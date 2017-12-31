@@ -287,3 +287,7 @@ You may run all tests with `npm run test-all`.
 
 You may run individual tests with `npm run test ./src/test/api.ts`, replacing `api.ts` with
 any other test file name.
+
+# License
+
+Do what you want with this as long as you do no evil.
