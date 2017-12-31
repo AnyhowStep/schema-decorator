@@ -178,7 +178,7 @@ console.log(raw) //Prints `{ value : "Hi" }`
 console.log(raw instanceof Foo); //Prints `false`
 ```
 
-Look at `./src/test/using-property-assertion.ts` for an executable example.
+Look at `./src/test/using-converter.ts` for an executable example.
 
 ## API
 
