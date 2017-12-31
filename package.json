@@ -1,0 +1,27 @@
+{
+  "name": "schema-decorator",
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/src/main/index.js",
+  "types": "dist/src/main/index.d.ts",
+  "scripts": {
+    "test": "ts-node",
+    "test-all": "ts-node ./src/test/test-all.ts",
+    "build": "(rm -r ./dist || true) && tsc -d"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anyhowstep/data-validation": "^1.14.0",
+    "@types/underscore": "^1.8.6",
+    "axios": "^0.17.1",
+    "typescript": "^2.7.0-dev.20171229",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^8.5.2",
+    "@types/tape": "^4.2.31",
+    "tape": "^4.8.0",
+    "ts-node": "^4.1.0"
+  }
+}
