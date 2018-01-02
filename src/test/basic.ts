@@ -321,3 +321,138 @@ tape("maybeCast", (t) => {
     });
     t.end();
 });
+tape("enumeration", (t) => {
+    enum E {
+        A,
+        B,
+        C
+    }
+    class Foo {
+        @schema.assert(schema.enumeration(E))
+        var : E = E.A;
+    }
+    myUtil.test(t, Foo, {
+        var : E.A
+    });
+    myUtil.test(t, Foo, {
+        var : E.B
+    });
+    myUtil.test(t, Foo, {
+        var : E.C
+    });
+    myUtil.test(t, Foo, {
+        var : 0
+    });
+    myUtil.test(t, Foo, {
+        var : 1
+    });
+    myUtil.test(t, Foo, {
+        var : 2
+    });
+    myUtil.fail(t, Foo, {
+        var : 3.1
+    });
+    myUtil.fail(t, Foo, {
+        var : undefined
+    });
+    myUtil.fail(t, Foo, {
+
+    });
+    myUtil.fail(t, Foo, {
+        var : E.A,
+        extra : 3
+    });
+    myUtil.fail(t, Foo, {
+        var : "0"
+    });
+    myUtil.fail(t, Foo, {
+        var : "1"
+    });
+    myUtil.fail(t, Foo, {
+        var : "2"
+    });
+    myUtil.fail(t, Foo, {
+        var : "A"
+    });
+    myUtil.fail(t, Foo, {
+        var : "B"
+    });
+    myUtil.fail(t, Foo, {
+        var : "C"
+    });
+    myUtil.fail(t, Foo, {
+        var : true
+    });
+    myUtil.fail(t, Foo, {
+        var : new Date()
+    });
+    t.end();
+});
+
+tape("string-enumeration", (t) => {
+    enum E {
+        A = "a",
+        B = "b",
+        C = "c"
+    }
+    class Foo {
+        @schema.assert(schema.enumeration(E))
+        var : E = E.A;
+    }
+    myUtil.test(t, Foo, {
+        var : E.A
+    });
+    myUtil.test(t, Foo, {
+        var : E.B
+    });
+    myUtil.test(t, Foo, {
+        var : E.C
+    });
+    myUtil.test(t, Foo, {
+        var : "a"
+    });
+    myUtil.test(t, Foo, {
+        var : "b"
+    });
+    myUtil.test(t, Foo, {
+        var : "c"
+    });
+    myUtil.fail(t, Foo, {
+        var : 3.1
+    });
+    myUtil.fail(t, Foo, {
+        var : undefined
+    });
+    myUtil.fail(t, Foo, {
+
+    });
+    myUtil.fail(t, Foo, {
+        var : E.A,
+        extra : 3
+    });
+    myUtil.fail(t, Foo, {
+        var : "0"
+    });
+    myUtil.fail(t, Foo, {
+        var : "1"
+    });
+    myUtil.fail(t, Foo, {
+        var : "2"
+    });
+    myUtil.fail(t, Foo, {
+        var : "A"
+    });
+    myUtil.fail(t, Foo, {
+        var : "B"
+    });
+    myUtil.fail(t, Foo, {
+        var : "C"
+    });
+    myUtil.fail(t, Foo, {
+        var : true
+    });
+    myUtil.fail(t, Foo, {
+        var : new Date()
+    });
+    t.end();
+});

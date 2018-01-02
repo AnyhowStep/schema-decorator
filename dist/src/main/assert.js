@@ -151,4 +151,18 @@ function any() {
     };
 }
 exports.any = any;
+//Please only pass enums here
+function enumeration(e) {
+    const keys = Object.keys(e).filter((k) => {
+        return !/^\d/.test(k);
+    });
+    const values = keys.map((k) => {
+        return e[k];
+    }).filter((v) => {
+        return (typeof v == "string" ||
+            typeof v == "number");
+    });
+    return oneOf(...values);
+}
+exports.enumeration = enumeration;
 //# sourceMappingURL=assert.js.map

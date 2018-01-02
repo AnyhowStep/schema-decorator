@@ -175,3 +175,19 @@ export function any () : AssertDelegate<any> {
         return mixed;
     };
 }
+
+//Please only pass enums here
+export function enumeration (e : {}) : AssertDelegate<string|number> {
+    const keys = Object.keys(e).filter((k) => {
+        return !/^\d/.test(k)
+    });
+    const values = keys.map((k) => {
+        return (e as any)[k];
+    }).filter((v) : v is string|number => {
+        return (
+            typeof v == "string" ||
+            typeof v == "number"
+        );
+    });
+    return oneOf(...values);
+}

@@ -39,3 +39,4 @@ export declare function maybe<T>(assertDelegate: AssertDelegate<T>): AssertDeleg
 export declare function array<T>(assertDelegate: AssertDelegate<T>): (name: string, mixed: any) => T[];
 export declare function date(): AssertDelegate<Date>;
 export declare function any(): AssertDelegate<any>;
+export declare function enumeration(e: {}): AssertDelegate<string | number>;
