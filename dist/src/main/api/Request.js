@@ -48,7 +48,8 @@ class Request {
                 }
                 else {
                     const d = t;
-                    return d(name, mixed);
+                    const v = d(name, mixed);
+                    return convert.anyToRaw(name, v);
                 }
             };
             const headers = {};

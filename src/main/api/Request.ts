@@ -200,7 +200,8 @@ export class Request<P, Q, B, A,
                 return convert.toRaw(name, convert.toClass(name, mixed, ctor));
             } else {
                 const d : AssertDelegate<any> = t as any;
-                return d(name, mixed);
+                const v = d(name, mixed);
+                return convert.anyToRaw(name, v);
             }
         };
 
