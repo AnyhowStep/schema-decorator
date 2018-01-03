@@ -18,7 +18,7 @@ export declare class Request<P, Q, B, A, RawParamT, ParamT extends {
     static Create<RawParamT, ParamT extends {
         [k in keyof RawParamT]: boolean | number | string;
     }, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined>(api: Api, route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>): Request<Empty, Empty, Empty, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
-    private readonly args;
+    readonly args: RequestArgs<P, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     private constructor();
     setParam<NewT extends ParamT>(this: Request<Empty, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<NewT, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     setQuery<NewT extends QueryT>(this: Request<P, Empty, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<P, NewT, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;

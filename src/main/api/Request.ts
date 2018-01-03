@@ -69,7 +69,7 @@ export class Request<P, Q, B, A,
             api   : api,
         });
     }
-    private readonly args : RequestArgs<P, Q, B, A,
+    public readonly args : RequestArgs<P, Q, B, A,
         RawParamT,
         ParamT,
         QueryT,
