@@ -9,5 +9,6 @@ __export(require("./api/Request"));
 __export(require("./api/Route"));
 __export(require("./assert"));
 __export(require("./convert"));
+__export(require("./LazyNested"));
 __export(require("./util"));
 //# sourceMappingURL=index.js.map
