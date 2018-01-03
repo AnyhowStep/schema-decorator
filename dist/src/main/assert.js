@@ -165,4 +165,45 @@ function enumeration(e) {
     return oneOf(...values);
 }
 exports.enumeration = enumeration;
+//Convenience
+function boolean() {
+    return validation.Boolean.assertBoolean;
+}
+exports.boolean = boolean;
+function number() {
+    return validation.Number.assertFiniteNumber;
+}
+exports.number = number;
+function integer() {
+    return validation.Number.assertInteger;
+}
+exports.integer = integer;
+function naturalNumber() {
+    return validation.Number.assertNaturalNumber;
+}
+exports.naturalNumber = naturalNumber;
+function string() {
+    return validation.String.assertString;
+}
+exports.string = string;
+function nil() {
+    //Using this because data-validation is bugged
+    return (name, mixed) => {
+        if (mixed === null) {
+            return mixed;
+        }
+        throw new Error(`Expected ${name} to be null, received ${typeof mixed}`);
+    };
+}
+exports.nil = nil;
+function undef() {
+    //Using this because data-validation is bugged
+    return (name, mixed) => {
+        if (mixed === undefined) {
+            return mixed;
+        }
+        throw new Error(`Expected ${name} to be undefined, received ${typeof mixed}`);
+    };
+}
+exports.undef = undef;
 //# sourceMappingURL=assert.js.map

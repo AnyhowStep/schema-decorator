@@ -40,3 +40,10 @@ export declare function array<T>(assertDelegate: AssertDelegate<T>): (name: stri
 export declare function date(): AssertDelegate<Date>;
 export declare function any(): AssertDelegate<any>;
 export declare function enumeration(e: {}): AssertDelegate<string | number>;
+export declare function boolean(): AssertDelegate<boolean>;
+export declare function number(): AssertDelegate<number>;
+export declare function integer(): AssertDelegate<number>;
+export declare function naturalNumber(): AssertDelegate<number>;
+export declare function string(): AssertDelegate<string>;
+export declare function nil(): AssertDelegate<null>;
+export declare function undef(): AssertDelegate<undefined>;

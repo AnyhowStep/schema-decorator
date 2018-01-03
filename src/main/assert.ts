@@ -191,3 +191,38 @@ export function enumeration (e : {}) : AssertDelegate<string|number> {
     });
     return oneOf(...values);
 }
+
+//Convenience
+export function boolean () : AssertDelegate<boolean> {
+    return validation.Boolean.assertBoolean;
+}
+export function number () : AssertDelegate<number> {
+    return validation.Number.assertFiniteNumber;
+}
+export function integer () : AssertDelegate<number> {
+    return validation.Number.assertInteger;
+}
+export function naturalNumber () : AssertDelegate<number> {
+    return validation.Number.assertNaturalNumber;
+}
+export function string () : AssertDelegate<string> {
+    return validation.String.assertString;
+}
+export function nil () : AssertDelegate<null> {
+    //Using this because data-validation is bugged
+    return (name : string, mixed : any) => {
+        if (mixed === null) {
+            return mixed;
+        }
+        throw new Error(`Expected ${name} to be null, received ${typeof mixed}`);
+    };
+}
+export function undef () : AssertDelegate<undefined> {
+    //Using this because data-validation is bugged
+    return (name : string, mixed : any) => {
+        if (mixed === undefined) {
+            return mixed;
+        }
+        throw new Error(`Expected ${name} to be undefined, received ${typeof mixed}`);
+    };
+}
