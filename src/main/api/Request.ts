@@ -4,10 +4,11 @@ import {Api} from "./Api";
 import {AccessTokenType, AccessTokenUtil} from "./AccessToken";
 import * as convert from "../convert";
 import {Assertion} from "../Assertion";
+import {Param} from "./Param";
 
 export interface RequestArgs<P, Q, B, A,
     RawParamT,
-    ParamT extends { [k in keyof RawParamT] : boolean|number|string },
+    ParamT extends Param<RawParamT>,
     QueryT,
     BodyT,
     ResponseT,
@@ -31,7 +32,7 @@ export interface RequestArgs<P, Q, B, A,
 }
 export class Request<P, Q, B, A,
     RawParamT,
-    ParamT extends { [k in keyof RawParamT] : boolean|number|string },
+    ParamT extends Param<RawParamT>,
     QueryT,
     BodyT,
     ResponseT,
@@ -39,7 +40,7 @@ export class Request<P, Q, B, A,
 > {
     public static Create<
         RawParamT,
-        ParamT extends { [k in keyof RawParamT] : boolean|number|string },
+        ParamT extends Param<RawParamT>,
         QueryT,
         BodyT,
         ResponseT,

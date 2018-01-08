@@ -1,6 +1,7 @@
 import { AccessTokenType } from "./AccessToken";
 import { Assertion } from "../Assertion";
 import { AssertDelegate } from "../AssertDelegate";
+import { Param } from "./Param";
 export interface PathParam<T> {
     param: keyof T;
     regex?: RegExp;
@@ -15,17 +16,13 @@ export declare class Path<T = {}> {
         [f in P]: string;
     }>;
     getRouterPath(): string;
-    getCallingPath(p: {
-        [k in keyof T]: boolean | number | string;
-    }): string;
+    getCallingPath(p: Param<T>): string;
 }
 export declare class Empty {
     _dummy?: undefined;
 }
 export declare type MethodLiteral = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT" | "Contextual";
-export interface RouteArgs<RawParamT, ParamT extends Empty | {
-    [k in keyof RawParamT]: boolean | number | string;
-}, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined, MethodT extends MethodLiteral> {
+export interface RouteArgs<RawParamT, ParamT extends Empty | Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined, MethodT extends MethodLiteral> {
     readonly path: Path<RawParamT>;
     readonly paramT: Assertion<ParamT>;
     readonly queryT: Assertion<QueryT>;
@@ -34,9 +31,7 @@ export interface RouteArgs<RawParamT, ParamT extends Empty | {
     readonly _accessToken?: AccessTokenT;
     readonly method: MethodT;
 }
-export declare class Route<RawParamT, ParamT extends Empty | {
-    [k in keyof RawParamT]: boolean | number | string;
-}, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined = undefined, MethodT extends MethodLiteral = "Contextual"> {
+export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined = undefined, MethodT extends MethodLiteral = "Contextual"> {
     static Create(): Route<{}, Empty, Empty, Empty, Empty, undefined, "Contextual">;
     readonly args: RouteArgs<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     private constructor();
@@ -44,9 +39,7 @@ export declare class Route<RawParamT, ParamT extends Empty | {
     appendParam<P extends string>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, param: P, regex?: RegExp): Route<RawParamT & {
         [f in P]: string;
     }, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    param<P extends {
-        [k in keyof RawParamT]: boolean | number | string;
-    }>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
+    param<P extends Param<RawParamT>>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
         new (): P;
     }): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     query<Q>(queryT: {

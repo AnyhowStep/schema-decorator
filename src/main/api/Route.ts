@@ -1,6 +1,7 @@
 import {AccessTokenType} from "./AccessToken";
 import {Assertion} from "../Assertion";
 import {AssertDelegate} from "../AssertDelegate";
+import {Param, ParamValue} from "./Param";
 
 export interface PathParam<T> {
     param  : keyof T,
@@ -63,13 +64,13 @@ export class Path<T = {}> {
     public getRouterPath () : string {
         return this.str;
     }
-    public getCallingPath (p : { [k in keyof T] : boolean|number|string }) : string {
+    public getCallingPath (p : Param<T>) : string {
         let result = "";
         for (let i of this.arr) {
             if (typeof i == "string") {
                 result += i;
             } else {
-                const raw : boolean|number|string = p[i.param];
+                const raw : ParamValue = p[i.param];
                 const value = raw.toString();
                 if (i.regex != null) {
                     if (!new RegExp(`^${i.regex.source}$`).test(value)) {
@@ -91,7 +92,7 @@ export type MethodLiteral = "GET"|"POST"|"PUT"|"DELETE"|"PATCH"|"HEAD"|"OPTIONS"
 
 export interface RouteArgs<
     RawParamT,
-    ParamT extends Empty|{ [k in keyof RawParamT] : boolean|number|string },
+    ParamT extends Empty|Param<RawParamT>,
     QueryT,
     BodyT,
     ResponseT,
@@ -110,7 +111,7 @@ export interface RouteArgs<
 
 export class Route<
     RawParamT,
-    ParamT extends Empty|{ [k in keyof RawParamT] : boolean|number|string },
+    ParamT extends Empty|Param<RawParamT>,
     QueryT,
     BodyT,
     ResponseT,
@@ -193,7 +194,7 @@ export class Route<
             path : this.args.path.appendParam(param, regex),
         });
     }
-    public param<P extends { [k in keyof RawParamT] : boolean|number|string }> (this : Route<
+    public param<P extends Param<RawParamT>> (this : Route<
         RawParamT,
         Empty, /*ParamT*/
         QueryT,

@@ -2,9 +2,8 @@ import * as axios from "axios";
 import { Route, MethodLiteral, Empty } from "./Route";
 import { Api } from "./Api";
 import { AccessTokenType } from "./AccessToken";
-export interface RequestArgs<P, Q, B, A, RawParamT, ParamT extends {
-    [k in keyof RawParamT]: boolean | number | string;
-}, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined> {
+import { Param } from "./Param";
+export interface RequestArgs<P, Q, B, A, RawParamT, ParamT extends Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined> {
     readonly param: P;
     readonly query: Q;
     readonly body: B;
@@ -12,12 +11,8 @@ export interface RequestArgs<P, Q, B, A, RawParamT, ParamT extends {
     readonly route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>;
     readonly api: Api;
 }
-export declare class Request<P, Q, B, A, RawParamT, ParamT extends {
-    [k in keyof RawParamT]: boolean | number | string;
-}, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined> {
-    static Create<RawParamT, ParamT extends {
-        [k in keyof RawParamT]: boolean | number | string;
-    }, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined>(api: Api, route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>): Request<Empty, Empty, Empty, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
+export declare class Request<P, Q, B, A, RawParamT, ParamT extends Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined> {
+    static Create<RawParamT, ParamT extends Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined>(api: Api, route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>): Request<Empty, Empty, Empty, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     readonly args: RequestArgs<P, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     private constructor();
     setParam<NewT extends ParamT>(this: Request<Empty, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<NewT, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;

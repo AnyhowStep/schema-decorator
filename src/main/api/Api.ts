@@ -2,6 +2,7 @@ import * as axios from "axios";
 import {Route, MethodLiteral, Empty} from "./Route";
 import {Request} from "./Request";
 import {AccessTokenType} from "./AccessToken";
+import {Param} from "./Param";
 
 export interface ApiConfiguration {
     domain : string,
@@ -23,7 +24,7 @@ export class Api {
 
     request<
         RawParamT,
-        ParamT extends { [k in keyof RawParamT] : boolean|number|string },
+        ParamT extends Param<RawParamT>,
         QueryT,
         BodyT,
         ResponseT,
