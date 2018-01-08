@@ -1,5 +1,6 @@
 export * from "./api/AccessToken";
 export * from "./api/Api";
+export * from "./api/Param";
 export * from "./api/Request";
 export * from "./api/Route";
 export * from "./assert";
