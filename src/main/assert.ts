@@ -208,6 +208,40 @@ export function naturalNumber () : AssertDelegate<number> {
 export function string () : AssertDelegate<string> {
     return validation.String.assertString;
 }
+export function stringToBoolean () : AssertDelegate<boolean> {
+    return cast(
+        validation.String.assertString,
+        (raw : string) => {
+            if (raw == "1" || raw.toLowerCase() == "true") {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        validation.Boolean.assertBoolean
+    );
+}
+export function stringToNumber () : AssertDelegate<number> {
+    return cast(
+        validation.NumberString.assertFiniteNumberString,
+        parseFloat,
+        validation.Number.assertFiniteNumber
+    );
+}
+export function stringToInteger () : AssertDelegate<number> {
+    return cast(
+        validation.NumberString.assertIntegerString,
+        parseInt,
+        validation.Number.assertInteger
+    );
+}
+export function stringToNaturalNumber () : AssertDelegate<number> {
+    return cast(
+        validation.NumberString.assertNaturalNumberString,
+        parseInt,
+        validation.Number.assertNaturalNumber
+    );
+}
 export function nil () : AssertDelegate<null> {
     //Using this because data-validation is bugged
     return (name : string, mixed : any) => {

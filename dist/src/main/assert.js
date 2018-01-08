@@ -186,6 +186,29 @@ function string() {
     return validation.String.assertString;
 }
 exports.string = string;
+function stringToBoolean() {
+    return cast(validation.String.assertString, (raw) => {
+        if (raw == "1" || raw.toLowerCase() == "true") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }, validation.Boolean.assertBoolean);
+}
+exports.stringToBoolean = stringToBoolean;
+function stringToNumber() {
+    return cast(validation.NumberString.assertFiniteNumberString, parseFloat, validation.Number.assertFiniteNumber);
+}
+exports.stringToNumber = stringToNumber;
+function stringToInteger() {
+    return cast(validation.NumberString.assertIntegerString, parseInt, validation.Number.assertInteger);
+}
+exports.stringToInteger = stringToInteger;
+function stringToNaturalNumber() {
+    return cast(validation.NumberString.assertNaturalNumberString, parseInt, validation.Number.assertNaturalNumber);
+}
+exports.stringToNaturalNumber = stringToNaturalNumber;
 function nil() {
     //Using this because data-validation is bugged
     return (name, mixed) => {
