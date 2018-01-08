@@ -1,5 +1,6 @@
 import * as myUtil from "./util";
 import * as _ from "underscore";
+import {Assertion} from "./Assertion";
 
 export const REGEX_IGNORE_VARIABLE_NAMES = /(?:^_)|(?:constructor)/;
 export function keepVariableName (name : string) {
@@ -82,4 +83,12 @@ export function toRaw<T> (name : string, instance : T) : Raw<T> {
         throw new Error(`Cannot convert ${name} to raw: ${e.message}`);
     }
     return result;
+}
+
+export function toClassOrAssert<T> (name : string, raw : any, assertion : Assertion<T>) : T {
+    if (assertion.isCtor) {
+        return toClass(name, raw, assertion.func);
+    } else {
+        return assertion.func(name, raw);
+    }
 }

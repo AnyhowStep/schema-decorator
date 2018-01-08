@@ -1,4 +1,4 @@
-export declare type AssertDelegate<T> = (name: string, mixed: any) => T;
+import { AssertDelegate } from "./AssertDelegate";
 export declare type CastDelegate<FromT, ToT> = (from: FromT) => ToT;
 export declare type Constructor<T> = {
     new (): T;

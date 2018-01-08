@@ -1,4 +1,5 @@
-import {AssertDelegate, nested} from "./assert";
+import {nested} from "./assert";
+import {AssertDelegate} from "./AssertDelegate";
 
 /*
     Used when you want to assert the type of circularly referencing nested classes.

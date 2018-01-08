@@ -1,5 +1,6 @@
-import { AssertDelegate } from "../assert";
 import { AccessTokenType } from "./AccessToken";
+import { Assertion } from "../Assertion";
+import { AssertDelegate } from "../AssertDelegate";
 export interface PathParam<T> {
     param: keyof T;
     regex?: RegExp;
@@ -26,24 +27,12 @@ export interface RouteArgs<RawParamT, ParamT extends Empty | {
     [k in keyof RawParamT]: boolean | number | string;
 }, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined, MethodT extends MethodLiteral> {
     readonly path: Path<RawParamT>;
-    readonly paramT: {
-        new (): ParamT;
-    } | AssertDelegate<ParamT>;
-    readonly queryT: {
-        new (): QueryT;
-    } | AssertDelegate<QueryT>;
-    readonly bodyT: {
-        new (): BodyT;
-    } | AssertDelegate<BodyT>;
-    readonly responseT: {
-        new (): ResponseT;
-    } | AssertDelegate<ResponseT>;
+    readonly paramT: Assertion<ParamT>;
+    readonly queryT: Assertion<QueryT>;
+    readonly bodyT: Assertion<BodyT>;
+    readonly responseT: Assertion<ResponseT>;
     readonly _accessToken?: AccessTokenT;
     readonly method: MethodT;
-    readonly paramIsCtor: boolean;
-    readonly queryIsCtor: boolean;
-    readonly bodyIsCtor: boolean;
-    readonly responseIsCtor: boolean;
 }
 export declare class Route<RawParamT, ParamT extends Empty | {
     [k in keyof RawParamT]: boolean | number | string;

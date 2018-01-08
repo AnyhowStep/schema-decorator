@@ -81,4 +81,13 @@ function toRaw(name, instance) {
     return result;
 }
 exports.toRaw = toRaw;
+function toClassOrAssert(name, raw, assertion) {
+    if (assertion.isCtor) {
+        return toClass(name, raw, assertion.func);
+    }
+    else {
+        return assertion.func(name, raw);
+    }
+}
+exports.toClassOrAssert = toClassOrAssert;
 //# sourceMappingURL=convert.js.map

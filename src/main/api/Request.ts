@@ -1,9 +1,9 @@
 import * as axios from "axios";
 import {Route, MethodLiteral, Empty} from "./Route";
 import {Api} from "./Api";
-import {AssertDelegate} from "../assert";
 import {AccessTokenType, AccessTokenUtil} from "./AccessToken";
 import * as convert from "../convert";
+import {Assertion} from "../Assertion";
 
 export interface RequestArgs<P, Q, B, A,
     RawParamT,
@@ -194,13 +194,11 @@ export class Request<P, Q, B, A,
         const route = this.args.route;
         const r = route.args;
 
-        const toRaw = (name : string, mixed : any, t : {new():any}|AssertDelegate<any>, isCtor : boolean) => {
-            if (isCtor) {
-                const ctor : {new():ResponseT} = t as any;
-                return convert.toRaw(name, convert.toClass(name, mixed, ctor));
+        const toRaw = <T>(name : string, mixed : any, t : Assertion<T>) => {
+            if (t.isCtor) {
+                return convert.toRaw(name, convert.toClass(name, mixed, t.func));
             } else {
-                const d : AssertDelegate<any> = t as any;
-                const v = d(name, mixed);
+                const v = t.func(name, mixed);
                 return convert.anyToRaw(name, v);
             }
         };
@@ -210,11 +208,11 @@ export class Request<P, Q, B, A,
         } = {};
         const config : axios.AxiosRequestConfig = {
             method : route.getMethod(),
-            url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT, r.paramIsCtor)),
-            params : toRaw("query", this.args.query, r.queryT, r.queryIsCtor),
+            url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),
+            params : toRaw("query", this.args.query, r.queryT),
             data : (this.args.body instanceof Empty) ?
                 undefined :
-                toRaw("body", this.args.body, r.bodyT, r.bodyIsCtor),
+                toRaw("body", this.args.body, r.bodyT),
             headers : headers,
         };
         const accessTokenType : AccessTokenType|undefined = this.args.accessTokenType;
@@ -223,18 +221,11 @@ export class Request<P, Q, B, A,
             headers["Access-Token"] = accessTokenString;
         }
         const result = await this.args.api.instance.request(config);
-        if (r.responseT == Empty) {
+        if (r.responseT.func == Empty) {
             return result;
         } else {
-            if (r.responseIsCtor) {
-                const ctor : {new():ResponseT} = r.responseT as any;
-                result.data = convert.toClass("response", result.data, ctor);
-                return result;
-            } else {
-                const d : AssertDelegate<ResponseT> = r.responseT as any;
-                d("response", result.data);
-                return result;
-            }
+            result.data = toRaw("response", result.data, r.responseT);
+            return result;
         }
     }
 }

@@ -78,15 +78,23 @@ class Route {
     static Create() {
         return new Route({
             path: new Path(),
-            paramT: Empty,
-            queryT: Empty,
-            bodyT: Empty,
-            responseT: Empty,
+            paramT: {
+                isCtor: true,
+                func: Empty,
+            },
+            queryT: {
+                isCtor: true,
+                func: Empty,
+            },
+            bodyT: {
+                isCtor: true,
+                func: Empty,
+            },
+            responseT: {
+                isCtor: true,
+                func: Empty,
+            },
             method: "Contextual",
-            paramIsCtor: true,
-            queryIsCtor: true,
-            bodyIsCtor: true,
-            responseIsCtor: true,
         });
     }
     append(part) {
@@ -96,28 +104,52 @@ class Route {
         return new Route(Object.assign({}, this.args, { path: this.args.path.appendParam(param, regex) }));
     }
     param(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: paramT, paramIsCtor: true }));
+        return new Route(Object.assign({}, this.args, { paramT: {
+                isCtor: true,
+                func: paramT,
+            } }));
     }
     query(queryT) {
-        return new Route(Object.assign({}, this.args, { queryT: queryT, queryIsCtor: true }));
+        return new Route(Object.assign({}, this.args, { queryT: {
+                isCtor: true,
+                func: queryT,
+            } }));
     }
     body(bodyT) {
-        return new Route(Object.assign({}, this.args, { bodyT: bodyT, bodyIsCtor: true }));
+        return new Route(Object.assign({}, this.args, { bodyT: {
+                isCtor: true,
+                func: bodyT,
+            } }));
     }
     response(responseT) {
-        return new Route(Object.assign({}, this.args, { responseT: responseT, responseIsCtor: true }));
+        return new Route(Object.assign({}, this.args, { responseT: {
+                isCtor: true,
+                func: responseT,
+            } }));
     }
     paramDelegate(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: paramT, paramIsCtor: false }));
+        return new Route(Object.assign({}, this.args, { paramT: {
+                isCtor: false,
+                func: paramT,
+            } }));
     }
     queryDelegate(queryT) {
-        return new Route(Object.assign({}, this.args, { queryT: queryT, queryIsCtor: false }));
+        return new Route(Object.assign({}, this.args, { queryT: {
+                isCtor: false,
+                func: queryT,
+            } }));
     }
     bodyDelegate(bodyT) {
-        return new Route(Object.assign({}, this.args, { bodyT: bodyT, bodyIsCtor: false }));
+        return new Route(Object.assign({}, this.args, { bodyT: {
+                isCtor: false,
+                func: bodyT,
+            } }));
     }
     responseDelegate(responseT) {
-        return new Route(Object.assign({}, this.args, { responseT: responseT, responseIsCtor: false }));
+        return new Route(Object.assign({}, this.args, { responseT: {
+                isCtor: false,
+                func: responseT,
+            } }));
     }
     requireAccessToken() {
         return new Route(Object.assign({}, this.args));
@@ -133,7 +165,7 @@ class Route {
     }
     getMethod() {
         if (this.args.method == "Contextual") {
-            if (this.args.bodyT == Empty) {
+            if (this.args.bodyT.func == Empty) {
                 return "GET";
             }
             else {

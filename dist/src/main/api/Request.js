@@ -41,25 +41,23 @@ class Request {
         return __awaiter(this, void 0, void 0, function* () {
             const route = this.args.route;
             const r = route.args;
-            const toRaw = (name, mixed, t, isCtor) => {
-                if (isCtor) {
-                    const ctor = t;
-                    return convert.toRaw(name, convert.toClass(name, mixed, ctor));
+            const toRaw = (name, mixed, t) => {
+                if (t.isCtor) {
+                    return convert.toRaw(name, convert.toClass(name, mixed, t.func));
                 }
                 else {
-                    const d = t;
-                    const v = d(name, mixed);
+                    const v = t.func(name, mixed);
                     return convert.anyToRaw(name, v);
                 }
             };
             const headers = {};
             const config = {
                 method: route.getMethod(),
-                url: r.path.getCallingPath(toRaw("param", this.args.param, r.paramT, r.paramIsCtor)),
-                params: toRaw("query", this.args.query, r.queryT, r.queryIsCtor),
+                url: r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),
+                params: toRaw("query", this.args.query, r.queryT),
                 data: (this.args.body instanceof Route_1.Empty) ?
                     undefined :
-                    toRaw("body", this.args.body, r.bodyT, r.bodyIsCtor),
+                    toRaw("body", this.args.body, r.bodyT),
                 headers: headers,
             };
             const accessTokenType = this.args.accessTokenType;
@@ -68,20 +66,12 @@ class Request {
                 headers["Access-Token"] = accessTokenString;
             }
             const result = yield this.args.api.instance.request(config);
-            if (r.responseT == Route_1.Empty) {
+            if (r.responseT.func == Route_1.Empty) {
                 return result;
             }
             else {
-                if (r.responseIsCtor) {
-                    const ctor = r.responseT;
-                    result.data = convert.toClass("response", result.data, ctor);
-                    return result;
-                }
-                else {
-                    const d = r.responseT;
-                    d("response", result.data);
-                    return result;
-                }
+                result.data = toRaw("response", result.data, r.responseT);
+                return result;
             }
         });
     }

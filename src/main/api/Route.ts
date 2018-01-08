@@ -1,5 +1,6 @@
-import {AssertDelegate} from "../assert";
 import {AccessTokenType} from "./AccessToken";
+import {Assertion} from "../Assertion";
+import {AssertDelegate} from "../AssertDelegate";
 
 export interface PathParam<T> {
     param  : keyof T,
@@ -98,18 +99,13 @@ export interface RouteArgs<
     MethodT extends MethodLiteral
 > {
     readonly path : Path<RawParamT>,
-    readonly paramT : {new():ParamT}|AssertDelegate<ParamT>,
-    readonly queryT : {new():QueryT}|AssertDelegate<QueryT>,
-    readonly bodyT : {new():BodyT}|AssertDelegate<BodyT>,
-    readonly responseT : {new():ResponseT}|AssertDelegate<ResponseT>,
+    readonly paramT : Assertion<ParamT>,
+    readonly queryT : Assertion<QueryT>,
+    readonly bodyT  : Assertion<BodyT>,
+    readonly responseT : Assertion<ResponseT>,
 
     readonly _accessToken? : AccessTokenT,
     readonly method : MethodT,
-
-    readonly paramIsCtor : boolean;
-    readonly queryIsCtor : boolean;
-    readonly bodyIsCtor : boolean;
-    readonly responseIsCtor : boolean;
 };
 
 export class Route<
@@ -125,17 +121,24 @@ export class Route<
         return new Route({
             path : new Path<{}>(),
 
-            paramT : Empty,
-            queryT : Empty,
-            bodyT : Empty,
-            responseT : Empty,
+            paramT : {
+                isCtor : true,
+                func   : Empty,
+            },
+            queryT : {
+                isCtor : true,
+                func   : Empty,
+            },
+            bodyT : {
+                isCtor : true,
+                func   : Empty,
+            },
+            responseT : {
+                isCtor : true,
+                func   : Empty,
+            },
 
             method : "Contextual",
-
-            paramIsCtor : true,
-            queryIsCtor : true,
-            bodyIsCtor : true,
-            responseIsCtor : true,
         });
     }
     public readonly args : RouteArgs<
@@ -201,29 +204,37 @@ export class Route<
     >, paramT : {new():P}) {
         return new Route({
             ...this.args,
-            paramT : paramT,
-            paramIsCtor : true,
+            paramT : {
+                isCtor : true,
+                func   : paramT,
+            },
         });
     }
     public query<Q> (queryT : {new():Q}) {
         return new Route({
             ...this.args,
-            queryT : queryT,
-            queryIsCtor : true,
+            queryT : {
+                isCtor : true,
+                func   : queryT,
+            },
         });
     }
     public body<B> (bodyT : {new():B}) {
         return new Route({
             ...this.args,
-            bodyT : bodyT,
-            bodyIsCtor : true,
+            bodyT : {
+                isCtor : true,
+                func   : bodyT,
+            },
         });
     }
     public response<R> (responseT : {new():R}) {
         return new Route({
             ...this.args,
-            responseT : responseT,
-            responseIsCtor : true,
+            responseT : {
+                isCtor : true,
+                func   : responseT,
+            },
         });
     }
     public paramDelegate<P extends RawParamT> (this : Route<
@@ -237,29 +248,37 @@ export class Route<
     >, paramT : AssertDelegate<P>) {
         return new Route({
             ...this.args,
-            paramT : paramT,
-            paramIsCtor : false,
+            paramT : {
+                isCtor : false,
+                func   : paramT,
+            },
         });
     }
     public queryDelegate<Q> (queryT : AssertDelegate<Q>) {
         return new Route({
             ...this.args,
-            queryT : queryT,
-            queryIsCtor : false,
+            queryT : {
+                isCtor : false,
+                func   : queryT,
+            },
         });
     }
     public bodyDelegate<B> (bodyT : AssertDelegate<B>) {
         return new Route({
             ...this.args,
-            bodyT : bodyT,
-            bodyIsCtor : false,
+            bodyT : {
+                isCtor : false,
+                func   : bodyT,
+            },
         });
     }
     public responseDelegate<R> (responseT : AssertDelegate<R>) {
         return new Route({
             ...this.args,
-            responseT : responseT,
-            responseIsCtor : false,
+            responseT : {
+                isCtor : false,
+                func   : responseT,
+            },
         });
     }
     public requireAccessToken () : Route<
@@ -309,7 +328,7 @@ export class Route<
     }
     public getMethod () {
         if (this.args.method == "Contextual") {
-            if (this.args.bodyT == Empty) {
+            if (this.args.bodyT.func == Empty) {
                 return "GET";
             } else {
                 return "POST";
