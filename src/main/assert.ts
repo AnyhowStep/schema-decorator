@@ -208,6 +208,15 @@ export function naturalNumber () : AssertDelegate<number> {
 export function string () : AssertDelegate<string> {
     return validation.String.assertString;
 }
+export function numberToBoolean () : AssertDelegate<boolean> {
+    return cast(
+        validation.Number.assertFiniteNumber,
+        (raw : number) => {
+            return (raw != 0);
+        },
+        validation.Boolean.assertBoolean
+    );
+}
 export function stringToBoolean () : AssertDelegate<boolean> {
     return cast(
         validation.String.assertString,

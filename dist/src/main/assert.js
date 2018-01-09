@@ -186,6 +186,12 @@ function string() {
     return validation.String.assertString;
 }
 exports.string = string;
+function numberToBoolean() {
+    return cast(validation.Number.assertFiniteNumber, (raw) => {
+        return (raw != 0);
+    }, validation.Boolean.assertBoolean);
+}
+exports.numberToBoolean = numberToBoolean;
 function stringToBoolean() {
     return cast(validation.String.assertString, (raw) => {
         if (raw == "1" || raw.toLowerCase() == "true") {

@@ -45,6 +45,7 @@ export declare function number(): AssertDelegate<number>;
 export declare function integer(): AssertDelegate<number>;
 export declare function naturalNumber(): AssertDelegate<number>;
 export declare function string(): AssertDelegate<string>;
+export declare function numberToBoolean(): AssertDelegate<boolean>;
 export declare function stringToBoolean(): AssertDelegate<boolean>;
 export declare function stringToNumber(): AssertDelegate<number>;
 export declare function stringToInteger(): AssertDelegate<number>;
