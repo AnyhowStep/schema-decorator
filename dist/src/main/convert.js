@@ -41,11 +41,18 @@ function toClass(name, raw, ctor) {
     return result;
 }
 exports.toClass = toClass;
-function anyToRaw(name, mixed) {
+function anyToRaw(name, mixed, ignoreInstancesOf) {
+    if (ignoreInstancesOf != undefined) {
+        for (let ctor of ignoreInstancesOf) {
+            if (mixed instanceof ctor) {
+                return mixed;
+            }
+        }
+    }
     if (mixed instanceof Array) {
         const result = [];
         for (let i = 0; i < mixed.length; ++i) {
-            const cur = anyToRaw(`${name}[${i}]`, mixed[i]);
+            const cur = anyToRaw(`${name}[${i}]`, mixed[i], ignoreInstancesOf);
             result.push(cur);
         }
         return result;
@@ -54,14 +61,21 @@ function anyToRaw(name, mixed) {
         return new Date(mixed);
     }
     else if (mixed instanceof Object) {
-        return toRaw(name, mixed);
+        return toRaw(name, mixed, ignoreInstancesOf);
     }
     else {
         return mixed;
     }
 }
 exports.anyToRaw = anyToRaw;
-function toRaw(name, instance) {
+function toRaw(name, instance, ignoreInstancesOf) {
+    if (ignoreInstancesOf != undefined) {
+        for (let ctor of ignoreInstancesOf) {
+            if (instance instanceof ctor) {
+                return instance;
+            }
+        }
+    }
     const variables = myUtil.getAllVariables(instance).map(i => i.name).filter(keepVariableName);
     if (variables.length > 0) {
         throw new Error(`Cannot convert ${name} to raw, the class has variables without assertions: ${variables.join(", ")}`);
@@ -71,7 +85,7 @@ function toRaw(name, instance) {
     try {
         for (let k of accessors) {
             const cur = instance[k];
-            result[k] = anyToRaw(`${name}[${k}]`, cur);
+            result[k] = anyToRaw(`${name}[${k}]`, cur, ignoreInstancesOf);
         }
     }
     catch (err) {

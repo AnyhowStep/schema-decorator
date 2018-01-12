@@ -46,18 +46,26 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
     return result;
 }
 
-export function anyToRaw (name : string, mixed : any) : any {
+export function anyToRaw (name : string, mixed : any, ignoreInstancesOf? : {new(...args:any[]):any}[]) : any {
+    if (ignoreInstancesOf != undefined) {
+        for (let ctor of ignoreInstancesOf) {
+            if (mixed instanceof ctor) {
+                return mixed;
+            }
+        }
+    }
+
     if (mixed instanceof Array) {
         const result : any[] = [];
         for (let i=0; i<mixed.length; ++i) {
-            const cur = anyToRaw(`${name}[${i}]`, mixed[i]);
+            const cur = anyToRaw(`${name}[${i}]`, mixed[i], ignoreInstancesOf);
             result.push(cur);
         }
         return result;
     } else if (mixed instanceof Date) {
         return new Date(mixed);
     } else if (mixed instanceof Object) {
-        return toRaw(name, mixed);
+        return toRaw(name, mixed, ignoreInstancesOf);
     } else {
         return mixed;
     }
@@ -65,7 +73,15 @@ export function anyToRaw (name : string, mixed : any) : any {
 
 export type Raw<T> = { [k in keyof T] : T[k] };
 
-export function toRaw<T> (name : string, instance : T) : Raw<T> {
+export function toRaw<T> (name : string, instance : T, ignoreInstancesOf? : {new(...args:any[]):any}[]) : Raw<T> {
+    if (ignoreInstancesOf != undefined) {
+        for (let ctor of ignoreInstancesOf) {
+            if (instance instanceof ctor) {
+                return instance;
+            }
+        }
+    }
+
     const variables = myUtil.getAllVariables(instance).map(i => i.name).filter(keepVariableName);
     if (variables.length > 0) {
         throw new Error(`Cannot convert ${name} to raw, the class has variables without assertions: ${variables.join(", ")}`)
@@ -76,7 +92,7 @@ export function toRaw<T> (name : string, instance : T) : Raw<T> {
     try {
         for (let k of accessors) {
             const cur = (instance as any)[k];
-            result[k] = anyToRaw(`${name}[${k}]`, cur);
+            result[k] = anyToRaw(`${name}[${k}]`, cur, ignoreInstancesOf);
         }
     } catch (err) {
         const e = err as Error;
