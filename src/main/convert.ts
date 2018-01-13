@@ -13,8 +13,12 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
     if (!(raw instanceof Object)) {
         throw new Error(`Cannot convert ${typeof raw}(${raw}) to ${ctor.name}`);
     }
-    const result = new ctor();
-
+    let result : T|undefined = undefined;
+    try {
+        result = new ctor();
+    } catch (err) {
+        throw new Error(`Could not instantiate ${ctor.name}; ${err.message}`);
+    }
     const variables = myUtil.getAllVariables(result).map(i => i.name).filter(keepVariableName);
     if (variables.length > 0) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${ctor.name} has variables without assertions: ${variables.join(", ")}`)

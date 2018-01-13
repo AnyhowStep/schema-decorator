@@ -16,6 +16,10 @@ tape("from-class-to-class", (t) => {
         @schema.assert(schema.naturalNumber())
         var2 : number = 0;
     }
+    class Invalid {
+        @schema.assert(schema.naturalNumber())
+        var : string = "lol";
+    }
     try {
         schema.toClass("run-time error", new Bar(), Baz);
         t.fail("Expected a run-time error");
@@ -34,5 +38,11 @@ tape("from-class-to-class", (t) => {
     t.pass("Converted Bar to Foo");
     console.log(schema.toClass("ok", { var : 2 }, Foo));
     t.pass("Converted object to Foo");
+    try {
+        schema.toClass("run-time error", { var : "hi" }, Invalid);
+        t.fail("Expected a run-time error");
+    } catch (err) {
+        t.pass(err.message);
+    }
     t.end();
 });
