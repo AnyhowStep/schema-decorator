@@ -23,6 +23,14 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
     const accessors = myUtil.getAllAccessors(result).map(i => i.name);
 
     const keys = Object.keys(raw);
+    const rawAccessors = myUtil.getAllAccessors(raw).map(i => i.name);
+    for (let i=0; i<keys.length; ++i) {
+        if (/^\_/.test(keys[i])) {
+            if (rawAccessors.indexOf(keys[i].substr(1)) >= 0) {
+                keys[i] = keys[i].substr(1);
+            }
+        }
+    }
 
     const extraKeys = _.difference(keys, accessors);
     if (extraKeys.length > 0) {

@@ -5,4 +5,5 @@ import "./built-in";
 import "./inheritance";
 import "./LazyNested";
 import "./nested";
+import "./to-class";
 import "./to-raw-ignore";
