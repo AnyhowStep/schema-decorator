@@ -4,8 +4,8 @@ export interface AccessorDescriptor {
     get : undefined|(() => any);
     set : undefined|((v: any) => void);
 }
-export interface AccessorItem {
-    name : string,
+export interface AccessorItem<T extends Object> {
+    name : keyof T,
     descriptor : AccessorDescriptor,
 }
 
@@ -37,9 +37,9 @@ const BUILT_IN_PROTOTYPES = [
 function isBuiltInPrototype (obj : Object) {
     return BUILT_IN_PROTOTYPES.indexOf(obj) >= 0;
 }
-export function getOwnAccessors (obj : Object) {
-    const arr = Object.getOwnPropertyNames(obj);
-    const result : AccessorItem[] = [];
+export function getOwnAccessors<T extends Object> (obj : T) {
+    const arr : (keyof T)[] = Object.getOwnPropertyNames(obj) as any;
+    const result : AccessorItem<T>[] = [];
     for (let k of arr) {
         const descriptor = Object.getOwnPropertyDescriptor(obj, k);
         if (isAccessorDescriptor(descriptor)) {
@@ -52,8 +52,8 @@ export function getOwnAccessors (obj : Object) {
     return result;
 }
 
-export function getAllAccessors (obj : Object) {
-    const result : AccessorItem[] = [];
+export function getAllAccessors<T extends Object> (obj : T) {
+    const result : AccessorItem<T>[] = [];
     while (!isBuiltInPrototype(obj)) {
         result.push(...getOwnAccessors(obj));
         obj = Object.getPrototypeOf(obj);

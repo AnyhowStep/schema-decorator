@@ -4,13 +4,13 @@ export interface AccessorDescriptor {
     get: undefined | (() => any);
     set: undefined | ((v: any) => void);
 }
-export interface AccessorItem {
-    name: string;
+export interface AccessorItem<T extends Object> {
+    name: keyof T;
     descriptor: AccessorDescriptor;
 }
 export declare function isAccessorDescriptor(descriptor: PropertyDescriptor | null | undefined): descriptor is AccessorDescriptor;
-export declare function getOwnAccessors(obj: Object): AccessorItem[];
-export declare function getAllAccessors(obj: Object): AccessorItem[];
+export declare function getOwnAccessors<T extends Object>(obj: T): AccessorItem<T>[];
+export declare function getAllAccessors<T extends Object>(obj: T): AccessorItem<T>[];
 export interface VariableDescriptor {
     configurable: boolean;
     enumerable: boolean;
