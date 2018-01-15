@@ -75,7 +75,20 @@ function anyToRaw(name, mixed, ignoreInstancesOf) {
         return new Date(mixed);
     }
     else if (mixed instanceof Object) {
-        return toRaw(name, mixed, ignoreInstancesOf);
+        if (Object.getPrototypeOf(mixed).constructor == Object) {
+            //This object is already as "raw" as we can get
+            //Its values might not be, though
+            const result = Object.assign({}, mixed);
+            for (let k in mixed) {
+                if (mixed.hasOwnProperty(k)) {
+                    result[k] = anyToRaw(`${name}[${k}]`, mixed[k], ignoreInstancesOf);
+                }
+            }
+            return result;
+        }
+        else {
+            return toRaw(name, mixed, ignoreInstancesOf);
+        }
     }
     else {
         return mixed;
