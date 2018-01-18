@@ -321,7 +321,7 @@ export class Route<
             ...this.args,
         }) as any;
     }
-    public method (method : MethodLiteral) {
+    public method<M extends MethodLiteral> (method : M) {
         return new Route({
             ...this.args,
             method : method,

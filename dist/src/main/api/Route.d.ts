@@ -58,6 +58,6 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     requireAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType, MethodT>;
     optionalAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType | undefined, MethodT>;
     denyAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, undefined, MethodT>;
-    method(method: MethodLiteral): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>;
+    method<M extends MethodLiteral>(method: M): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, M>;
     getMethod(): "GET" | "POST" | MethodT;
 }
