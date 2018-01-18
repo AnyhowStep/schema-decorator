@@ -19,7 +19,11 @@ export class Path<T = {}> {
 
     public append (part : string) : Path<T> {
         if (part.length == 0) {
-            throw new Error(`part cannot be an empty string`);
+            //No change, return a copy, anyway
+            return new Path(
+                [...this.arr],
+                this.str
+            );
         }
         if (part.indexOf(":") >= 0) {
             throw new Error(`":" not allowed in part, ${part}`);

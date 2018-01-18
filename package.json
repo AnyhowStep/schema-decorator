@@ -1,6 +1,6 @@
 {
   "name": "schema-decorator",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
