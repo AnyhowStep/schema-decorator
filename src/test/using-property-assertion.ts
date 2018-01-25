@@ -32,7 +32,7 @@ try {
     console.log(err.message);
 }
 
-//console.log(foo._value);          //Transpile-time Error
-console.log((foo as any)._value); //OK
+//console.log(foo["____hijacked-by-schema-decorator-value"]);          //Transpile-time Error
+console.log((foo as any)["____hijacked-by-schema-decorator-value"]); //OK
 
-console.log(Object.keys(foo)) //Prints `["_value"]`
+console.log(Object.keys(foo)) //Prints `["value"]`

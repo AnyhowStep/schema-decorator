@@ -97,20 +97,43 @@ export function cast<FromT, ToT> (canCastDelegate : AssertDelegate<FromT>, castD
 }
 export function assert<T> (assertDelegate : AssertDelegate<T>) {
     return (target : Object, propertyKey : string | symbol) : void => {
-        if ((target as any)[propertyKey] !== undefined) {
-            throw new Error(`Property ${propertyKey.toString()} must have a start value of undefined`);
-        }
-        delete (target as any)[propertyKey];
         const propertyName = (typeof propertyKey == "string") ?
             propertyKey : `Symbol(${propertyKey.toString()})`;
-        const privateName = `_${propertyName}`;
+        const privateName = `____hijacked-by-schema-decorator-${propertyName}`;
+
         Object.defineProperty(target, propertyKey, {
             get : function (this : any) {
                 return this[privateName];
             },
             set : function (this : any, mixed : any) {
-                this[privateName] = assertDelegate(propertyName, mixed);
+                //If we are here, we have the accessor defined on the class prototype,
+                //but not on the instance itself.
+                //We want to preserve the behaviour of Object.keys(),
+                //So, we need to define the accessor on the instance.
+
+                //Set the value on the instance first,
+                //We define a property that is not enumerable,
+                //So it does not show up in Object.keys().
+                //We don't want this property to show up because
+                //its name is `privateName`, not the "original" name.
+                Object.defineProperty(this, privateName, {
+                    value : assertDelegate(propertyName, mixed),
+                    writable : true,
+                    enumerable : false,
+                });
+                //We define the accessor that should be used from now on
+                //And will be enumerable with Object.keys(instance)
+                Object.defineProperty(this, propertyName, {
+                    get : function (this : any) {
+                        return this[privateName];
+                    },
+                    set : function (this : any, mixed : any) {
+                        this[privateName] = assertDelegate(propertyName, mixed);
+                    },
+                    enumerable : true,
+                });
             },
+            enumerable : true,
         });
     };
 }

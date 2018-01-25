@@ -37,50 +37,50 @@ for more examples.
 You may use the `@schema.assert()` decorator on properties of classes.
 The decorator will do the following when run:
 
-1. **REPLACE** the property with an accessor.
-1. **ADD** a property that has the same name as the accessor, prefixed with an underscore (`_`).
+1. **CREATE** an accessor on the class **prototype**, with the same name as the property.
+1. Generate a property name that has the same name as the property, prefixed with `____hijacked-by-schema-decorator-`.
+
+When the accessor on the **prototype** has its `set()` is called for the first time,
+it does the following:
+
+1. **CREATE** a *non-enumerable* property on the **instance**, with the generated prefixed name (`____hijacked-by-schema-decorator-`).
+1. Set the value of the *non-enumerable* property.
+1. **CREATE** an *enumerable* accessor on the **instance**, with the same name as the property.
+
+Subsequent writes will use the accessor on the **instance**.
+
+This is needed because when `Object.keys()` is called on the **instance**,
+if the enumerable accessor is on the **prototype**, it will not be returned
+in the array of keys.
+
+So, we need the accessor to be on the **instance**.
+
+But property decorators are called with the **prototype**, and not the instance!
+
+So, the accessor we put on the **prototype** will create the accessor on the instance for us.
+
+-----
 
 When the accessor's `set()` is called,
 
 1. The type assertion given to `@schema.assert()` is run.
-1. The `_property` value is set.
+1. The `____hijacked-by-schema-decorator-` prefixed property value is set.
 
 When the accessor's `get()` is called,
 
-1. The value of `_property` is returned.
+1. The value of the `____hijacked-by-schema-decorator-` prefixed property is returned.
 
 **WARNING:** Yes, this means that we're modifying the structure of the class
-during run-time. Yes, this is hacky. Yes, this will break `Object.keys()`.
+during run-time. Yes, this is hacky.
 
-For example,
+**UPDATE:**
 
-```
-import * as schema from "schema-decorator";
-function isString (name : string, mixed : any) : string {
-    if (typeof mixed == "string") {
-        return mixed;
-    } else {
-        throw new Error(`Expected ${name} to be a string, received ${mixed}`);
-    }
-}
-class Foo {
-    @schema.assert(isString)
-    value : string = "Hello";
-}
-const foo = new Foo();
+Prior to version `1.10.0`, the hack would cause `Object.keys()` to break.
 
-console.log(foo.value); //Prints "Hello"
+`toRaw()` had to be used to convert to a raw object that would work with `Object.keys()`
+and `JSON.stringify()`.
 
-foo.value = "World"; //OK
-foo.value = (3 as any);          //Run-time Error
-foo.value = (true as any);       //Run-time Error
-foo.value = (new Date() as any); //Run-time Error
-
-console.log(foo._value);          //Transpile-time Error
-console.log((foo as any)._value); //OK
-
-console.log(Object.keys(foo)) //Prints `["_value"]`
-```
+As of version `1.10.0`, `Object.keys()` will now return the keys, as expected.
 
 Look at `./src/test/using-property-assertion.ts` for an executable example.
 

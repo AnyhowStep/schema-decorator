@@ -37,6 +37,15 @@ export function test<C> (t : tape.Test, ctor : {new():C}, raw : any, expected? :
     const expectedStr = JSON.stringify(sortInternalKeys(expected));
     t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
 }
+export function testToJson<C> (t : tape.Test, instance : C, expected : any) {
+    const actualStr   = JSON.stringify(instance);
+    const expectedStr = JSON.stringify(expected);
+    t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
+}
+export function testKeys (t : tape.Test, instance : any, expected : string[]) {
+    const actualKeys = Object.keys(instance);
+    t.deepEqual(actualKeys, expected, `${actualKeys.join(",")} == ${expected.join(",")}`);
+}
 export function fail<C> (t : tape.Test, ctor : {new():C}, raw : any) {
     try {
         schema.toClass("raw", raw, ctor);

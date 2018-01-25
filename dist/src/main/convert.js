@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const myUtil = require("./util");
 const _ = require("underscore");
-exports.REGEX_IGNORE_VARIABLE_NAMES = /(?:^_)|(?:constructor)/;
+//Note, must match the prefix given by assert.ts assert<T>()
+exports.REGEX_IGNORE_VARIABLE_NAMES = /(?:^____hijacked-by-schema-decorator-)|(?:constructor)/;
 function keepVariableName(name) {
     return !exports.REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }

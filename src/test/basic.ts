@@ -456,3 +456,12 @@ tape("string-enumeration", (t) => {
     });
     t.end();
 });
+tape("leading-underscore-without-assertion", (t) => {
+    class Foo {
+        _var : number = 0;
+    }
+    myUtil.fail(t, Foo, {
+        _var : 3.1
+    });
+    t.end();
+});

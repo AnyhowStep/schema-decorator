@@ -2,7 +2,8 @@ import * as myUtil from "./util";
 import * as _ from "underscore";
 import {Assertion} from "./Assertion";
 
-export const REGEX_IGNORE_VARIABLE_NAMES = /(?:^_)|(?:constructor)/;
+//Note, must match the prefix given by assert.ts assert<T>()
+export const REGEX_IGNORE_VARIABLE_NAMES = /(?:^____hijacked-by-schema-decorator-)|(?:constructor)/;
 export function keepVariableName (name : string) {
     return !REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }

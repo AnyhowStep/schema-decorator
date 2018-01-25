@@ -5,6 +5,8 @@ import "./built-in";
 import "./inheritance";
 import "./LazyNested";
 import "./nested";
+import "./object-keys";
 import "./to-class";
+import "./to-json";
 import "./to-raw-ignore";
 import "./to-raw-already-raw";
