@@ -10,3 +10,4 @@ import "./to-class";
 import "./to-json";
 import "./to-raw-ignore";
 import "./to-raw-already-raw";
+import "./validate";

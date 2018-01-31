@@ -61,6 +61,17 @@ export function getAllAccessors<T extends Object> (obj : T) {
     return result;
 }
 
+export function getAccessor (obj : Object, name : PropertyKey) : AccessorDescriptor|undefined {
+    if (isBuiltInPrototype(obj)) {
+        return undefined;
+    }
+    const potentialResult = Object.getOwnPropertyDescriptor(obj, name);
+    if (potentialResult == undefined || !isAccessorDescriptor(potentialResult)) {
+        return getAccessor(Object.getPrototypeOf(obj), name);
+    }
+    return potentialResult;
+}
+
 export interface VariableDescriptor {
     configurable : boolean;
     enumerable : boolean;

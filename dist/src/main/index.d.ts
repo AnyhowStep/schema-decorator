@@ -9,3 +9,4 @@ export * from "./Assertion";
 export * from "./convert";
 export * from "./LazyNested";
 export * from "./util";
+export * from "./validate";

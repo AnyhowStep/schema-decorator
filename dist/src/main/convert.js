@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const myUtil = require("./util");
 const _ = require("underscore");
 //Note, must match the prefix given by assert.ts assert<T>()
-exports.REGEX_IGNORE_VARIABLE_NAMES = /(?:^____hijacked-by-schema-decorator-)|(?:constructor)/;
+exports.REGEX_IGNORE_VARIABLE_NAMES = /(?:^____hijacked-by-schema-decorator-)|(?:^constructor$)/;
 function keepVariableName(name) {
     return !exports.REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }
@@ -28,14 +28,6 @@ function toClass(name, raw, ctor) {
     }
     const accessors = myUtil.getAllAccessors(result).map(i => i.name);
     const keys = Object.keys(raw);
-    const rawAccessors = myUtil.getAllAccessors(raw).map(i => i.name);
-    for (let i = 0; i < keys.length; ++i) {
-        if (/^\_/.test(keys[i])) {
-            if (rawAccessors.indexOf(keys[i].substr(1)) >= 0) {
-                keys[i] = keys[i].substr(1);
-            }
-        }
-    }
     const extraKeys = _.difference(keys, accessors);
     if (extraKeys.length > 0) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);

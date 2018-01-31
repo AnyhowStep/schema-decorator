@@ -8,7 +8,7 @@ and quietly cause calling code to break (e.g. fields are removed/added/changed).
 
 # Goals
 
-We must validate/sanitize the following
+We must validate/sanitize the following,
 
 + Route parameters
   (e.g. Validate that `id` is a natural number in `GET /posts/${id}`)
@@ -18,6 +18,12 @@ We must validate/sanitize the following
   (e.g. Validate that `title` is a non-empty string in `POST /posts`)
 + JSON responses
   (e.g. Validate that `title` is a non-empty string in `GET /posts/${id}`)
+
+We may also do the following,
+
++ Validate data from "schemaless" databases.
+  If a developer accidentally introduces invalid data directly, this can
+  be caught if you use `schema-decorator` to check the type during run-time.
 
 # Installation
 
@@ -35,52 +41,17 @@ for more examples.
 ## Property Assertions
 
 You may use the `@schema.assert()` decorator on properties of classes.
-The decorator will do the following when run:
-
-1. **CREATE** an accessor on the class **prototype**, with the same name as the property.
-1. Generate a property name that has the same name as the property, prefixed with `____hijacked-by-schema-decorator-`.
-
-When the accessor on the **prototype** has its `set()` is called for the first time,
-it does the following:
-
-1. **CREATE** a *non-enumerable* property on the **instance**, with the generated prefixed name (`____hijacked-by-schema-decorator-`).
-1. Set the value of the *non-enumerable* property.
-1. **CREATE** an *enumerable* accessor on the **instance**, with the same name as the property.
-
-Subsequent writes will use the accessor on the **instance**.
-
-This is needed because when `Object.keys()` is called on the **instance**,
-if the enumerable accessor is on the **prototype**, it will not be returned
-in the array of keys.
-
-So, we need the accessor to be on the **instance**.
-
-But property decorators are called with the **prototype**, and not the instance!
-
-So, the accessor we put on the **prototype** will create the accessor on the instance for us.
-
------
-
-When the accessor's `set()` is called,
-
-1. The type assertion given to `@schema.assert()` is run.
-1. The `____hijacked-by-schema-decorator-` prefixed property value is set.
-
-When the accessor's `get()` is called,
-
-1. The value of the `____hijacked-by-schema-decorator-` prefixed property is returned.
-
-**WARNING:** Yes, this means that we're modifying the structure of the class
-during run-time. Yes, this is hacky.
 
 **UPDATE:**
 
-Prior to version `1.10.0`, the hack would cause `Object.keys()` to break.
+Prior to version `1.10.0`, the hack would cause `Object.keys()` and `JSON.stringify()` to break.
 
 `toRaw()` had to be used to convert to a raw object that would work with `Object.keys()`
 and `JSON.stringify()`.
 
 As of version `1.10.0`, `Object.keys()` will now return the keys, as expected.
+
+As of version `1.10.0`, `JSON.stringify()` will now serialize as expected.
 
 Look at `./src/test/using-property-assertion.ts` for an executable example.
 
@@ -99,11 +70,11 @@ An `AssertDelegate` should:
 1. Return the unmodified `mixed` if it is the right data type
 1. Throw an error with `name`, and relevant descriptive information otherwise
 
-It is *bad behaviour* to modify `mixed` and return it or return something else entirely.
+It is  generally *bad behaviour* to modify `mixed` and return it or return something else entirely.
 
 -----
 
-The only exception is `schema.array()` which creates an `AssertDelegate<T[]>` from `AssertDelegate<T>`.
+One of the few exceptions is `schema.array()` which creates an `AssertDelegate<T[]>` from `AssertDelegate<T>`.
 
 If at least one element returned by `AssertDelegate<T>` is not the original element,
 the whole array is copied and an array with the new elements is returned.
@@ -147,6 +118,9 @@ The following restrictions must be met to convert to a class instance or raw obj
 
 1. There must be a public no-arg constructor. (i.e. `public constructor() {/*init*/}`)
 1. All class fields must have the `@schema.assert()` decorator.
+
+**UPDATE:** As of `1.10.0`, you do not need to call `toRaw()` before
+calling `Object.keys()` or `JSON.stringify()` anymore!
 
 If either is not met, you will receive a transpile-time/run-time error.
 
@@ -280,6 +254,47 @@ The following are non-goals:
 
   You may use the `schema.any()` `AssertDelegate` to remove type checks for certain fields,
   but you should be very careful and I do not recommend it.
+
+# How it Works
+
+The decorator will do the following when run:
+
+1. `const propertyName = <name of property>`
+1. ``const privateName  = `____hijacked-by-schema-decorator-${propertyName}` ``
+1. **CREATE** an accessor on the class **prototype**, with the name `propertyName`.
+
+When the accessor on the **prototype** has its `set()` is called for the first time,
+it does the following:
+
+1. **CREATE** a *non-enumerable* property on the **instance**, with the name `privateName`.
+1. Set the value of `privateName`.
+1. **CREATE** an *enumerable* accessor on the **instance**, with the name `propertyName`.
+
+Subsequent writes will use the accessor on the **instance**.
+
+This is needed because when `Object.keys()` is called on the **instance**,
+if the enumerable accessor is on the **prototype**, it will not be returned
+in the array of keys.
+
+So, we need the accessor to be on the **instance**.
+
+But property decorators are called with the **prototype**, and not the instance!
+
+So, the accessor we put on the **prototype** will create the accessor on the instance for us.
+
+-----
+
+When the accessor's `set()` is called,
+
+1. The type assertion given to `@schema.assert()` is run.
+1. The `privateName` property value is set.
+
+When the accessor's `get()` is called,
+
+1. The value of the the `privateName` property is returned.
+
+**WARNING:** Yes, this means that we're modifying the structure of the class
+during run-time. Yes, this is hacky.
 
 # Tests
 

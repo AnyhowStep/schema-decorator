@@ -23,15 +23,16 @@ tape("API", async (t) => {
         @schema.assert(validation.String.assertNonEmpty)
         title : string = "-";
     }
+    //https://github.com/typicode/jsonplaceholder/issues/60
     class Response {
-        @schema.assert(validation.Number.assertNaturalNumber)
-        userId : number = 1;
-        @schema.assert(validation.Number.assertNaturalNumber)
-        id : number = 1;
-        @schema.assert(validation.String.assertNonEmpty)
-        title : string = "-";
-        @schema.assert(validation.String.assertNonEmpty)
-        body : string = "-";
+        @schema.assert(schema.maybe(validation.Number.assertNaturalNumber))
+        userId? : null|number;
+        @schema.assert(schema.maybe(validation.Number.assertNaturalNumber))
+        id? : null|number;
+        @schema.assert(schema.maybe(validation.String.assertNonEmpty))
+        title? : null|string;
+        @schema.assert(schema.maybe(validation.String.assertNonEmpty))
+        body? : null|string;
     }
     class Comment {
         @schema.assert(validation.Number.assertNaturalNumber)

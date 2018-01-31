@@ -41,3 +41,77 @@ tape("inheritance", (t) => {
     });
     t.end();
 });
+tape("tighter-restriction-in-derived", (t) => {
+    /*
+        Here, we see that we can inherit the restrictions of `Base`
+        and also allow only a subset the values `Base` allows
+    */
+    class Base {
+        //(-infty, +infty)
+        @schema.assert(schema.integer())
+        var : number = 0;
+    }
+    class Derived extends Base {
+        //[0, +infty)
+        @schema.assert(validation.Number.assertNonNegative)
+        var : number = 0;
+    }
+    myUtil.test(t, Base, {
+        var : 3,
+    });
+    myUtil.test(t, Base, {
+        var : 0,
+    });
+    myUtil.test(t, Base, {
+        var : -3,
+    });
+    myUtil.test(t, Derived, {
+        var : 3,
+    });
+    myUtil.fail(t, Derived, {
+        var : -3,
+    });
+    myUtil.fail(t, Derived, {
+        var : 3.141,
+    });
+    t.end();
+});
+tape("overlapping-restriction-in-derived", (t) => {
+    /*
+        Over here, we see that the two restrictions in
+        `Base` and `Derived` overlap and only allow
+        the value `0` (zero).
+
+        Trying to set any other value on `Derived` will fail.
+    */
+    class Base {
+        //>= 0
+        @schema.assert(schema.naturalNumber())
+        var : number = 0;
+    }
+    class Derived extends Base {
+        //<= 0
+        @schema.assert(schema.and(
+            (name, mixed) => {
+                return validation.Number.assertLessThanOrEqual(name, mixed, 0);
+            }
+        ))
+        var : number = 0;
+    }
+    myUtil.test(t, Base, {
+        var : 3,
+    });
+    myUtil.test(t, Base, {
+        var : 0,
+    });
+    myUtil.fail(t, Base, {
+        var : -3,
+    });
+    myUtil.test(t, Derived, {
+        var : 0,
+    });
+    myUtil.fail(t, Derived, {
+        var : -3,
+    });
+    t.end();
+});

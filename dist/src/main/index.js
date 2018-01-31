@@ -11,4 +11,5 @@ __export(require("./assert"));
 __export(require("./convert"));
 __export(require("./LazyNested"));
 __export(require("./util"));
+__export(require("./validate"));
 //# sourceMappingURL=index.js.map

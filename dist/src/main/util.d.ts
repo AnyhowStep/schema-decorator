@@ -11,6 +11,7 @@ export interface AccessorItem<T extends Object> {
 export declare function isAccessorDescriptor(descriptor: PropertyDescriptor | null | undefined): descriptor is AccessorDescriptor;
 export declare function getOwnAccessors<T extends Object>(obj: T): AccessorItem<T>[];
 export declare function getAllAccessors<T extends Object>(obj: T): AccessorItem<T>[];
+export declare function getAccessor(obj: Object, name: PropertyKey): AccessorDescriptor | undefined;
 export interface VariableDescriptor {
     configurable: boolean;
     enumerable: boolean;

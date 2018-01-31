@@ -47,6 +47,17 @@ function getAllAccessors(obj) {
     return result;
 }
 exports.getAllAccessors = getAllAccessors;
+function getAccessor(obj, name) {
+    if (isBuiltInPrototype(obj)) {
+        return undefined;
+    }
+    const potentialResult = Object.getOwnPropertyDescriptor(obj, name);
+    if (potentialResult == undefined || !isAccessorDescriptor(potentialResult)) {
+        return getAccessor(Object.getPrototypeOf(obj), name);
+    }
+    return potentialResult;
+}
+exports.getAccessor = getAccessor;
 function isVariableDescriptor(descriptor) {
     if (descriptor == null) {
         return false;
