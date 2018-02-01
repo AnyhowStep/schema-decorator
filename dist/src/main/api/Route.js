@@ -152,6 +152,18 @@ class Route {
                 func: responseT,
             } }));
     }
+    paramAssertion(assertion) {
+        return new Route(Object.assign({}, this.args, { paramT: assertion }));
+    }
+    queryAssertion(assertion) {
+        return new Route(Object.assign({}, this.args, { queryT: assertion }));
+    }
+    bodyAssertion(assertion) {
+        return new Route(Object.assign({}, this.args, { bodyT: assertion }));
+    }
+    responseAssertion(assertion) {
+        return new Route(Object.assign({}, this.args, { responseT: assertion }));
+    }
     requireAccessToken() {
         return new Route(Object.assign({}, this.args));
     }

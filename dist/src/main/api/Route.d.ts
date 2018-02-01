@@ -55,6 +55,10 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     queryDelegate<Q>(queryT: AssertDelegate<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
     bodyDelegate<B>(bodyT: AssertDelegate<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
     responseDelegate<R>(responseT: AssertDelegate<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
+    paramAssertion<P>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    queryAssertion<Q>(assertion: Assertion<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
+    bodyAssertion<B>(assertion: Assertion<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
+    responseAssertion<R>(assertion: Assertion<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
     requireAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType, MethodT>;
     optionalAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType | undefined, MethodT>;
     denyAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, undefined, MethodT>;

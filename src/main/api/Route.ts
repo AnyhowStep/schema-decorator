@@ -286,6 +286,30 @@ export class Route<
             },
         });
     }
+    public paramAssertion<P> (assertion : Assertion<P>) {
+        return new Route({
+            ...this.args,
+            paramT : assertion,
+        });
+    }
+    public queryAssertion<Q> (assertion : Assertion<Q>) {
+        return new Route({
+            ...this.args,
+            queryT : assertion,
+        });
+    }
+    public bodyAssertion<B> (assertion : Assertion<B>) {
+        return new Route({
+            ...this.args,
+            bodyT : assertion,
+        });
+    }
+    public responseAssertion<R> (assertion : Assertion<R>) {
+        return new Route({
+            ...this.args,
+            responseT : assertion,
+        });
+    }
     public requireAccessToken () : Route<
         RawParamT,
         ParamT,
