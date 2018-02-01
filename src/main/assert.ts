@@ -1,6 +1,7 @@
 import * as convert from "./convert";
 import * as validation from "@anyhowstep/data-validation";
 import {AssertDelegate} from "./AssertDelegate";
+import {Assertion} from "./Assertion";
 import * as myUtil from "./util";
 
 export type CastDelegate<FromT, ToT> = (from : FromT) => ToT;
@@ -11,6 +12,13 @@ export function nested<T> (ctor : Constructor<T>) : AssertDelegate<T> {
         const result = convert.toClass(name, mixed, ctor);
         return result;
     };
+}
+export function assertion<T> (assertion : Assertion<T>) : AssertDelegate<T> {
+    if (assertion.isCtor) {
+        return nested(assertion.func);
+    } else {
+        return assertion.func;
+    }
 }
 function toTypeStr (arr : any[]) : string {
     const mapped = arr.map((i) => {

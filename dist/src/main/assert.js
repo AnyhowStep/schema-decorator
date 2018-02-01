@@ -10,6 +10,15 @@ function nested(ctor) {
     };
 }
 exports.nested = nested;
+function assertion(assertion) {
+    if (assertion.isCtor) {
+        return nested(assertion.func);
+    }
+    else {
+        return assertion.func;
+    }
+}
+exports.assertion = assertion;
 function toTypeStr(arr) {
     const mapped = arr.map((i) => {
         if (i === null) {

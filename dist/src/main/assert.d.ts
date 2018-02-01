@@ -1,9 +1,11 @@
 import { AssertDelegate } from "./AssertDelegate";
+import { Assertion } from "./Assertion";
 export declare type CastDelegate<FromT, ToT> = (from: FromT) => ToT;
 export declare type Constructor<T> = {
     new (): T;
 };
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;
+export declare function assertion<T>(assertion: Assertion<T>): AssertDelegate<T>;
 export declare function oneOf<T0 extends string>(...arr: (T0)[]): AssertDelegate<T0>;
 export declare function oneOf<T0 extends number>(...arr: (T0)[]): AssertDelegate<T0>;
 export declare function oneOf<T0 extends boolean>(...arr: (T0)[]): AssertDelegate<T0>;
