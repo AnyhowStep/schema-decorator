@@ -8,6 +8,21 @@ function keepVariableName(name) {
     return !exports.REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }
 exports.keepVariableName = keepVariableName;
+const IGNORE_EXTRA_VARIABLES = Symbol();
+//Class decorator, when this is on a class,
+//toClass() will ignore extra variables on the raw object
+function ignoreExtraVariables(ctor) {
+    return _a = class extends ctor {
+            constructor() {
+                super(...arguments);
+                this[_b] = true;
+            }
+        },
+        _b = IGNORE_EXTRA_VARIABLES,
+        _a;
+    var _b, _a;
+}
+exports.ignoreExtraVariables = ignoreExtraVariables;
 function toClass(name, raw, ctor) {
     if (raw instanceof ctor) {
         return raw;
@@ -29,11 +44,11 @@ function toClass(name, raw, ctor) {
     const accessors = myUtil.getAllAccessors(result).map(i => i.name);
     const keys = Object.keys(raw);
     const extraKeys = _.difference(keys, accessors);
-    if (extraKeys.length > 0) {
+    if (extraKeys.length > 0 && result[IGNORE_EXTRA_VARIABLES] !== true) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);
     }
     try {
-        for (let k of keys) {
+        for (let k of accessors) {
             result[k] = raw[k];
         }
         const missingKeys = _.difference(accessors, keys);
