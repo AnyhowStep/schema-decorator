@@ -7,6 +7,17 @@ export const REGEX_IGNORE_VARIABLE_NAMES = /(?:^____hijacked-by-schema-decorator
 export function keepVariableName (name : string) {
     return !REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }
+
+const IGNORE_EXTRA_VARIABLES = Symbol();
+
+//Class decorator, when this is on a class,
+//toClass() will ignore extra variables on the raw object
+export function ignoreExtraVariables<CtorT extends {new(...args:any[]):{}}> (ctor : CtorT) {
+    return class extends ctor {
+        [IGNORE_EXTRA_VARIABLES] = true;
+    };
+}
+
 export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
     if (raw instanceof ctor) {
         return raw;
@@ -29,12 +40,12 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
 
     const keys = Object.keys(raw);
     const extraKeys = _.difference(keys, accessors);
-    if (extraKeys.length > 0) {
+    if (extraKeys.length > 0 && (result as any)[IGNORE_EXTRA_VARIABLES] !== true) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);
     }
 
     try {
-        for (let k of keys) {
+        for (let k of accessors) {
             (result as any)[k] = raw[k];
         }
 
