@@ -1,6 +1,7 @@
 import { Assertion } from "./Assertion";
 export declare const REGEX_IGNORE_VARIABLE_NAMES: RegExp;
 export declare function keepVariableName(name: string): boolean;
+export declare const IGNORE_EXTRA_VARIABLES: unique symbol;
 export declare function ignoreExtraVariables<CtorT extends {
     new (...args: any[]): {};
 }>(ctor: CtorT): {

@@ -8,7 +8,7 @@ export function keepVariableName (name : string) {
     return !REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }
 
-const IGNORE_EXTRA_VARIABLES = Symbol();
+export const IGNORE_EXTRA_VARIABLES = Symbol();
 
 //Class decorator, when this is on a class,
 //toClass() will ignore extra variables on the raw object
