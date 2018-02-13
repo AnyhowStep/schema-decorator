@@ -12,14 +12,19 @@ exports.IGNORE_EXTRA_VARIABLES = Symbol();
 //Class decorator, when this is on a class,
 //toClass() will ignore extra variables on the raw object
 function ignoreExtraVariables(ctor) {
-    return _a = class extends ctor {
+    const result = (_a = class extends ctor {
             constructor() {
                 super(...arguments);
                 this[_b] = true;
             }
         },
         _b = exports.IGNORE_EXTRA_VARIABLES,
-        _a;
+        _a);
+    //A hack to preserve the original name and also mark that it has been decorated
+    Object.defineProperty(result, "name", {
+        value: `@ignoreExtraVariables(${ctor.name})`,
+    });
+    return result;
     var _b, _a;
 }
 exports.ignoreExtraVariables = ignoreExtraVariables;

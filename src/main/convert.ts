@@ -13,9 +13,14 @@ export const IGNORE_EXTRA_VARIABLES = Symbol();
 //Class decorator, when this is on a class,
 //toClass() will ignore extra variables on the raw object
 export function ignoreExtraVariables<CtorT extends {new(...args:any[]):{}}> (ctor : CtorT) {
-    return class extends ctor {
+    const result = class extends ctor {
         [IGNORE_EXTRA_VARIABLES] = true;
     };
+    //A hack to preserve the original name and also mark that it has been decorated
+    Object.defineProperty(result, "name", {
+        value : `@ignoreExtraVariables(${ctor.name})`,
+    });
+    return result;
 }
 
 export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
