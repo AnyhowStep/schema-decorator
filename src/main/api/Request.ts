@@ -18,6 +18,7 @@ export interface RequestArgs<P, Q, B, A,
     readonly query : Q,
     readonly body  : B,
     readonly accessTokenType : A,
+    readonly headers : { [key : string] : undefined|string|string[] },
 
     readonly route : Route<
         RawParamT,
@@ -66,6 +67,7 @@ export class Request<P, Q, B, A,
             query : new Empty(),
             body  : new Empty(),
             accessTokenType  : undefined,
+            headers : {},
             route : route,
             api   : api,
         });
@@ -168,6 +170,22 @@ export class Request<P, Q, B, A,
             accessTokenType : n,
         });
     }
+    public setHeader (key : string, value : undefined|string|(string[])) : Request<P, Q, B, A,
+        RawParamT,
+        ParamT,
+        QueryT,
+        BodyT,
+        ResponseT,
+        AccessTokenT
+    > {
+        return new Request({
+            ...this.args,
+            headers : {
+                ...this.args.headers,
+                [key] : value,
+            }
+        });
+    }
     public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
         RawParamT,
         ParamT,
@@ -205,8 +223,10 @@ export class Request<P, Q, B, A,
         };
 
         const headers : {
-            [key : string] : string|string[]
-        } = {};
+            [key : string] : undefined|string|(string[])
+        } = {
+            ...this.args.headers,
+        };
         const config : axios.AxiosRequestConfig = {
             method : route.getMethod(),
             url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),

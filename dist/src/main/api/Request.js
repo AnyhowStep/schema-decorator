@@ -21,6 +21,7 @@ class Request {
             query: new Route_1.Empty(),
             body: new Route_1.Empty(),
             accessTokenType: undefined,
+            headers: {},
             route: route,
             api: api,
         });
@@ -37,6 +38,9 @@ class Request {
     setAccessToken(n) {
         return new Request(Object.assign({}, this.args, { accessTokenType: n }));
     }
+    setHeader(key, value) {
+        return new Request(Object.assign({}, this.args, { headers: Object.assign({}, this.args.headers, { [key]: value }) }));
+    }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
             const route = this.args.route;
@@ -50,7 +54,7 @@ class Request {
                     return convert.anyToRaw(name, v);
                 }
             };
-            const headers = {};
+            const headers = Object.assign({}, this.args.headers);
             const config = {
                 method: route.getMethod(),
                 url: r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),

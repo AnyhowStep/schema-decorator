@@ -8,6 +8,9 @@ export interface RequestArgs<P, Q, B, A, RawParamT, ParamT extends Param<RawPara
     readonly query: Q;
     readonly body: B;
     readonly accessTokenType: A;
+    readonly headers: {
+        [key: string]: undefined | string | string[];
+    };
     readonly route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>;
     readonly api: Api;
 }
@@ -19,6 +22,7 @@ export declare class Request<P, Q, B, A, RawParamT, ParamT extends Param<RawPara
     setQuery<NewT extends QueryT>(this: Request<P, Empty, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<P, NewT, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     setBody<NewT extends BodyT>(this: Request<P, Q, Empty, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<P, Q, NewT, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     setAccessToken<NewT extends AccessTokenT>(this: Request<P, Q, B, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<P, Q, B, NewT, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
+    setHeader(key: string, value: undefined | string | (string[])): Request<P, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     send(this: Request<ParamT, QueryT, BodyT, AccessTokenT, RawParamT, ParamT, QueryT, BodyT, Empty, AccessTokenT>): Promise<axios.AxiosResponse<any>>;
     send(this: Request<ParamT, QueryT, BodyT, AccessTokenT, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>): Promise<axios.AxiosResponse<ResponseT>>;
 }
