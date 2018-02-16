@@ -1,13 +1,11 @@
 import { Assertion } from "./Assertion";
 export declare const REGEX_IGNORE_VARIABLE_NAMES: RegExp;
 export declare function keepVariableName(name: string): boolean;
-export declare const IGNORE_EXTRA_VARIABLES: unique symbol;
+export declare const IGNORE_EXTRA_VARIABLES = "____hijacked-by-schema-decorator-IGNORE_EXTRA_VARIABLES";
 export declare function ignoreExtraVariables<CtorT extends {
     new (...args: any[]): {};
 }>(ctor: CtorT): {
-    new (...args: any[]): {
-        [IGNORE_EXTRA_VARIABLES]: boolean;
-    };
+    new (...args: any[]): {};
 } & CtorT;
 export declare function toClass<T>(name: string, raw: any, ctor: {
     new (): T;

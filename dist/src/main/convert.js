@@ -8,24 +8,23 @@ function keepVariableName(name) {
     return !exports.REGEX_IGNORE_VARIABLE_NAMES.test(name);
 }
 exports.keepVariableName = keepVariableName;
-exports.IGNORE_EXTRA_VARIABLES = Symbol();
+//Originally used Symbol but when projects
+//start having different versions of this package,
+//it all breaks down.
+exports.IGNORE_EXTRA_VARIABLES = `____hijacked-by-schema-decorator-IGNORE_EXTRA_VARIABLES`;
 //Class decorator, when this is on a class,
 //toClass() will ignore extra variables on the raw object
 function ignoreExtraVariables(ctor) {
-    const result = (_a = class extends ctor {
-            constructor() {
-                super(...arguments);
-                this[_b] = true;
-            }
-        },
-        _b = exports.IGNORE_EXTRA_VARIABLES,
-        _a);
+    const result = class extends ctor {
+    };
     //A hack to preserve the original name and also mark that it has been decorated
     Object.defineProperty(result, "name", {
         value: `@ignoreExtraVariables(${ctor.name})`,
     });
+    /*Object.defineProperty(result, IGNORE_EXTRA_VARIABLES, {
+        value : true,
+    });*/
     return result;
-    var _b, _a;
 }
 exports.ignoreExtraVariables = ignoreExtraVariables;
 function toClass(name, raw, ctor) {
@@ -49,7 +48,8 @@ function toClass(name, raw, ctor) {
     const accessors = myUtil.getAllAccessors(result).map(i => i.name);
     const keys = Object.keys(raw);
     const extraKeys = _.difference(keys, accessors);
-    if (extraKeys.length > 0 && result[exports.IGNORE_EXTRA_VARIABLES] !== true) {
+    //UGLY HACK
+    if (extraKeys.length > 0 && !ctor.name.startsWith("@ignoreExtraVariables(")) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);
     }
     try {
