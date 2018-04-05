@@ -10,9 +10,19 @@ class Api {
             baseURL: `${config.domain}${root}`,
             responseType: "json"
         });
+        this.config = config;
     }
     request(route) {
-        return Request_1.Request.Create(this, route);
+        let result = Request_1.Request.Create(this, route);
+        if (this.config.onInjectHeaders != undefined) {
+            const headers = this.config.onInjectHeaders(route);
+            for (let k in headers) {
+                if (headers.hasOwnProperty(k)) {
+                    result = result.setHeader(k, headers[k]);
+                }
+            }
+        }
+        return result;
     }
 }
 exports.Api = Api;

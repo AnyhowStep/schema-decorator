@@ -4,13 +4,19 @@ import {Request} from "./Request";
 import {AccessTokenType} from "./AccessToken";
 import {Param} from "./Param";
 
+export type InjectHeadersDelegate = (route : Route<any, any, any, any, any, any, any>) => {
+    [key : string] : undefined|string|(string[])
+};
+
 export interface ApiConfiguration {
     domain : string,
-    root? : string
+    root? : string,
+    onInjectHeaders? : InjectHeadersDelegate,
 }
 
 export class Api {
     public readonly instance : axios.AxiosInstance;
+    private readonly config : ApiConfiguration;
 
     public constructor (config : ApiConfiguration) {
         const root = (config.root != null) ?
@@ -20,6 +26,7 @@ export class Api {
             baseURL: `${config.domain}${root}`,
             responseType: "json"
         });
+        this.config = config;
     }
 
     request<
@@ -45,6 +52,16 @@ export class Api {
         ResponseT,
         AccessTokenT
     > {
-        return Request.Create(this, route);
+        let result = Request.Create(this, route);
+        if (this.config.onInjectHeaders != undefined) {
+            const headers = this.config.onInjectHeaders(route);
+            for (let k in headers) {
+                if (headers.hasOwnProperty(k)) {
+                    result = result.setHeader(k, headers[k]);
+                }
+            }
+        }
+        return result;
+
     }
 }
