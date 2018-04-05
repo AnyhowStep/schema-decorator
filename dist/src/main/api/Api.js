@@ -22,6 +22,9 @@ class Api {
                 }
             }
         }
+        if (this.config.onTransformBody != undefined) {
+            result = result.setOnTransformBody(this.config.onTransformBody);
+        }
         return result;
     }
 }

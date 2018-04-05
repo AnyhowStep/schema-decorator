@@ -1,6 +1,6 @@
 import * as axios from "axios";
 import {Route, MethodLiteral, Empty} from "./Route";
-import {Request} from "./Request";
+import {Request, TransformBodyDelegate} from "./Request";
 import {AccessTokenType} from "./AccessToken";
 import {Param} from "./Param";
 
@@ -12,6 +12,7 @@ export interface ApiConfiguration {
     domain : string,
     root? : string,
     onInjectHeaders? : InjectHeadersDelegate,
+    onTransformBody? : TransformBodyDelegate,
 }
 
 export class Api {
@@ -60,6 +61,9 @@ export class Api {
                     result = result.setHeader(k, headers[k]);
                 }
             }
+        }
+        if (this.config.onTransformBody != undefined) {
+            result = result.setOnTransformBody(this.config.onTransformBody);
         }
         return result;
 

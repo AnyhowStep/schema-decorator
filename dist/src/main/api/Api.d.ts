@@ -1,6 +1,6 @@
 import * as axios from "axios";
 import { Route, MethodLiteral, Empty } from "./Route";
-import { Request } from "./Request";
+import { Request, TransformBodyDelegate } from "./Request";
 import { AccessTokenType } from "./AccessToken";
 import { Param } from "./Param";
 export declare type InjectHeadersDelegate = (route: Route<any, any, any, any, any, any, any>) => {
@@ -10,6 +10,7 @@ export interface ApiConfiguration {
     domain: string;
     root?: string;
     onInjectHeaders?: InjectHeadersDelegate;
+    onTransformBody?: TransformBodyDelegate;
 }
 export declare class Api {
     readonly instance: axios.AxiosInstance;

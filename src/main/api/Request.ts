@@ -6,6 +6,8 @@ import * as convert from "../convert";
 import {Assertion} from "../Assertion";
 import {Param} from "./Param";
 
+export type TransformBodyDelegate = (rawBody : any) => any;
+
 export interface RequestArgs<P, Q, B, A,
     RawParamT,
     ParamT extends Param<RawParamT>,
@@ -19,6 +21,7 @@ export interface RequestArgs<P, Q, B, A,
     readonly body  : B,
     readonly accessTokenType : A,
     readonly headers : { [key : string] : undefined|string|string[] },
+    readonly onTransformBody? : TransformBodyDelegate,
 
     readonly route : Route<
         RawParamT,
@@ -186,6 +189,12 @@ export class Request<P, Q, B, A,
             }
         });
     }
+    public setOnTransformBody (onTransformBody : TransformBodyDelegate) {
+        return new Request({
+            ...this.args,
+            onTransformBody : onTransformBody,
+        });
+    }
     public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
         RawParamT,
         ParamT,
@@ -227,13 +236,17 @@ export class Request<P, Q, B, A,
         } = {
             ...this.args.headers,
         };
+        let rawBody = (this.args.body instanceof Empty) ?
+            undefined :
+            toRaw("body", this.args.body, r.bodyT);
+        if (this.args.onTransformBody != undefined && rawBody != undefined) {
+            rawBody = this.args.onTransformBody(rawBody);
+        }
         const config : axios.AxiosRequestConfig = {
             method : route.getMethod(),
             url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),
             params : toRaw("query", this.args.query, r.queryT),
-            data : (this.args.body instanceof Empty) ?
-                undefined :
-                toRaw("body", this.args.body, r.bodyT),
+            data : rawBody,
             headers : headers,
         };
         const accessTokenType : AccessTokenType|undefined = this.args.accessTokenType;

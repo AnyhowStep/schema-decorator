@@ -41,6 +41,9 @@ class Request {
     setHeader(key, value) {
         return new Request(Object.assign({}, this.args, { headers: Object.assign({}, this.args.headers, { [key]: value }) }));
     }
+    setOnTransformBody(onTransformBody) {
+        return new Request(Object.assign({}, this.args, { onTransformBody: onTransformBody }));
+    }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
             const route = this.args.route;
@@ -55,13 +58,17 @@ class Request {
                 }
             };
             const headers = Object.assign({}, this.args.headers);
+            let rawBody = (this.args.body instanceof Route_1.Empty) ?
+                undefined :
+                toRaw("body", this.args.body, r.bodyT);
+            if (this.args.onTransformBody != undefined && rawBody != undefined) {
+                rawBody = this.args.onTransformBody(rawBody);
+            }
             const config = {
                 method: route.getMethod(),
                 url: r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),
                 params: toRaw("query", this.args.query, r.queryT),
-                data: (this.args.body instanceof Route_1.Empty) ?
-                    undefined :
-                    toRaw("body", this.args.body, r.bodyT),
+                data: rawBody,
                 headers: headers,
             };
             const accessTokenType = this.args.accessTokenType;
