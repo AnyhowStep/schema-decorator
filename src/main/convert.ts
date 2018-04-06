@@ -148,3 +148,8 @@ export function toClassOrAssert<T> (name : string, raw : any, assertion : Assert
         return assertion.func(name, raw);
     }
 }
+
+//Give two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
+export function toClassExact<T> (name : string, raw : any, ctor : {new():T}) : T {
+    return toClass(name, toRaw(name, raw), ctor);
+}
