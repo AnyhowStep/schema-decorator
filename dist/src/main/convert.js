@@ -150,7 +150,7 @@ function toClassExact(name, raw, ctor) {
         return raw;
     }
     else {
-        return toClass(name, toRaw(name, raw), ctor);
+        return toClass(name, anyToRaw(name, raw), ctor);
     }
 }
 exports.toClassExact = toClassExact;

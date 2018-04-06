@@ -25,5 +25,19 @@ tape("to-class-exact", (t) => {
     t.assert(!(bExact instanceof Derived), "bExact is NOT derived");
     t.assert(bExact instanceof Base, "bExact is base");
 
+    const b2 = schema.toClassExact("b2", {
+        var : 10,
+        someValueInDerived : 20,
+    }, Base);
+    t.assert(!(b2 instanceof Derived), "b2 is NOT derived");
+    t.assert(b2 instanceof Base, "b2 is base");
+
+    const d2 = schema.toClassExact("d2", {
+        var : 10,
+        someValueInDerived : 20,
+    }, Derived);
+    t.assert(d2 instanceof Derived, "d2 is derived");
+    t.assert(d2 instanceof Base, "d2 is base");
+
     t.end();
 });
