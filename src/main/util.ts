@@ -120,3 +120,13 @@ export function getAllVariables (obj : Object) {
     }
     return result;
 }
+
+export function isExactInstanceOf<T> (mixed : any, ctor : {new(...args:any[]):T}) : mixed is T {
+    if (mixed == undefined) {
+        return false;
+    }
+    if (!(mixed instanceof Object)) {
+        return false;
+    }
+    return (Object.getPrototypeOf(mixed).constructor == ctor);
+}

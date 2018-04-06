@@ -95,4 +95,14 @@ function getAllVariables(obj) {
     return result;
 }
 exports.getAllVariables = getAllVariables;
+function isExactInstanceOf(mixed, ctor) {
+    if (mixed == undefined) {
+        return false;
+    }
+    if (!(mixed instanceof Object)) {
+        return false;
+    }
+    return (Object.getPrototypeOf(mixed).constructor == ctor);
+}
+exports.isExactInstanceOf = isExactInstanceOf;
 //# sourceMappingURL=util.js.map

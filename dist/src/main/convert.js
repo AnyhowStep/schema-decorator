@@ -146,7 +146,12 @@ function toClassOrAssert(name, raw, assertion) {
 exports.toClassOrAssert = toClassOrAssert;
 //Give two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
 function toClassExact(name, raw, ctor) {
-    return toClass(name, toRaw(name, raw), ctor);
+    if (myUtil.isExactInstanceOf(raw, ctor)) {
+        return raw;
+    }
+    else {
+        return toClass(name, toRaw(name, raw), ctor);
+    }
 }
 exports.toClassExact = toClassExact;
 //# sourceMappingURL=convert.js.map

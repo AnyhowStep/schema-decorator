@@ -25,3 +25,6 @@ export interface VariableItem {
 export declare function isVariableDescriptor(descriptor: PropertyDescriptor | null | undefined): descriptor is VariableDescriptor;
 export declare function getOwnVariables(obj: Object): VariableItem[];
 export declare function getAllVariables(obj: Object): VariableItem[];
+export declare function isExactInstanceOf<T>(mixed: any, ctor: {
+    new (...args: any[]): T;
+}): mixed is T;
