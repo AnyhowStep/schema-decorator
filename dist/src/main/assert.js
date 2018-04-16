@@ -10,6 +10,13 @@ function nested(ctor) {
     };
 }
 exports.nested = nested;
+function nestedExact(ctor) {
+    return (name, mixed) => {
+        const result = convert.toClassExact(name, mixed, ctor);
+        return result;
+    };
+}
+exports.nestedExact = nestedExact;
 function assertion(assertion) {
     if (assertion.isCtor) {
         return nested(assertion.func);

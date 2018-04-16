@@ -13,6 +13,12 @@ export function nested<T> (ctor : Constructor<T>) : AssertDelegate<T> {
         return result;
     };
 }
+export function nestedExact<T> (ctor : Constructor<T>) : AssertDelegate<T> {
+    return (name : string, mixed : any) : T => {
+        const result = convert.toClassExact(name, mixed, ctor);
+        return result;
+    };
+}
 export function assertion<T> (assertion : Assertion<T>) : AssertDelegate<T> {
     if (assertion.isCtor) {
         return nested(assertion.func);

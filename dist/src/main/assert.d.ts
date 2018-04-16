@@ -5,6 +5,7 @@ export declare type Constructor<T> = {
     new (): T;
 };
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;
+export declare function nestedExact<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function assertion<T>(assertion: Assertion<T>): AssertDelegate<T>;
 export declare function oneOf<T0 extends string>(...arr: (T0)[]): AssertDelegate<T0>;
 export declare function oneOf<T0 extends number>(...arr: (T0)[]): AssertDelegate<T0>;
