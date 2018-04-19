@@ -91,6 +91,22 @@ function cast(canCastDelegate, castDelegate, assertDelegate) {
     };
 }
 exports.cast = cast;
+function castFirst(canCastDelegate, castDelegate, assertDelegate) {
+    return (name, mixed) => {
+        try {
+            //Attempt to cast first
+            const from = canCastDelegate(name, mixed);
+            const to = castDelegate(from);
+            //Check that the result is the desired type
+            return assertDelegate(name, to);
+        }
+        catch (err) {
+            //We failed to cast, check if the original value is the desired type
+            return assertDelegate(name, mixed);
+        }
+    };
+}
+exports.castFirst = castFirst;
 function assert(assertDelegate) {
     return (target, propertyKey) => {
         const propertyName = (typeof propertyKey == "string") ?

@@ -110,6 +110,20 @@ export function cast<FromT, ToT> (canCastDelegate : AssertDelegate<FromT>, castD
         }
     };
 }
+export function castFirst<FromT, ToT> (canCastDelegate : AssertDelegate<FromT>, castDelegate : CastDelegate<FromT, ToT>, assertDelegate : AssertDelegate<ToT>) : AssertDelegate<ToT> {
+    return (name : string, mixed : any) : ToT => {
+        try {
+            //Attempt to cast first
+            const from = canCastDelegate(name, mixed);
+            const to = castDelegate(from);
+            //Check that the result is the desired type
+            return assertDelegate(name, to);
+        } catch (err) {
+            //We failed to cast, check if the original value is the desired type
+            return assertDelegate(name, mixed);
+        }
+    };
+}
 export function assert<T> (assertDelegate : AssertDelegate<T>) {
     return (target : Object, propertyKey : string | symbol) : void => {
         const propertyName = (typeof propertyKey == "string") ?

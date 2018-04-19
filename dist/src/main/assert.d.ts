@@ -35,6 +35,7 @@ export declare function and<T0, T1, T2, T3>(...arr: AssertDelegate<T0 | T1 | T2 
 export declare function and<T0, T1, T2, T3, T4>(...arr: AssertDelegate<T0 | T1 | T2 | T3 | T4>[]): AssertDelegate<T0 & T1 & T2 & T3 & T4>;
 export declare function and(...arr: AssertDelegate<any>[]): AssertDelegate<any>;
 export declare function cast<FromT, ToT>(canCastDelegate: AssertDelegate<FromT>, castDelegate: CastDelegate<FromT, ToT>, assertDelegate: AssertDelegate<ToT>): AssertDelegate<ToT>;
+export declare function castFirst<FromT, ToT>(canCastDelegate: AssertDelegate<FromT>, castDelegate: CastDelegate<FromT, ToT>, assertDelegate: AssertDelegate<ToT>): AssertDelegate<ToT>;
 export declare function assert<T>(assertDelegate: AssertDelegate<T>): (target: Object, propertyKey: string | symbol) => void;
 export declare function optional<T>(assertDelegate: AssertDelegate<T>): AssertDelegate<T | undefined>;
 export declare function nullable<T>(assertDelegate: AssertDelegate<T>): AssertDelegate<T | null>;
