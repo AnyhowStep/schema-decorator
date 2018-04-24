@@ -51,11 +51,11 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     response<R>(responseT: {
         new (): R;
     }): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
-    paramDelegate<P extends RawParamT>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: AssertDelegate<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    paramDelegate<P extends Param<RawParamT>>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: AssertDelegate<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     queryDelegate<Q>(queryT: AssertDelegate<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
     bodyDelegate<B>(bodyT: AssertDelegate<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
     responseDelegate<R>(responseT: AssertDelegate<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
-    paramAssertion<P>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    paramAssertion<P extends Param<RawParamT>>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     queryAssertion<Q>(assertion: Assertion<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
     bodyAssertion<B>(assertion: Assertion<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
     responseAssertion<R>(assertion: Assertion<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;

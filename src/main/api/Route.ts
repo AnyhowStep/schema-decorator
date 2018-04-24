@@ -242,7 +242,7 @@ export class Route<
             },
         });
     }
-    public paramDelegate<P extends RawParamT> (this : Route<
+    public paramDelegate<P extends Param<RawParamT>> (this : Route<
         RawParamT,
         Empty, /*ParamT*/
         QueryT,
@@ -286,7 +286,7 @@ export class Route<
             },
         });
     }
-    public paramAssertion<P> (assertion : Assertion<P>) {
+    public paramAssertion<P extends Param<RawParamT>> (assertion : Assertion<P>) {
         return new Route({
             ...this.args,
             paramT : assertion,
