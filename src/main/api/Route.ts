@@ -366,4 +366,22 @@ export class Route<
             return this.args.method;
         }
     }
+
+    public withoutParam (this : Route<
+        RawParamT,
+        ParamT,
+        QueryT,
+        BodyT,
+        ResponseT,
+        AccessTokenT,
+        MethodT
+    >) {
+        return new Route({
+            ...this.args,
+            paramT : {
+                isCtor : true,
+                func   : Empty,
+            },
+        });
+    }
 }

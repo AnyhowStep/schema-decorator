@@ -189,6 +189,12 @@ class Route {
             return this.args.method;
         }
     }
+    withoutParam() {
+        return new Route(Object.assign({}, this.args, { paramT: {
+                isCtor: true,
+                func: Empty,
+            } }));
+    }
 }
 exports.Route = Route;
 //# sourceMappingURL=Route.js.map

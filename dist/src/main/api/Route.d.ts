@@ -64,4 +64,5 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     denyAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, undefined, MethodT>;
     method<M extends MethodLiteral>(method: M): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, M>;
     getMethod(): "GET" | "POST" | MethodT;
+    withoutParam(this: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>): Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
 }
