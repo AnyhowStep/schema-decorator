@@ -21,9 +21,9 @@ function ignoreExtraVariables(ctor) {
     Object.defineProperty(result, "name", {
         value: `@ignoreExtraVariables(${ctor.name})`,
     });
-    /*Object.defineProperty(result, IGNORE_EXTRA_VARIABLES, {
-        value : true,
-    });*/
+    Object.defineProperty(result, exports.IGNORE_EXTRA_VARIABLES, {
+        value: true,
+    });
     return result;
 }
 exports.ignoreExtraVariables = ignoreExtraVariables;
@@ -49,7 +49,7 @@ function toClass(name, raw, ctor) {
     const keys = Object.keys(raw);
     const extraKeys = _.difference(keys, accessors);
     //UGLY HACK
-    if (extraKeys.length > 0 && !ctor.name.startsWith("@ignoreExtraVariables(")) {
+    if (extraKeys.length > 0 && ctor[exports.IGNORE_EXTRA_VARIABLES] !== true && !ctor.name.startsWith("@ignoreExtraVariables(")) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);
     }
     try {
