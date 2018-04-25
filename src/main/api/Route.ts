@@ -174,15 +174,7 @@ export class Route<
         };
     }
 
-    public append (this : Route<
-        RawParamT,
-        Empty, /*ParamT*/
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT,
-        MethodT
-    >, part : string) {
+    public append (part : string) {
         return new Route({
             ...this.args,
             path : this.args.path.append(part),
