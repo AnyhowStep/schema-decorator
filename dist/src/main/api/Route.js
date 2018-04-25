@@ -209,6 +209,36 @@ class Route {
                 func: Empty,
             } }));
     }
+    //Dangerous to use unless you know what you're doing.
+    //Will allow you to bypass checks for this call but there are still other
+    //checks like on the class type.
+    //This hack is only necessary because of,
+    //https://github.com/Microsoft/TypeScript/issues/23673
+    anyParam(paramT) {
+        return new Route(Object.assign({}, this.args, { paramT: {
+                isCtor: true,
+                func: paramT,
+            } }));
+    }
+    //Dangerous to use unless you know what you're doing.
+    //Will allow you to bypass checks for this call but there are still other
+    //checks like on the class type.
+    //This hack is only necessary because of,
+    //https://github.com/Microsoft/TypeScript/issues/23673
+    anyParamDelegate(paramT) {
+        return new Route(Object.assign({}, this.args, { paramT: {
+                isCtor: false,
+                func: paramT,
+            } }));
+    }
+    //Dangerous to use unless you know what you're doing.
+    //Will allow you to bypass checks for this call but there are still other
+    //checks like on the class type.
+    //This hack is only necessary because of,
+    //https://github.com/Microsoft/TypeScript/issues/23673
+    anyParamAssertion(assertion) {
+        return new Route(Object.assign({}, this.args, { paramT: assertion }));
+    }
 }
 exports.Route = Route;
 //# sourceMappingURL=Route.js.map

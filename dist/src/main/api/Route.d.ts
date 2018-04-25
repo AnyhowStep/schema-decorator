@@ -65,4 +65,9 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     method<M extends MethodLiteral>(method: M): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, M>;
     getMethod(): "GET" | "POST" | MethodT;
     withoutParam(this: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>): Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    anyParam<P>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
+        new (): P;
+    }): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    anyParamDelegate<P>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: AssertDelegate<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    anyParamAssertion<P>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
 }
