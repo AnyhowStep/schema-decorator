@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const convert = require("./convert");
 const validation = require("@anyhowstep/data-validation");
 const myUtil = require("./util");
+const type_util_1 = require("@anyhowstep/type-util");
 function nested(ctor) {
     return (name, mixed) => {
         const result = convert.toClass(name, mixed, ctor);
@@ -310,4 +311,37 @@ function undef() {
     };
 }
 exports.undef = undef;
+function isCtor(assertFunc) {
+    return assertFunc.length == 0;
+}
+exports.isCtor = isCtor;
+function toAssertDelegate(assertFunc) {
+    if (isCtor(assertFunc)) {
+        return nested(assertFunc);
+    }
+    else {
+        return assertFunc;
+    }
+}
+exports.toAssertDelegate = toAssertDelegate;
+function toAssertDelegateExact(assertFunc) {
+    if (isCtor(assertFunc)) {
+        return nestedExact(assertFunc);
+    }
+    else {
+        return assertFunc;
+    }
+}
+exports.toAssertDelegateExact = toAssertDelegateExact;
+function intersect(...assertions) {
+    const assertDelegates = assertions.map(toAssertDelegateExact);
+    return (name, mixed) => {
+        const result = [];
+        for (let d of assertDelegates) {
+            result.push(d(name, mixed));
+        }
+        return type_util_1.spread(...result);
+    };
+}
+exports.intersect = intersect;
 //# sourceMappingURL=assert.js.map

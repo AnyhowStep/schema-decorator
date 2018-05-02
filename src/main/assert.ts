@@ -3,9 +3,11 @@ import * as validation from "@anyhowstep/data-validation";
 import {AssertDelegate} from "./AssertDelegate";
 import {Assertion} from "./Assertion";
 import * as myUtil from "./util";
+import {spread} from "@anyhowstep/type-util";
 
 export type CastDelegate<FromT, ToT> = (from : FromT) => ToT;
 export type Constructor<T> = {new():T};
+export type AssertFunc<T> = Constructor<T>|AssertDelegate<T>;
 
 export function nested<T> (ctor : Constructor<T>) : AssertDelegate<T> {
     return (name : string, mixed : any) : T => {
@@ -339,5 +341,55 @@ export function undef () : AssertDelegate<undefined> {
             return mixed;
         }
         throw new Error(`Expected ${name} to be undefined, received ${typeof mixed}`);
+    };
+}
+
+export function isCtor<T> (assertFunc : AssertFunc<T>) : assertFunc is Constructor<T> {
+    return assertFunc.length == 0;
+}
+export function toAssertDelegate<T> (assertFunc : AssertFunc<T>) : AssertDelegate<T> {
+    if (isCtor(assertFunc)) {
+        return nested(assertFunc);
+    } else {
+        return assertFunc;
+    }
+}
+export function toAssertDelegateExact<T> (assertFunc : AssertFunc<T>) : AssertDelegate<T> {
+    if (isCtor(assertFunc)) {
+        return nestedExact(assertFunc);
+    } else {
+        return assertFunc;
+    }
+}
+
+export function intersect<T0 extends object> (i0 : AssertFunc<T0>) : AssertDelegate<T0>;
+export function intersect<T0 extends object, T1 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>) : AssertDelegate<T0&T1>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>) : AssertDelegate<T0&T1&T2>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>) : AssertDelegate<T0&T1&T2&T3>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>) : AssertDelegate<T0&T1&T2&T3&T4>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>) : AssertDelegate<T0&T1&T2&T3&T4&T5>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object, T18 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18>;
+export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object, T18 extends object, T19 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>, i19 : AssertFunc<T19>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18&T19>;
+export function intersect<T extends object> (...assertions : AssertFunc<T>[]) : AssertDelegate<T> {
+    const assertDelegates = assertions.map(toAssertDelegateExact);
+
+    return (name : string, mixed : any) : T => {
+        const result : T[] = [];
+        for (let d of assertDelegates) {
+            result.push(d(name, mixed));
+        }
+        return spread(...result);
     };
 }

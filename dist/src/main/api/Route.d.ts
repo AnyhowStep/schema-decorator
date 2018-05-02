@@ -36,9 +36,7 @@ export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, Q
     readonly args: RouteArgs<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     private constructor();
     append(part: string): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    appendParam<P extends string>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, param: P, regex?: RegExp): Route<RawParamT & {
-        [f in P]: string;
-    }, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    appendParam<P extends string>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, param: P, regex?: RegExp): Route<RawParamT & { [f in P]: string; }, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
     param<P extends Param<RawParamT>>(this: Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
         new (): P;
     }): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;

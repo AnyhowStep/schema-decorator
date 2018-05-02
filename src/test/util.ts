@@ -37,6 +37,21 @@ export function test<C> (t : tape.Test, ctor : {new():C}, raw : any, expected? :
     const expectedStr = JSON.stringify(sortInternalKeys(expected));
     t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
 }
+export function testAssertDelegate<C> (t : tape.Test, d : schema.AssertDelegate<C>, raw : any, expected? : any) {
+    if (expected == null) {
+        expected = raw;
+    }
+    const originalRawStr = JSON.stringify(raw);
+
+    const f : C = d("raw", raw);
+
+    const currentRawStr = JSON.stringify(raw);
+    t.equal(currentRawStr, originalRawStr, `raw: ${currentRawStr} == ${originalRawStr}`);
+
+    const actualStr = JSON.stringify(sortInternalKeys(schema.anyToRaw("instance", f)));
+    const expectedStr = JSON.stringify(sortInternalKeys(expected));
+    t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
+}
 export function testToJson<C> (t : tape.Test, instance : C, expected : any) {
     const actualStr   = JSON.stringify(instance);
     const expectedStr = JSON.stringify(expected);
@@ -49,6 +64,14 @@ export function testKeys (t : tape.Test, instance : any, expected : string[]) {
 export function fail<C> (t : tape.Test, ctor : {new():C}, raw : any) {
     try {
         schema.toClass("raw", raw, ctor);
+        t.fail();
+    } catch (err) {
+        t.pass(err.message);
+    }
+}
+export function failAssertDelegate<C> (t : tape.Test, d : schema.AssertDelegate<C>, raw : any) {
+    try {
+        d("raw", raw);
         t.fail();
     } catch (err) {
         t.pass(err.message);

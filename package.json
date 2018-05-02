@@ -17,9 +17,10 @@
   },
   "dependencies": {
     "@anyhowstep/data-validation": "^1.14.0",
+    "@anyhowstep/type-util": "^1.9.1",
     "@types/underscore": "^1.8.6",
     "axios": "^0.17.1",
-    "typescript": "^2.7.0-dev.20171229",
+    "typescript": "^2.8.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
