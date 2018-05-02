@@ -150,7 +150,13 @@ function toClassExact(name, raw, ctor) {
         return raw;
     }
     else {
-        return toClass(name, anyToRaw(name, raw), ctor);
+        //TODO find a better way to do this
+        if (raw instanceof Object) {
+            return toClass(name, Object.assign({}, raw), ctor);
+        }
+        else {
+            return toClass(name, raw, ctor);
+        }
     }
 }
 exports.toClassExact = toClassExact;

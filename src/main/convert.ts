@@ -154,6 +154,11 @@ export function toClassExact<T> (name : string, raw : any, ctor : {new():T}) : T
     if (myUtil.isExactInstanceOf(raw, ctor)) {
         return raw;
     } else {
-        return toClass(name, anyToRaw(name, raw), ctor);
+        //TODO find a better way to do this
+        if (raw instanceof Object) {
+            return toClass(name, {...raw}, ctor);
+        } else {
+            return toClass(name, raw, ctor);
+        }
     }
 }
