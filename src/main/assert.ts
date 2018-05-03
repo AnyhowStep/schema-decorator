@@ -59,15 +59,45 @@ export function oneOf<T> (...arr : T[]) : AssertDelegate<T> {
         throw new Error(`Expected ${name} to be one of ${toTypeStr(arr)}; received ${typeof mixed}(${mixed})`);
     };
 }
-export function or<T0 extends string> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function or<T0 extends number> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function or<T0 extends boolean> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function or<T0> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function or<T0, T1> (...arr : AssertDelegate<T0|T1>[]) : AssertDelegate<T0|T1>;
-export function or<T0, T1, T2> (...arr : AssertDelegate<T0|T1|T2>[]) : AssertDelegate<T0|T1|T2>;
-export function or<T0, T1, T2, T3> (...arr : AssertDelegate<T0|T1|T2|T3>[]) : AssertDelegate<T0|T1|T2|T3>;
-export function or<T0, T1, T2, T3, T4> (...arr : AssertDelegate<T0|T1|T2|T3|T4>[]) : AssertDelegate<T0|T1|T2|T3|T4>;
-export function or (...arr : AssertDelegate<any>[]) : AssertDelegate<any>;
+/*
+function gen (n) {
+let args0 = [];
+let args1 = [];
+let args2 = [];
+for (let i=0; i<n; ++i) {
+    args0.push(`T${i}`);
+    args1.push(`i${i} : AssertDelegate<T${i}>`);
+    args2.push(`T${i}`);
+}
+return `export function or<${args0.join(", ")}> (${args1.join(", ")}) : AssertDelegate<${args2.join("|")}>;`;
+}
+arr = [];
+for (let i=1; i<21; ++i) {
+arr.push(gen(i));
+}
+arr.join("\n");
+*/
+export function or<T0> (i0 : AssertDelegate<T0>) : AssertDelegate<T0>;
+export function or<T0, T1> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>) : AssertDelegate<T0|T1>;
+export function or<T0, T1, T2> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>) : AssertDelegate<T0|T1|T2>;
+export function or<T0, T1, T2, T3> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>) : AssertDelegate<T0|T1|T2|T3>;
+export function or<T0, T1, T2, T3, T4> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>) : AssertDelegate<T0|T1|T2|T3|T4>;
+export function or<T0, T1, T2, T3, T4, T5> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>) : AssertDelegate<T0|T1|T2|T3|T4|T5>;
+export function or<T0, T1, T2, T3, T4, T5, T6> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>, i18 : AssertDelegate<T18>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17|T18>;
+export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>, i18 : AssertDelegate<T18>, i19 : AssertDelegate<T19>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17|T18|T19>;
+export function or<T> (...arr : AssertDelegate<T>[]) : AssertDelegate<T>;
 export function or<T> (...arr : AssertDelegate<T>[]) : AssertDelegate<T> {
     return (name : string, mixed : any) : T => {
         let messages : string[] = [];
@@ -81,15 +111,45 @@ export function or<T> (...arr : AssertDelegate<T>[]) : AssertDelegate<T> {
         throw new Error(messages.join(" or "));
     };
 }
-export function and<T0 extends string> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function and<T0 extends number> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function and<T0 extends boolean> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function and<T0> (...arr : AssertDelegate<T0>[]) : AssertDelegate<T0>;
-export function and<T0, T1> (...arr : AssertDelegate<T0|T1>[]) : AssertDelegate<T0&T1>;
-export function and<T0, T1, T2> (...arr : AssertDelegate<T0|T1|T2>[]) : AssertDelegate<T0&T1&T2>;
-export function and<T0, T1, T2, T3> (...arr : AssertDelegate<T0|T1|T2|T3>[]) : AssertDelegate<T0&T1&T2&T3>;
-export function and<T0, T1, T2, T3, T4> (...arr : AssertDelegate<T0|T1|T2|T3|T4>[]) : AssertDelegate<T0&T1&T2&T3&T4>;
-export function and (...arr : AssertDelegate<any>[]) : AssertDelegate<any>;
+/*
+function gen (n) {
+	let args0 = [];
+	let args1 = [];
+	let args2 = [];
+	for (let i=0; i<n; ++i) {
+		args0.push(`T${i}`);
+		args1.push(`i${i} : AssertDelegate<T${i}>`);
+		args2.push(`T${i}`);
+	}
+	return `export function and<${args0.join(", ")}> (${args1.join(", ")}) : AssertDelegate<${args2.join("&")}>;`;
+}
+arr = [];
+for (let i=1; i<21; ++i) {
+	arr.push(gen(i));
+}
+arr.join("\n");
+*/
+export function and<T0> (i0 : AssertDelegate<T0>) : AssertDelegate<T0>;
+export function and<T0, T1> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>) : AssertDelegate<T0&T1>;
+export function and<T0, T1, T2> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>) : AssertDelegate<T0&T1&T2>;
+export function and<T0, T1, T2, T3> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>) : AssertDelegate<T0&T1&T2&T3>;
+export function and<T0, T1, T2, T3, T4> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>) : AssertDelegate<T0&T1&T2&T3&T4>;
+export function and<T0, T1, T2, T3, T4, T5> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>) : AssertDelegate<T0&T1&T2&T3&T4&T5>;
+export function and<T0, T1, T2, T3, T4, T5, T6> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>, i18 : AssertDelegate<T18>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18>;
+export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> (i0 : AssertDelegate<T0>, i1 : AssertDelegate<T1>, i2 : AssertDelegate<T2>, i3 : AssertDelegate<T3>, i4 : AssertDelegate<T4>, i5 : AssertDelegate<T5>, i6 : AssertDelegate<T6>, i7 : AssertDelegate<T7>, i8 : AssertDelegate<T8>, i9 : AssertDelegate<T9>, i10 : AssertDelegate<T10>, i11 : AssertDelegate<T11>, i12 : AssertDelegate<T12>, i13 : AssertDelegate<T13>, i14 : AssertDelegate<T14>, i15 : AssertDelegate<T15>, i16 : AssertDelegate<T16>, i17 : AssertDelegate<T17>, i18 : AssertDelegate<T18>, i19 : AssertDelegate<T19>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18&T19>;
+export function and<T> (...arr : AssertDelegate<T>[]) : AssertDelegate<T>;
 export function and<T> (...arr : AssertDelegate<T>[]) : AssertDelegate<T> {
     return (name : string, mixed : any) : T => {
         for (let d of arr) {
@@ -251,6 +311,9 @@ export function any () : AssertDelegate<any> {
 }
 
 //Please only pass enums here
+export enum Enum {}
+export function enumeration<E extends typeof Enum> (e : E) : AssertDelegate<E[keyof E]>;
+export function enumeration (e : {}) : AssertDelegate<string|number>;
 export function enumeration (e : {}) : AssertDelegate<string|number> {
     const keys = Object.keys(e).filter((k) => {
         return !/^\d/.test(k)

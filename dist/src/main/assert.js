@@ -228,6 +228,9 @@ function any() {
 }
 exports.any = any;
 //Please only pass enums here
+var Enum;
+(function (Enum) {
+})(Enum = exports.Enum || (exports.Enum = {}));
 function enumeration(e) {
     const keys = Object.keys(e).filter((k) => {
         return !/^\d/.test(k);

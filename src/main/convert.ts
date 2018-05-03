@@ -149,7 +149,7 @@ export function toClassOrAssert<T> (name : string, raw : any, assertion : Assert
     }
 }
 
-//Give two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
+//Given two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
 export function toClassExact<T> (name : string, raw : any, ctor : {new():T}) : T {
     if (myUtil.isExactInstanceOf(raw, ctor)) {
         return raw;

@@ -144,7 +144,7 @@ function toClassOrAssert(name, raw, assertion) {
     }
 }
 exports.toClassOrAssert = toClassOrAssert;
-//Give two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
+//Given two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
 function toClassExact(name, raw, ctor) {
     if (myUtil.isExactInstanceOf(raw, ctor)) {
         return raw;
