@@ -7,6 +7,7 @@ import "./intersect";
 import "./LazyNested";
 import "./nested";
 import "./object-keys";
+import "./schema";
 import "./spread";
 import "./to-class-exact";
 import "./to-class-ignore-extra-variables";

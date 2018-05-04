@@ -61,12 +61,21 @@ export function testKeys (t : tape.Test, instance : any, expected : string[]) {
     const actualKeys = Object.keys(instance);
     t.deepEqual(actualKeys, expected, `${actualKeys.join(",")} == ${expected.join(",")}`);
 }
-export function fail<C> (t : tape.Test, ctor : {new():C}, raw : any) {
+export function fail<C> (t : tape.Test, assert : schema.AssertFunc<C>, raw : any) {
     try {
-        schema.toClass("raw", raw, ctor);
+        schema.toAssertDelegate(assert)("raw", raw);
         t.fail();
     } catch (err) {
         t.pass(err.message);
+    }
+}
+export function pass<C> (t : tape.Test, assert : schema.AssertFunc<C>, raw : any) {
+    try {
+        console.log(raw);
+        console.log(schema.toAssertDelegate(assert)("raw", raw));
+        t.pass();
+    } catch (err) {
+        t.fail(err.message);
     }
 }
 export function failAssertDelegate<C> (t : tape.Test, d : schema.AssertDelegate<C>, raw : any) {

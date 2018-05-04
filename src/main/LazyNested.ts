@@ -35,10 +35,13 @@ export class LazyNested<T> {
     public setCtor (ctor : {new():T}) {
         this.ctor = ctor;
     }
+    public setDelegate (delegate : AssertDelegate<T>) {
+        this.delegate = delegate;
+    }
     public assert = (name : string, mixed : any) : T => {
         if (this.delegate == null) {
             if (this.ctor == null) {
-                throw new Error("Called LazyNested.assert() before calling setCtor()");
+                throw new Error("Called LazyNested.assert() before calling setCtor() or setDelegate()");
             }
             this.delegate = nested(this.ctor);
         }

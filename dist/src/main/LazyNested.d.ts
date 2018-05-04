@@ -1,3 +1,4 @@
+import { AssertDelegate } from "./AssertDelegate";
 export declare class LazyNested<T> {
     private ctor;
     private delegate;
@@ -5,5 +6,6 @@ export declare class LazyNested<T> {
     setCtor(ctor: {
         new (): T;
     }): void;
+    setDelegate(delegate: AssertDelegate<T>): void;
     assert: (name: string, mixed: any) => T;
 }

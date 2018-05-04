@@ -34,7 +34,7 @@ class LazyNested {
         this.assert = (name, mixed) => {
             if (this.delegate == null) {
                 if (this.ctor == null) {
-                    throw new Error("Called LazyNested.assert() before calling setCtor()");
+                    throw new Error("Called LazyNested.assert() before calling setCtor() or setDelegate()");
                 }
                 this.delegate = assert_1.nested(this.ctor);
             }
@@ -43,6 +43,9 @@ class LazyNested {
     }
     setCtor(ctor) {
         this.ctor = ctor;
+    }
+    setDelegate(delegate) {
+        this.delegate = delegate;
     }
 }
 exports.LazyNested = LazyNested;

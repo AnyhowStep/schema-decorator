@@ -12,4 +12,6 @@ __export(require("./convert"));
 __export(require("./LazyNested"));
 __export(require("./util"));
 __export(require("./validate"));
+__export(require("./field"));
+__export(require("./schema"));
 //# sourceMappingURL=index.js.map

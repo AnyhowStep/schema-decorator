@@ -33,7 +33,7 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
         return raw;
     }
     if (!(raw instanceof Object)) {
-        throw new Error(`Cannot convert ${typeof raw}(${raw}) to ${ctor.name}`);
+        throw new Error(`Cannot convert ${name} ${typeof raw}(${raw}) to ${ctor.name}`);
     }
     let result : T|undefined = undefined;
     try {
