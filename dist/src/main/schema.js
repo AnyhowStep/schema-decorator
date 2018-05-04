@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const field_1 = require("./field");
 function schema(...fields) {
     return (name, mixed) => {
         if (!(mixed instanceof Object)) {
@@ -13,4 +14,15 @@ function schema(...fields) {
     };
 }
 exports.schema = schema;
+function toSchema(raw) {
+    const fieldCollection = field_1.fields(raw);
+    const fieldArray = [];
+    for (let k in fieldCollection) {
+        if (fieldCollection.hasOwnProperty(k)) {
+            fieldArray.push(fieldCollection[k]);
+        }
+    }
+    return schema(...fieldArray);
+}
+exports.toSchema = toSchema;
 //# sourceMappingURL=schema.js.map

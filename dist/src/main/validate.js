@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+//TODO phase out
 exports.ValidatedSymbol = Symbol();
 const convert_1 = require("./convert");
 function validate(arg0, arg1, arg2) {

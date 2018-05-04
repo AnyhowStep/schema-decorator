@@ -1,5 +1,5 @@
-import {Field, AssertDelegate} from "./types";
-
+import {Field, AssertDelegate, TypeOf} from "./types";
+import {RawFieldCollection, fields} from "./field";
 /*
 function gen (n) {
 let args0 = [];
@@ -81,4 +81,15 @@ export function schema (...fields : Field<any, any>[]) : AssertDelegate<any> {
         }
         return result;
     };
+}
+
+export function toSchema<RawFieldCollectionT extends RawFieldCollection> (raw : RawFieldCollectionT) : AssertDelegate<{ [name in keyof RawFieldCollectionT] : TypeOf<RawFieldCollectionT[name]> }> {
+    const fieldCollection = fields(raw);
+    const fieldArray : Field<string, any>[] = [];
+    for (let k in fieldCollection) {
+        if (fieldCollection.hasOwnProperty(k)) {
+            fieldArray.push(fieldCollection[k]);
+        }
+    }
+    return schema(...fieldArray) as any;
 }

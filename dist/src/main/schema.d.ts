@@ -1,4 +1,5 @@
-import { Field, AssertDelegate } from "./types";
+import { Field, AssertDelegate, TypeOf } from "./types";
+import { RawFieldCollection } from "./field";
 export declare function schema<N0 extends string, T0>(f0: Field<N0, T0>): AssertDelegate<{
     [k in N0]: T0;
 }>;
@@ -2601,4 +2602,7 @@ export declare function schema<N0 extends string, T0, N1 extends string, T1, N2 
 }>;
 export declare function schema<N extends string, T>(...fields: Field<N, T>[]): AssertDelegate<{
     [k in N]: T;
+}>;
+export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT): AssertDelegate<{
+    [name in keyof RawFieldCollectionT]: TypeOf<RawFieldCollectionT[name]>;
 }>;
