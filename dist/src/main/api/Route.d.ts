@@ -1,6 +1,6 @@
 import { AccessTokenType } from "./AccessToken";
 import { Assertion } from "../Assertion";
-import { AssertDelegate } from "../AssertDelegate";
+import { AssertDelegate } from "../types";
 import { Param } from "./Param";
 export interface PathParam<T> {
     param: keyof T;

@@ -1,4 +1,5 @@
-import {AssertDelegate} from "./AssertDelegate";
+//TODO Phase out
+import {AssertDelegate} from "./types";
 
 export type Assertion<T> = (
     {

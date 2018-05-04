@@ -1,4 +1,4 @@
-import { AssertDelegate } from "./AssertDelegate";
+import { AssertDelegate } from "./types";
 export declare class LazyNested<T> {
     private ctor;
     private delegate;

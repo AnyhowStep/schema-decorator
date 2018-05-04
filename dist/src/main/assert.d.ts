@@ -1,10 +1,6 @@
-import { AssertDelegate } from "./AssertDelegate";
+import { Constructor, AssertDelegate, AssertFunc } from "./types";
 import { Assertion } from "./Assertion";
 export declare type CastDelegate<FromT, ToT> = (from: FromT) => ToT;
-export declare type Constructor<T> = {
-    new (): T;
-};
-export declare type AssertFunc<T> = Constructor<T> | AssertDelegate<T>;
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function nestedExact<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function assertion<T>(assertion: Assertion<T>): AssertDelegate<T>;

@@ -1,13 +1,15 @@
 import * as convert from "./convert";
 import * as validation from "@anyhowstep/data-validation";
-import {AssertDelegate} from "./AssertDelegate";
+import {
+    Constructor,
+    AssertDelegate,
+    AssertFunc
+} from "./types";
 import {Assertion} from "./Assertion";
 import * as myUtil from "./util";
 import {spread} from "@anyhowstep/type-util";
 
 export type CastDelegate<FromT, ToT> = (from : FromT) => ToT;
-export type Constructor<T> = {new():T};
-export type AssertFunc<T> = Constructor<T>|AssertDelegate<T>;
 
 export function nested<T> (ctor : Constructor<T>) : AssertDelegate<T> {
     return (name : string, mixed : any) : T => {

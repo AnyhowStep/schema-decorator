@@ -1,4 +1,4 @@
-import { AssertDelegate } from "./AssertDelegate";
+import { AssertDelegate } from "./types";
 export declare type Assertion<T> = ({
     isCtor: true;
     func: {

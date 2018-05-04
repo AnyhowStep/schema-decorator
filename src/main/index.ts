@@ -5,10 +5,10 @@ export * from "./api/Request";
 export * from "./api/Route";
 
 export * from "./assert";
-export * from "./AssertDelegate";
 export * from "./Assertion";
 export * from "./convert";
 export * from "./LazyNested"
+export * from "./types";
 export * from "./util";
 export * from "./validate";
 

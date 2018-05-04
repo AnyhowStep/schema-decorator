@@ -1,5 +1,5 @@
 import { Field } from "./field";
-import { AssertDelegate } from "./AssertDelegate";
+import { AssertDelegate } from "./types";
 export declare function schema<N0 extends string, T0>(f0: Field<N0, T0>): AssertDelegate<{
     [k in N0]: T0;
 }>;

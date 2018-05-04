@@ -1,11 +1,14 @@
 import {
-    AssertFunc,
     toAssertDelegateExact,
     maybe,
     optional,
     nullable,
 } from "./assert";
-import {AssertDelegate} from "./AssertDelegate";
+import {
+    AssertDelegate,
+    AssertFunc,
+    TypeOf
+} from "./types";
 
 export class Field <NameT extends string, TypeT> {
     public readonly name : NameT;
@@ -49,9 +52,22 @@ export class Field <NameT extends string, TypeT> {
     }
 }
 
+export type RawFieldCollection = { [name : string] : AssertFunc<any> };
+export type FieldCollection<RawFieldCollectionT extends RawFieldCollection> = { [name in keyof RawFieldCollectionT] : Field<name, TypeOf<RawFieldCollectionT[name]>> };
+
 export function field<NameT extends string, TypeT> (
     name : NameT,
     assert : AssertFunc<TypeT>
 ) {
     return new Field(name, assert);
+}
+export function fields<RawFieldCollectionT extends RawFieldCollection> (raw : RawFieldCollectionT) : FieldCollection<RawFieldCollectionT> {
+    const result : any = {};
+    for (let name in raw) {
+        if (!raw.hasOwnProperty(name)) {
+            continue;
+        }
+        result[name] = field(name, raw[name]);
+    }
+    return result;
 }

@@ -2,6 +2,7 @@ import "./api";
 import "./basic-array";
 import "./basic";
 import "./built-in";
+import "./field-collection";
 import "./inheritance";
 import "./intersect";
 import "./LazyNested";

@@ -1,5 +1,5 @@
 import {Field} from "./field";
-import {AssertDelegate} from "./AssertDelegate";
+import {AssertDelegate} from "./types";
 
 /*
 function gen (n) {

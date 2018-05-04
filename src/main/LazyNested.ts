@@ -1,5 +1,5 @@
 import {nested} from "./assert";
-import {AssertDelegate} from "./AssertDelegate";
+import {AssertDelegate} from "./types";
 
 /*
     Used when you want to assert the type of circularly referencing nested classes.
