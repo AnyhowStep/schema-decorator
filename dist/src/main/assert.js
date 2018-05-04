@@ -1,26 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const convert = require("./convert");
 const validation = require("@anyhowstep/data-validation");
+const types_1 = require("./types");
 const myUtil = require("./util");
 const type_util_1 = require("@anyhowstep/type-util");
-function nested(ctor) {
-    return (name, mixed) => {
-        const result = convert.toClass(name, mixed, ctor);
-        return result;
-    };
-}
-exports.nested = nested;
-function nestedExact(ctor) {
-    return (name, mixed) => {
-        const result = convert.toClassExact(name, mixed, ctor);
-        return result;
-    };
-}
-exports.nestedExact = nestedExact;
 function assertion(assertion) {
     if (assertion.isCtor) {
-        return nested(assertion.func);
+        return types_1.nested(assertion.func);
     }
     else {
         return assertion.func;
@@ -53,9 +39,10 @@ function oneOf(...arr) {
 }
 exports.oneOf = oneOf;
 function or(...arr) {
+    const assertDelegates = arr.map(types_1.toAssertDelegateExact);
     return (name, mixed) => {
         let messages = [];
-        for (let d of arr) {
+        for (let d of assertDelegates) {
             try {
                 return d(name, mixed);
             }
@@ -68,15 +55,18 @@ function or(...arr) {
 }
 exports.or = or;
 function and(...arr) {
+    const assertDelegates = arr.map(types_1.toAssertDelegateExact);
     return (name, mixed) => {
-        for (let d of arr) {
+        for (let d of assertDelegates) {
             mixed = d(name, mixed);
         }
         return mixed;
     };
 }
 exports.and = and;
-function cast(canCastDelegate, castDelegate, assertDelegate) {
+function cast(canCast, castDelegate, assert) {
+    const canCastDelegate = types_1.toAssertDelegateExact(canCast);
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return (name, mixed) => {
         try {
             //If this works, we are already the desired data type
@@ -92,7 +82,9 @@ function cast(canCastDelegate, castDelegate, assertDelegate) {
     };
 }
 exports.cast = cast;
-function castFirst(canCastDelegate, castDelegate, assertDelegate) {
+function castFirst(canCast, castDelegate, assert) {
+    const canCastDelegate = types_1.toAssertDelegateExact(canCast);
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return (name, mixed) => {
         try {
             //Attempt to cast first
@@ -108,7 +100,8 @@ function castFirst(canCastDelegate, castDelegate, assertDelegate) {
     };
 }
 exports.castFirst = castFirst;
-function assert(assertDelegate) {
+function assert(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return (target, propertyKey) => {
         const propertyName = (typeof propertyKey == "string") ?
             propertyKey : `Symbol(${propertyKey.toString()})`;
@@ -171,20 +164,24 @@ function assert(assertDelegate) {
 }
 exports.assert = assert;
 //Convenience
-function optional(assertDelegate) {
+function optional(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return or(oneOf(undefined), assertDelegate);
 }
 exports.optional = optional;
-function nullable(assertDelegate) {
+function nullable(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return or(oneOf(null), assertDelegate);
 }
 exports.nullable = nullable;
-function maybe(assertDelegate) {
+function maybe(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return or(oneOf(undefined, null), assertDelegate);
 }
 exports.maybe = maybe;
 //Array
-function array(assertDelegate) {
+function array(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
     return (name, mixed) => {
         if (!(mixed instanceof Array)) {
             throw new Error(`Expected ${name} to be an array, received ${typeof mixed}`);
@@ -314,30 +311,8 @@ function undef() {
     };
 }
 exports.undef = undef;
-function isCtor(assertFunc) {
-    return assertFunc.length == 0;
-}
-exports.isCtor = isCtor;
-function toAssertDelegate(assertFunc) {
-    if (isCtor(assertFunc)) {
-        return nested(assertFunc);
-    }
-    else {
-        return assertFunc;
-    }
-}
-exports.toAssertDelegate = toAssertDelegate;
-function toAssertDelegateExact(assertFunc) {
-    if (isCtor(assertFunc)) {
-        return nestedExact(assertFunc);
-    }
-    else {
-        return assertFunc;
-    }
-}
-exports.toAssertDelegateExact = toAssertDelegateExact;
 function intersect(...assertions) {
-    const assertDelegates = assertions.map(toAssertDelegateExact);
+    const assertDelegates = assertions.map(types_1.toAssertDelegateExact);
     return (name, mixed) => {
         const result = [];
         for (let d of assertDelegates) {

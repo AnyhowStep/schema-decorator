@@ -1,3 +1,4 @@
+//TODO phase out
 export const ValidatedSymbol = Symbol();
 export type Validated<T> = typeof ValidatedSymbol & T;
 

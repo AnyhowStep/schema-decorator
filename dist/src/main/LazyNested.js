@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const assert_1 = require("./assert");
+const types_1 = require("./types");
 /*
     Used when you want to assert the type of circularly referencing nested classes.
 
@@ -36,7 +36,7 @@ class LazyNested {
                 if (this.ctor == null) {
                     throw new Error("Called LazyNested.assert() before calling setCtor() or setDelegate()");
                 }
-                this.delegate = assert_1.nested(this.ctor);
+                this.delegate = types_1.nested(this.ctor);
             }
             return this.delegate(name, mixed);
         };

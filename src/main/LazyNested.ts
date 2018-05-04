@@ -1,4 +1,4 @@
-import {nested} from "./assert";
+import {nested} from "./types";
 import {AssertDelegate} from "./types";
 
 /*

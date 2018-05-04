@@ -10,6 +10,7 @@ __export(require("./api/Route"));
 __export(require("./assert"));
 __export(require("./convert"));
 __export(require("./LazyNested"));
+__export(require("./types"));
 __export(require("./util"));
 __export(require("./validate"));
 __export(require("./field"));
