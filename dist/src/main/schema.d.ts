@@ -1,6 +1,6 @@
 import { Field, AssertDelegate, TypeOf } from "./types";
 import { RawFieldCollection } from "./field";
-export declare type SchemaField<N extends string, T> = (T extends undefined ? {
+export declare type SchemaField<N extends string, T> = (undefined extends T ? {
     [k in N]+?: T;
 } : {
     [k in N]: T;

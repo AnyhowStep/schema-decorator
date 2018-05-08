@@ -20,7 +20,7 @@ arr.join("\n");
 */
 
 export type SchemaField<N extends string, T> = (
-    T extends undefined ?
+    undefined extends T ?
         { [k in N]+? : T } :
         { [k in N] : T }
 );
