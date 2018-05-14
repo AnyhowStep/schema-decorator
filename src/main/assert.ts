@@ -268,6 +268,34 @@ export function maybe<T> (assert : AssertFunc<T>) : AssertDelegate<T|undefined|n
     );
 }
 
+export function notOptional<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, undefined>> {
+    const assertDelegate = toAssertDelegateExact(assert);
+    return ((name : string, mixed : any) => {
+        if (mixed === undefined) {
+            throw new Error(`${name} cannot be undefined, received ${mixed}`);
+        }
+        return assertDelegate(name, mixed);
+    }) as any;
+}
+export function notNullable<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, null>> {
+    const assertDelegate = toAssertDelegateExact(assert);
+    return ((name : string, mixed : any) => {
+        if (mixed === null) {
+            throw new Error(`${name} cannot be null, received ${mixed}`);
+        }
+        return assertDelegate(name, mixed);
+    }) as any;
+}
+export function notMaybe<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, null|undefined>> {
+    const assertDelegate = toAssertDelegateExact(assert);
+    return ((name : string, mixed : any) => {
+        if (mixed === null || mixed === undefined) {
+            throw new Error(`${name} cannot be null|undefined, received ${mixed}`);
+        }
+        return assertDelegate(name, mixed);
+    }) as any;
+}
+
 //Array
 export function array<T> (assert : AssertFunc<T>) {
     const assertDelegate = toAssertDelegateExact(assert);

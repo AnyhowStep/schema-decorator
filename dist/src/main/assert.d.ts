@@ -58,6 +58,9 @@ export declare function assert<T>(assert: AssertFunc<T>): (target: Object, prope
 export declare function optional<T>(assert: AssertFunc<T>): AssertDelegate<T | undefined>;
 export declare function nullable<T>(assert: AssertFunc<T>): AssertDelegate<T | null>;
 export declare function maybe<T>(assert: AssertFunc<T>): AssertDelegate<T | undefined | null>;
+export declare function notOptional<T>(assert: AssertFunc<T>): AssertDelegate<Exclude<T, undefined>>;
+export declare function notNullable<T>(assert: AssertFunc<T>): AssertDelegate<Exclude<T, null>>;
+export declare function notMaybe<T>(assert: AssertFunc<T>): AssertDelegate<Exclude<T, null | undefined>>;
 export declare function array<T>(assert: AssertFunc<T>): (name: string, mixed: any) => T[];
 export declare function date(): AssertDelegate<Date>;
 export declare function any(): AssertDelegate<any>;
