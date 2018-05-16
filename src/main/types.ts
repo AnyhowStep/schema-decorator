@@ -61,6 +61,8 @@ export class Field<NameT extends string, TypeT> {
         );
     }
 }
+export type AnyField = Field<any, any>;
+
 export function nested<T> (ctor : Constructor<T>) : AssertDelegate<T> {
     return (name : string, mixed : any) : T => {
         const result = convert.toClass(name, mixed, ctor);

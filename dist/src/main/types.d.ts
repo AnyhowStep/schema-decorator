@@ -16,6 +16,7 @@ export declare class Field<NameT extends string, TypeT> {
     withName<NewNameT extends string>(name: NewNameT): Field<NewNameT, TypeT>;
     withAssert<NewTypeT>(assert: AssertFunc<NewTypeT>): Field<NameT, NewTypeT>;
 }
+export declare type AnyField = Field<any, any>;
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function nestedExact<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function isCtor<T>(assertFunc: AssertFunc<T>): assertFunc is Constructor<T>;
