@@ -49,7 +49,8 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
     const accessors = myUtil.getAllAccessors(result).map(i => i.name);
 
     const keys = Object.keys(raw);
-    const extraKeys = _.difference(keys, accessors);
+    //HACK I'm not sure how symbols affect this but I don't use symbols
+    const extraKeys = _.difference(keys, accessors.map(a => a.toString()));
     //UGLY HACK
     if (extraKeys.length > 0 && (ctor as any)[IGNORE_EXTRA_VARIABLES] !== true && !ctor.name.startsWith("@ignoreExtraVariables(")) {
         throw new Error(`Cannot convert ${name} to ${ctor.name}, ${name} has extra keys: ${extraKeys.join(", ")}`);
@@ -60,7 +61,8 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
             (result as any)[k] = raw[k];
         }
 
-        const missingKeys = _.difference(accessors, keys);
+        //HACK I'm not sure how symbols affect this but I don't use symbols
+        const missingKeys = _.difference(accessors.map(a => a.toString()), keys);
         for (let k of missingKeys) {
             (result as any)[k] = undefined;
         }

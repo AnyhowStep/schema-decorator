@@ -121,7 +121,7 @@ function assert(assert) {
                     superAccessorGenerator.set.bind(this)(mixed);
                     const accessor = Object.getOwnPropertyDescriptor(this, propertyKey);
                     if (!myUtil.isAccessorDescriptor(accessor) || accessor.set == undefined) {
-                        throw new Error(`Expected ${propertyKey} to be an accessor and have a "set()" method`);
+                        throw new Error(`Expected ${propertyKey.toString()} to be an accessor and have a "set()" method`);
                     }
                     superSetter = accessor.set.bind(this);
                 }

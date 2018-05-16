@@ -94,7 +94,8 @@ export function toSchema<RawFieldCollectionT extends RawFieldCollection> (raw : 
     const fieldArray : Field<string, any>[] = [];
     for (let k in fieldCollection) {
         if (fieldCollection.hasOwnProperty(k)) {
-            fieldArray.push(fieldCollection[k]);
+            //HACK
+            fieldArray.push((fieldCollection as any)[k]);
         }
     }
     return schema(...fieldArray) as any;

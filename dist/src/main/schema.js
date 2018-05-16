@@ -19,6 +19,7 @@ function toSchema(raw) {
     const fieldArray = [];
     for (let k in fieldCollection) {
         if (fieldCollection.hasOwnProperty(k)) {
+            //HACK
             fieldArray.push(fieldCollection[k]);
         }
     }
