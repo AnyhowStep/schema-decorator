@@ -9,7 +9,15 @@ import {maybe, optional, nullable} from "./assert";
 export type AssertDelegate<T> = (name : string, mixed : any) => T;
 export type Constructor<T> = {new():T};
 export type AssertFunc<T> = Constructor<T>|AssertDelegate<T>|Field<string, T>;
-export type TypeOf<T extends AssertFunc<any>> = T extends AssertFunc<infer R> ? R : any;
+export type TypeOf<T extends AssertFunc<any>> = (
+    T extends Constructor<infer R> ?
+    R :
+    T extends AssertDelegate<infer R> ?
+    R :
+    T extends Field<string, infer R> ?
+    R :
+    never
+);
 
 export class Field<NameT extends string, TypeT> {
     public readonly name : NameT;

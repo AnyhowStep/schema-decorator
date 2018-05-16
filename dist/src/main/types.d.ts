@@ -3,7 +3,7 @@ export declare type Constructor<T> = {
     new (): T;
 };
 export declare type AssertFunc<T> = Constructor<T> | AssertDelegate<T> | Field<string, T>;
-export declare type TypeOf<T extends AssertFunc<any>> = T extends AssertFunc<infer R> ? R : any;
+export declare type TypeOf<T extends AssertFunc<any>> = (T extends Constructor<infer R> ? R : T extends AssertDelegate<infer R> ? R : T extends Field<string, infer R> ? R : never);
 export declare class Field<NameT extends string, TypeT> {
     readonly name: NameT;
     readonly assert: AssertFunc<TypeT>;
