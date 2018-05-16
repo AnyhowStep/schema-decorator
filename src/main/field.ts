@@ -6,7 +6,7 @@ import {
 
 export type RawFieldCollection = { [name : string] : AssertFunc<any> };
 export type FieldCollection<RawFieldCollectionT extends RawFieldCollection> = {
-    [name in Exclude<keyof RawFieldCollectionT, number|symbol>] : Field<name, TypeOf<RawFieldCollectionT[name]>>
+    [name in Extract<keyof RawFieldCollectionT, string>] : Field<name, TypeOf<RawFieldCollectionT[name]>>
 };
 
 export function field<NameT extends string, TypeT> (
