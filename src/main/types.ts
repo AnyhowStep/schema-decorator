@@ -9,13 +9,14 @@ import {maybe, optional, nullable} from "./assert";
 export type AssertDelegate<T> = (name : string, mixed : any) => T;
 export type Constructor<T> = {new():T};
 export type AssertFunc<T> = Constructor<T>|AssertDelegate<T>|Field<string, T>;
-export type TypeOf<T extends AssertFunc<any>> = (
-    T extends Constructor<infer R> ?
-    R :
-    T extends AssertDelegate<infer R> ?
-    R :
-    T extends Field<string, infer R> ?
-    R :
+export type AnyAssertFunc = AssertFunc<any>;
+export type TypeOf<F extends AnyAssertFunc> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegate<infer T> ?
+    T :
+    F extends Field<string, infer T> ?
+    T :
     never
 );
 
@@ -79,21 +80,21 @@ export function isCtor<T> (assertFunc : AssertFunc<T>) : assertFunc is Construct
     }
     return assertFunc.length == 0;
 }
-export function toAssertDelegate<T> (assertFunc : AssertFunc<T>) : AssertDelegate<T> {
+export function toAssertDelegate<F extends AnyAssertFunc> (assertFunc : F) : AssertDelegate<TypeOf<F>> {
     if (assertFunc instanceof Field) {
         return assertFunc.assertDelegate;
     } else if (isCtor(assertFunc)) {
-        return nested(assertFunc);
+        return nested(assertFunc as any);
     } else {
-        return assertFunc;
+        return assertFunc as any;
     }
 }
-export function toAssertDelegateExact<T> (assertFunc : AssertFunc<T>) : AssertDelegate<T> {
+export function toAssertDelegateExact<F extends AnyAssertFunc> (assertFunc : F) : AssertDelegate<TypeOf<F>> {
     if (assertFunc instanceof Field) {
         return assertFunc.assertDelegate;
     } else if (isCtor(assertFunc)) {
-        return nestedExact(assertFunc);
+        return nestedExact(assertFunc as any);
     } else {
-        return assertFunc;
+        return assertFunc as any;
     }
 }

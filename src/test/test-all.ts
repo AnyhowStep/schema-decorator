@@ -17,4 +17,3 @@ import "./to-json";
 import "./to-raw-already-raw";
 import "./to-raw-ignore";
 import "./to-schema";
-import "./validate";

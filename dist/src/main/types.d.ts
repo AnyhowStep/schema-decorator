@@ -3,7 +3,8 @@ export declare type Constructor<T> = {
     new (): T;
 };
 export declare type AssertFunc<T> = Constructor<T> | AssertDelegate<T> | Field<string, T>;
-export declare type TypeOf<T extends AssertFunc<any>> = (T extends Constructor<infer R> ? R : T extends AssertDelegate<infer R> ? R : T extends Field<string, infer R> ? R : never);
+export declare type AnyAssertFunc = AssertFunc<any>;
+export declare type TypeOf<F extends AnyAssertFunc> = (F extends Constructor<infer T> ? T : F extends AssertDelegate<infer T> ? T : F extends Field<string, infer T> ? T : never);
 export declare class Field<NameT extends string, TypeT> {
     readonly name: NameT;
     readonly assert: AssertFunc<TypeT>;
@@ -18,5 +19,5 @@ export declare class Field<NameT extends string, TypeT> {
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function nestedExact<T>(ctor: Constructor<T>): AssertDelegate<T>;
 export declare function isCtor<T>(assertFunc: AssertFunc<T>): assertFunc is Constructor<T>;
-export declare function toAssertDelegate<T>(assertFunc: AssertFunc<T>): AssertDelegate<T>;
-export declare function toAssertDelegateExact<T>(assertFunc: AssertFunc<T>): AssertDelegate<T>;
+export declare function toAssertDelegate<F extends AnyAssertFunc>(assertFunc: F): AssertDelegate<TypeOf<F>>;
+export declare function toAssertDelegateExact<F extends AnyAssertFunc>(assertFunc: F): AssertDelegate<TypeOf<F>>;

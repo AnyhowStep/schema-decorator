@@ -2,15 +2,21 @@ import * as validation from "@anyhowstep/data-validation";
 import {
     AssertDelegate,
     AssertFunc,
+    AnyAssertFunc,
+    TypeOf,
     nested,
-    toAssertDelegateExact
+    toAssertDelegateExact,
+    Field
 } from "./types";
 import {Assertion} from "./Assertion";
 import * as myUtil from "./util";
 import {spread} from "@anyhowstep/type-util";
 
+Field; //For implicit type inference
+
 export type CastDelegate<FromT, ToT> = (from : FromT) => ToT;
 
+//TODO delete
 export function assertion<T> (assertion : Assertion<T>) : AssertDelegate<T> {
     if (assertion.isCtor) {
         return nested(assertion.func);
@@ -55,9 +61,9 @@ let args0 = [];
 let args1 = [];
 let args2 = [];
 for (let i=0; i<n; ++i) {
-    args0.push(`T${i}`);
-    args1.push(`i${i} : AssertFunc<T${i}>`);
-    args2.push(`T${i}`);
+    args0.push(`F${i} extends AnyAssertFunc`);
+    args1.push(`f${i} : F${i}`);
+    args2.push(`TypeOf<F${i}>`);
 }
 return `export function or<${args0.join(", ")}> (${args1.join(", ")}) : AssertDelegate<${args2.join("|")}>;`;
 }
@@ -67,30 +73,30 @@ arr.push(gen(i));
 }
 arr.join("\n");
 */
-export function or<T0> (i0 : AssertFunc<T0>) : AssertDelegate<T0>;
-export function or<T0, T1> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>) : AssertDelegate<T0|T1>;
-export function or<T0, T1, T2> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>) : AssertDelegate<T0|T1|T2>;
-export function or<T0, T1, T2, T3> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>) : AssertDelegate<T0|T1|T2|T3>;
-export function or<T0, T1, T2, T3, T4> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>) : AssertDelegate<T0|T1|T2|T3|T4>;
-export function or<T0, T1, T2, T3, T4, T5> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>) : AssertDelegate<T0|T1|T2|T3|T4|T5>;
-export function or<T0, T1, T2, T3, T4, T5, T6> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17|T18>;
-export function or<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>, i19 : AssertFunc<T19>) : AssertDelegate<T0|T1|T2|T3|T4|T5|T6|T7|T8|T9|T10|T11|T12|T13|T14|T15|T16|T17|T18|T19>;
-export function or<T> (...arr : AssertFunc<T>[]) : AssertDelegate<T>;
-export function or<T> (...arr : AssertFunc<T>[]) : AssertDelegate<T> {
+export function or<F0 extends AnyAssertFunc> (f0 : F0) : AssertDelegate<TypeOf<F0>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc> (f0 : F0, f1 : F1) : AssertDelegate<TypeOf<F0>|TypeOf<F1>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>|TypeOf<F15>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>|TypeOf<F15>|TypeOf<F16>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>|TypeOf<F15>|TypeOf<F16>|TypeOf<F17>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc, F18 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>|TypeOf<F15>|TypeOf<F16>|TypeOf<F17>|TypeOf<F18>>;
+export function or<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc, F18 extends AnyAssertFunc, F19 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18, f19 : F19) : AssertDelegate<TypeOf<F0>|TypeOf<F1>|TypeOf<F2>|TypeOf<F3>|TypeOf<F4>|TypeOf<F5>|TypeOf<F6>|TypeOf<F7>|TypeOf<F8>|TypeOf<F9>|TypeOf<F10>|TypeOf<F11>|TypeOf<F12>|TypeOf<F13>|TypeOf<F14>|TypeOf<F15>|TypeOf<F16>|TypeOf<F17>|TypeOf<F18>|TypeOf<F19>>;
+export function or<F extends AnyAssertFunc> (...arr : F[]) : AssertDelegate<TypeOf<F>>;
+export function or<F extends AnyAssertFunc> (...arr : F[]) : AssertDelegate<TypeOf<F>>  {
     const assertDelegates = arr.map(toAssertDelegateExact);
-    return (name : string, mixed : any) : T => {
+    return (name : string, mixed : any) : TypeOf<F> => {
         let messages : string[] = [];
         for (let d of assertDelegates) {
             try {
@@ -120,39 +126,46 @@ for (let i=1; i<21; ++i) {
 }
 arr.join("\n");
 */
-export function and<T0> (i0 : AssertFunc<T0>) : AssertDelegate<T0>;
-export function and<T0, T1> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>) : AssertDelegate<T0&T1>;
-export function and<T0, T1, T2> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>) : AssertDelegate<T0&T1&T2>;
-export function and<T0, T1, T2, T3> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>) : AssertDelegate<T0&T1&T2&T3>;
-export function and<T0, T1, T2, T3, T4> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>) : AssertDelegate<T0&T1&T2&T3&T4>;
-export function and<T0, T1, T2, T3, T4, T5> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>) : AssertDelegate<T0&T1&T2&T3&T4&T5>;
-export function and<T0, T1, T2, T3, T4, T5, T6> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18>;
-export function and<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>, i19 : AssertFunc<T19>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18&T19>;
-export function and<T> (...arr : AssertFunc<T>[]) : AssertDelegate<T> {
+export function and<F0 extends AnyAssertFunc> (f0 : F0) : AssertDelegate<TypeOf<F0>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc> (f0 : F0, f1 : F1) : AssertDelegate<TypeOf<F0>&TypeOf<F1>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc, F18 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>>;
+export function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, F2 extends AnyAssertFunc, F3 extends AnyAssertFunc, F4 extends AnyAssertFunc, F5 extends AnyAssertFunc, F6 extends AnyAssertFunc, F7 extends AnyAssertFunc, F8 extends AnyAssertFunc, F9 extends AnyAssertFunc, F10 extends AnyAssertFunc, F11 extends AnyAssertFunc, F12 extends AnyAssertFunc, F13 extends AnyAssertFunc, F14 extends AnyAssertFunc, F15 extends AnyAssertFunc, F16 extends AnyAssertFunc, F17 extends AnyAssertFunc, F18 extends AnyAssertFunc, F19 extends AnyAssertFunc> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18, f19 : F19) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>&TypeOf<F19>>;
+export function and<F extends AnyAssertFunc> (...arr : F[]) : AssertDelegate<TypeOf<F>> {
     const assertDelegates = arr.map(toAssertDelegateExact);
-    return (name : string, mixed : any) : T => {
+    return (name : string, mixed : any) : TypeOf<F> => {
         for (let d of assertDelegates) {
             mixed = d(name, mixed);
         }
         return mixed;
     };
 }
-export function cast<FromT, ToT> (canCast : AssertFunc<FromT>, castDelegate : CastDelegate<FromT, ToT>, assert : AssertFunc<ToT>) : AssertDelegate<ToT> {
+export function cast<
+    FromF extends AnyAssertFunc,
+    ToF extends AnyAssertFunc
+> (
+    canCast : FromF,
+    castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
+    assert : ToF
+) : AssertDelegate<TypeOf<ToF>> {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : ToT => {
+    return (name : string, mixed : any) : TypeOf<ToF> => {
         try {
             //If this works, we are already the desired data type
             return assertDelegate(name, mixed);
@@ -165,10 +178,17 @@ export function cast<FromT, ToT> (canCast : AssertFunc<FromT>, castDelegate : Ca
         }
     };
 }
-export function castFirst<FromT, ToT> (canCast : AssertFunc<FromT>, castDelegate : CastDelegate<FromT, ToT>, assert : AssertFunc<ToT>) : AssertDelegate<ToT> {
+export function castFirst<
+    FromF extends AnyAssertFunc,
+    ToF extends AnyAssertFunc
+> (
+    canCast : FromF,
+    castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
+    assert : ToF
+) : AssertDelegate<TypeOf<ToF>> {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : ToT => {
+    return (name : string, mixed : any) : TypeOf<ToF> => {
         try {
             //Attempt to cast first
             const from = canCastDelegate(name, mixed);
@@ -181,7 +201,7 @@ export function castFirst<FromT, ToT> (canCast : AssertFunc<FromT>, castDelegate
         }
     };
 }
-export function assert<T> (assert : AssertFunc<T>) {
+export function assert<F extends AnyAssertFunc> (assert : F) {
     const assertDelegate = toAssertDelegateExact(assert);
     return (target : Object, propertyKey : string | symbol) : void => {
         const propertyName = (typeof propertyKey == "string") ?
@@ -246,29 +266,29 @@ export function assert<T> (assert : AssertFunc<T>) {
 }
 
 //Convenience
-export function optional<T> (assert : AssertFunc<T>) : AssertDelegate<T|undefined> {
+export function optional<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|undefined> {
     const assertDelegate = toAssertDelegateExact(assert);
     return or(
         oneOf(undefined),
         assertDelegate
     );
 }
-export function nullable<T> (assert : AssertFunc<T>) : AssertDelegate<T|null> {
+export function nullable<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|null> {
     const assertDelegate = toAssertDelegateExact(assert);
     return or(
         oneOf(null),
         assertDelegate
     );
 }
-export function maybe<T> (assert : AssertFunc<T>) : AssertDelegate<T|undefined|null> {
+export function maybe<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|undefined|null> {
     const assertDelegate = toAssertDelegateExact(assert);
-    return or<T|undefined|null>(
+    return or(
         oneOf(undefined, null),
         assertDelegate
     );
 }
 
-export function notOptional<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, undefined>> {
+export function notOptional<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, undefined>> {
     const assertDelegate = toAssertDelegateExact(assert);
     return ((name : string, mixed : any) => {
         if (mixed === undefined) {
@@ -277,7 +297,7 @@ export function notOptional<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude
         return assertDelegate(name, mixed);
     }) as any;
 }
-export function notNullable<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, null>> {
+export function notNullable<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, null>> {
     const assertDelegate = toAssertDelegateExact(assert);
     return ((name : string, mixed : any) => {
         if (mixed === null) {
@@ -286,7 +306,7 @@ export function notNullable<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude
         return assertDelegate(name, mixed);
     }) as any;
 }
-export function notMaybe<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T, null|undefined>> {
+export function notMaybe<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, null|undefined>> {
     const assertDelegate = toAssertDelegateExact(assert);
     return ((name : string, mixed : any) => {
         if (mixed === null || mixed === undefined) {
@@ -297,9 +317,9 @@ export function notMaybe<T> (assert : AssertFunc<T>) : AssertDelegate<Exclude<T,
 }
 
 //Array
-export function array<T> (assert : AssertFunc<T>) {
+export function array<F extends AnyAssertFunc> (assert : F) {
     const assertDelegate = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : T[] => {
+    return (name : string, mixed : any) : TypeOf<F>[] => {
         if (!(mixed instanceof Array)) {
             throw new Error(`Expected ${name} to be an array, received ${typeof mixed}`);
         }
@@ -435,32 +455,49 @@ export function undef () : AssertDelegate<undefined> {
     };
 }
 
-
-export function intersect<T0 extends object> (i0 : AssertFunc<T0>) : AssertDelegate<T0>;
-export function intersect<T0 extends object, T1 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>) : AssertDelegate<T0&T1>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>) : AssertDelegate<T0&T1&T2>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>) : AssertDelegate<T0&T1&T2&T3>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>) : AssertDelegate<T0&T1&T2&T3&T4>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>) : AssertDelegate<T0&T1&T2&T3&T4&T5>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object, T18 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18>;
-export function intersect<T0 extends object, T1 extends object, T2 extends object, T3 extends object, T4 extends object, T5 extends object, T6 extends object, T7 extends object, T8 extends object, T9 extends object, T10 extends object, T11 extends object, T12 extends object, T13 extends object, T14 extends object, T15 extends object, T16 extends object, T17 extends object, T18 extends object, T19 extends object> (i0 : AssertFunc<T0>, i1 : AssertFunc<T1>, i2 : AssertFunc<T2>, i3 : AssertFunc<T3>, i4 : AssertFunc<T4>, i5 : AssertFunc<T5>, i6 : AssertFunc<T6>, i7 : AssertFunc<T7>, i8 : AssertFunc<T8>, i9 : AssertFunc<T9>, i10 : AssertFunc<T10>, i11 : AssertFunc<T11>, i12 : AssertFunc<T12>, i13 : AssertFunc<T13>, i14 : AssertFunc<T14>, i15 : AssertFunc<T15>, i16 : AssertFunc<T16>, i17 : AssertFunc<T17>, i18 : AssertFunc<T18>, i19 : AssertFunc<T19>) : AssertDelegate<T0&T1&T2&T3&T4&T5&T6&T7&T8&T9&T10&T11&T12&T13&T14&T15&T16&T17&T18&T19>;
-export function intersect<T extends object> (...assertions : AssertFunc<T>[]) : AssertDelegate<T> {
+/*
+function gen (n) {
+let args0 = [];
+let args1 = [];
+let args2 = [];
+for (let i=0; i<n; ++i) {
+    args0.push(`F${i} extends AssertFunc<object>`);
+    args1.push(`f${i} : F${i}`);
+    args2.push(`TypeOf<F${i}>`);
+}
+return `export function intersect<${args0.join(", ")}> (${args1.join(", ")}) : AssertDelegate<${args2.join("&")}>;`;
+}
+arr = [];
+for (let i=1; i<21; ++i) {
+arr.push(gen(i));
+}
+arr.join("\n");
+*/
+export function intersect<F0 extends AssertFunc<object>> (f0 : F0) : AssertDelegate<TypeOf<F0>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>> (f0 : F0, f1 : F1) : AssertDelegate<TypeOf<F0>&TypeOf<F1>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>, F18 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>>;
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>, F18 extends AssertFunc<object>, F19 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18, f19 : F19) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>&TypeOf<F19>>;
+export function intersect<F extends AssertFunc<object>> (...assertions : F[]) : AssertDelegate<TypeOf<F>> {
     const assertDelegates = assertions.map(toAssertDelegateExact);
 
-    return (name : string, mixed : any) : T => {
-        const result : T[] = [];
+    return (name : string, mixed : any) : TypeOf<F> => {
+        const result : TypeOf<F>[] = [];
         for (let d of assertDelegates) {
             result.push(d(name, mixed));
         }

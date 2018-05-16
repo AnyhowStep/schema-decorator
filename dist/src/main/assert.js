@@ -4,6 +4,8 @@ const validation = require("@anyhowstep/data-validation");
 const types_1 = require("./types");
 const myUtil = require("./util");
 const type_util_1 = require("@anyhowstep/type-util");
+types_1.Field; //For implicit type inference
+//TODO delete
 function assertion(assertion) {
     if (assertion.isCtor) {
         return types_1.nested(assertion.func);
