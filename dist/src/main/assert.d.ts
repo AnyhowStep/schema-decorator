@@ -1,4 +1,4 @@
-import { AssertDelegate, AssertFunc, AnyAssertFunc, TypeOf, Field } from "./types";
+import { AssertDelegate, AssertFunc, AnyAssertFunc, TypeOf } from "./types";
 import { Assertion } from "./Assertion";
 export declare type CastDelegate<FromT, ToT> = (from: FromT) => ToT;
 export declare function assertion<T>(assertion: Assertion<T>): AssertDelegate<T>;
@@ -61,7 +61,7 @@ export declare function maybe<F extends AnyAssertFunc>(assert: F): AssertDelegat
 export declare function notOptional<F extends AnyAssertFunc>(assert: F): AssertDelegate<Exclude<TypeOf<F>, undefined>>;
 export declare function notNullable<F extends AnyAssertFunc>(assert: F): AssertDelegate<Exclude<TypeOf<F>, null>>;
 export declare function notMaybe<F extends AnyAssertFunc>(assert: F): AssertDelegate<Exclude<TypeOf<F>, null | undefined>>;
-export declare function array<F extends AnyAssertFunc>(assert: F): (name: string, mixed: any) => (F extends new () => infer T ? T : F extends AssertDelegate<infer T> ? T : F extends Field<string, infer T> ? T : never)[];
+export declare function array<F extends AnyAssertFunc>(assert: F): AssertDelegate<TypeOf<F>[]>;
 export declare function date(): AssertDelegate<Date>;
 export declare function any(): AssertDelegate<any>;
 export declare enum Enum {

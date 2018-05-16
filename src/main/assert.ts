@@ -317,7 +317,7 @@ export function notMaybe<F extends AnyAssertFunc> (assert : F) : AssertDelegate<
 }
 
 //Array
-export function array<F extends AnyAssertFunc> (assert : F) {
+export function array<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>[]> {
     const assertDelegate = toAssertDelegateExact(assert);
     return (name : string, mixed : any) : TypeOf<F>[] => {
         if (!(mixed instanceof Array)) {
