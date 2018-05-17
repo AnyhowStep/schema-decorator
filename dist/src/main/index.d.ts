@@ -7,6 +7,7 @@ export * from "./assert";
 export * from "./Assertion";
 export * from "./convert";
 export * from "./LazyNested";
+export * from "./restrict";
 export * from "./types";
 export * from "./util";
 export * from "./field";
