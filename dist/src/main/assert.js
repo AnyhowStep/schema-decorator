@@ -343,6 +343,67 @@ function undef() {
     };
 }
 exports.undef = undef;
+function varChar(arg0, arg1) {
+    if (arg1 == undefined) {
+        return validation.String.assertMaxLengthHandler(arg0);
+    }
+    else {
+        return validation.String.assertLengthHandler({
+            min: arg0,
+            max: arg1,
+        });
+    }
+}
+exports.varChar = varChar;
+function numberToTrue() {
+    return (name, mixed) => {
+        const b = numberToBoolean()(name, mixed);
+        return oneOf(true)(name, b);
+    };
+}
+exports.numberToTrue = numberToTrue;
+function numberToFalse() {
+    return (name, mixed) => {
+        const b = numberToBoolean()(name, mixed);
+        return oneOf(false)(name, b);
+    };
+}
+exports.numberToFalse = numberToFalse;
+function jsonObjectStr() {
+    return (name, str) => {
+        let jsonObject = undefined;
+        try {
+            jsonObject = JSON.parse(str);
+        }
+        catch (err) {
+            throw new Error(`Expected ${name} to be a valid JSON string; ${err.message}`);
+        }
+        const jsonStr = JSON.stringify(jsonObject);
+        if (jsonStr[0] != "{") {
+            throw new Error(`Expected ${name} to be a JSON object, received ${jsonStr}`);
+        }
+        //We return the result of JSON.stringify() to use the minimal amount of space
+        return jsonStr;
+    };
+}
+exports.jsonObjectStr = jsonObjectStr;
+function jsonObject() {
+    return (name, mixed) => {
+        if (typeof mixed == "string") {
+            //If this assertion doesn't throw an error,
+            //this object is safe to use
+            jsonObjectStr()(name, mixed);
+            return JSON.parse(mixed);
+        }
+        else {
+            //If this assertion doesn't throw an error,
+            //this object is safe to use
+            jsonObjectStr()(name, JSON.stringify(mixed));
+            return mixed;
+        }
+    };
+}
+exports.jsonObject = jsonObject;
 function intersect(...assertions) {
     const assertDelegates = assertions.map(types_1.toAssertDelegateExact);
     return (name, mixed) => {

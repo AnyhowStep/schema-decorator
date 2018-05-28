@@ -455,6 +455,63 @@ export function undef () : AssertDelegate<undefined> {
     };
 }
 
+
+export function varChar (min : number, max : number) : AssertDelegate<string>;
+export function varChar (max : number) : AssertDelegate<string>;
+export function varChar (arg0 : number, arg1? : number) : AssertDelegate<string> {
+    if (arg1 == undefined) {
+        return validation.String.assertMaxLengthHandler(arg0);
+    } else {
+        return validation.String.assertLengthHandler({
+            min : arg0,
+            max : arg1,
+        });
+    }
+}
+export function numberToTrue () : AssertDelegate<true> {
+    return (name : string, mixed : any) : true => {
+        const b = numberToBoolean()(name, mixed);
+        return oneOf(true)(name, b);
+    };
+}
+export function numberToFalse () : AssertDelegate<false> {
+    return (name : string, mixed : any) : false => {
+        const b = numberToBoolean()(name, mixed);
+        return oneOf(false)(name, b);
+    };
+}
+export function jsonObjectStr () : AssertDelegate<string> {
+    return (name : string, str : string) : string => {
+        let jsonObject : Object|undefined = undefined;
+        try {
+            jsonObject = JSON.parse(str);
+        } catch (err) {
+            throw new Error(`Expected ${name} to be a valid JSON string; ${err.message}`);
+        }
+        const jsonStr = JSON.stringify(jsonObject);
+        if (jsonStr[0] != "{") {
+            throw new Error(`Expected ${name} to be a JSON object, received ${jsonStr}`);
+        }
+        //We return the result of JSON.stringify() to use the minimal amount of space
+        return jsonStr;
+    };
+}
+export function jsonObject () : AssertDelegate<Object> {
+    return (name : string, mixed : any) : Object => {
+        if (typeof mixed == "string") {
+            //If this assertion doesn't throw an error,
+            //this object is safe to use
+            jsonObjectStr()(name, mixed);
+            return JSON.parse(mixed);
+        } else {
+            //If this assertion doesn't throw an error,
+            //this object is safe to use
+            jsonObjectStr()(name, JSON.stringify(mixed));
+            return mixed;
+        }
+    }
+}
+
 /*
 function gen (n) {
 let args0 = [];

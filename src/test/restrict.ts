@@ -15,10 +15,10 @@ tape("restrict", (t) => {
         @schema.assert(validation.Number.assertNaturalNumber)
         b : number = 0;
     }
-    class C {
+    /*class C {
         @schema.assert(validation.Number.assertNaturalNumber)
         c : number = 0;
-    }
+    }*/
 
     const restricted = schema.restrict(A, "restricting B to A", new B());
     console.log(JSON.stringify(restricted));

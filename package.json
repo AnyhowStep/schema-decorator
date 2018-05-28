@@ -16,7 +16,7 @@
     "url": "https://github.com/AnyhowStep/schema-decorator"
   },
   "dependencies": {
-    "@anyhowstep/data-validation": "^1.14.0",
+    "@anyhowstep/data-validation": "^1.15.0",
     "@anyhowstep/type-util": "^1.9.1",
     "@types/underscore": "^1.8.6",
     "axios": "^0.17.1",
