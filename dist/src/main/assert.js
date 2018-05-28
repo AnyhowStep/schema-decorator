@@ -371,6 +371,7 @@ function numberToFalse() {
 exports.numberToFalse = numberToFalse;
 function jsonObjectStr() {
     return (name, str) => {
+        validation.String.assertString(name, str);
         let jsonObject = undefined;
         try {
             jsonObject = JSON.parse(str);

@@ -482,6 +482,7 @@ export function numberToFalse () : AssertDelegate<false> {
 }
 export function jsonObjectStr () : AssertDelegate<string> {
     return (name : string, str : string) : string => {
+        validation.String.assertString(name, str);
         let jsonObject : Object|undefined = undefined;
         try {
             jsonObject = JSON.parse(str);
