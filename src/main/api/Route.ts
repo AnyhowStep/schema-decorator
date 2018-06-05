@@ -42,7 +42,9 @@ export class Path<T = {}> {
         arr.push(part);
         return new Path(
             arr,
-            this.str + part
+            (this.str + part)
+                .replace(/\/{2,}/g, "/")
+                .replace(/\/$/g, "")
         );
     }
     //regex, if provided, ignores modifiers like `g` and `i`

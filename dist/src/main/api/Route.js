@@ -31,7 +31,9 @@ class Path {
         }
         const arr = this.arr.slice();
         arr.push(part);
-        return new Path(arr, this.str + part);
+        return new Path(arr, (this.str + part)
+            .replace(/\/{2,}/g, "/")
+            .replace(/\/$/g, ""));
     }
     //regex, if provided, ignores modifiers like `g` and `i`
     appendParam(param, regex) {
