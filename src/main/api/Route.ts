@@ -2,8 +2,9 @@ import {AccessTokenType} from "./AccessToken";
 import {Assertion} from "../Assertion";
 import {AssertDelegate} from "../types";
 import {Param, ParamValue} from "./Param";
-import * as a from "../assert";
+import * as a from "../assert-lib";
 import {ignoreExtraVariables} from "../convert";
+import {assert} from "../assert";
 
 export interface PathParam<T> {
     param  : keyof T,
@@ -92,7 +93,7 @@ export class Path<T = {}> {
 
 @ignoreExtraVariables
 export class Empty {
-    @a.assert(a.any())
+    @assert(a.any())
     _dummy? : undefined;
 }
 

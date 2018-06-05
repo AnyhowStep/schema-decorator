@@ -6,8 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const a = require("../assert");
+const a = require("../assert-lib");
 const convert_1 = require("../convert");
+const assert_1 = require("../assert");
 class Path {
     constructor(arr = [], str = "") {
         this.arr = arr;
@@ -79,7 +80,7 @@ exports.Path = Path;
 let Empty = class Empty {
 };
 __decorate([
-    a.assert(a.any())
+    assert_1.assert(a.any())
 ], Empty.prototype, "_dummy", void 0);
 Empty = __decorate([
     convert_1.ignoreExtraVariables

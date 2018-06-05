@@ -1,5 +1,12 @@
 import * as convert from "./convert";
-import {maybe, optional, nullable} from "./assert";
+import {
+    maybe,
+    optional,
+    nullable,
+    notMaybe,
+    notOptional,
+    notNullable
+} from "./assert-lib/missing-value";
 
 /*
     Everything should be converted into an AssertDelegate.
@@ -46,6 +53,24 @@ export class Field<NameT extends string, TypeT> {
         return new Field(
             this.name,
             nullable(this.assertDelegate)
+        );
+    }
+    public notMaybe () {
+        return new Field(
+            this.name,
+            notMaybe(this.assertDelegate)
+        );
+    }
+    public notOptional () {
+        return new Field(
+            this.name,
+            notOptional(this.assertDelegate)
+        );
+    }
+    public notNullable () {
+        return new Field(
+            this.name,
+            notNullable(this.assertDelegate)
         );
     }
     public withName<NewNameT extends string> (name : NewNameT) {

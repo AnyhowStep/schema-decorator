@@ -1,0 +1,1 @@
+{"version":3,"file":"assertion.js","sourceRoot":"","sources":["../../../../src/main/assert-lib/assertion.ts"],"names":[],"mappings":";;AAAA,oCAGkB;AAGlB,aAAa;AACb,mBAA8B,SAAwB;IAClD,IAAI,SAAS,CAAC,MAAM,EAAE;QAClB,OAAO,cAAM,CAAC,SAAS,CAAC,IAAI,CAAC,CAAC;KACjC;SAAM;QACH,OAAO,SAAS,CAAC,IAAI,CAAC;KACzB;AACL,CAAC;AAND,8BAMC"}

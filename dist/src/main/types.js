@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const convert = require("./convert");
-const assert_1 = require("./assert");
+const missing_value_1 = require("./assert-lib/missing-value");
 class Field {
     constructor(name, assert) {
         this.name = name;
@@ -9,13 +9,22 @@ class Field {
         this.assertDelegate = toAssertDelegateExact(assert);
     }
     maybe() {
-        return new Field(this.name, assert_1.maybe(this.assertDelegate));
+        return new Field(this.name, missing_value_1.maybe(this.assertDelegate));
     }
     optional() {
-        return new Field(this.name, assert_1.optional(this.assertDelegate));
+        return new Field(this.name, missing_value_1.optional(this.assertDelegate));
     }
     nullable() {
-        return new Field(this.name, assert_1.nullable(this.assertDelegate));
+        return new Field(this.name, missing_value_1.nullable(this.assertDelegate));
+    }
+    notMaybe() {
+        return new Field(this.name, missing_value_1.notMaybe(this.assertDelegate));
+    }
+    notOptional() {
+        return new Field(this.name, missing_value_1.notOptional(this.assertDelegate));
+    }
+    notNullable() {
+        return new Field(this.name, missing_value_1.notNullable(this.assertDelegate));
     }
     withName(name) {
         return new Field(name, this.assert);

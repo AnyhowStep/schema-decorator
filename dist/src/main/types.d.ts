@@ -13,6 +13,9 @@ export declare class Field<NameT extends string, TypeT> {
     maybe(): Field<NameT, TypeT | null | undefined>;
     optional(): Field<NameT, TypeT | undefined>;
     nullable(): Field<NameT, TypeT | null>;
+    notMaybe(): Field<NameT, Exclude<TypeT, null | undefined>>;
+    notOptional(): Field<NameT, Exclude<TypeT, undefined>>;
+    notNullable(): Field<NameT, Exclude<TypeT, null>>;
     withName<NewNameT extends string>(name: NewNameT): Field<NewNameT, TypeT>;
     withAssert<NewTypeT>(assert: AssertFunc<NewTypeT>): Field<NameT, NewTypeT>;
 }

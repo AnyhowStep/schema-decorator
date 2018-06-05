@@ -7,6 +7,7 @@ __export(require("./api/AccessToken"));
 __export(require("./api/Api"));
 __export(require("./api/Request"));
 __export(require("./api/Route"));
+__export(require("./assert-lib"));
 __export(require("./assert"));
 __export(require("./convert"));
 __export(require("./LazyNested"));

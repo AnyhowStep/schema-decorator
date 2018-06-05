@@ -4,6 +4,8 @@ export * from "./api/Param";
 export * from "./api/Request";
 export * from "./api/Route";
 
+export * from "./assert-lib";
+
 export * from "./assert";
 export * from "./Assertion";
 export * from "./convert";

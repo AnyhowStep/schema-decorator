@@ -1,6 +1,6 @@
 {
   "name": "schema-decorator",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
@@ -16,7 +16,6 @@
     "url": "https://github.com/AnyhowStep/schema-decorator"
   },
   "dependencies": {
-    "@anyhowstep/data-validation": "^1.15.0",
     "@anyhowstep/type-util": "^1.9.1",
     "@types/underscore": "^1.8.6",
     "axios": "^0.17.1",
@@ -24,6 +23,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "@anyhowstep/data-validation": "^1.15.0",
     "@types/node": "^8.5.2",
     "@types/tape": "^4.2.31",
     "tape": "^4.8.0",
