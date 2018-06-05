@@ -74,3 +74,29 @@ export function varChar (arg0 : number, arg1? : number) : AssertDelegate<string>
 export function varChar (arg0 : number, arg1? : number) : AssertDelegate<string> {
     return stringLength(arg0, arg1);
 }
+
+export function match (regex : RegExp) : AssertDelegate<string> {
+    return and(
+        string(),
+        (name : string, mixed : string) : string => {
+            if (regex.test(mixed)) {
+                return mixed;
+            } else {
+                throw new Error(`${name} does not match ${regex.source}, received ${mixed}`);
+            }
+        }
+    );
+}
+
+export function email () : AssertDelegate<string> {
+    return and(
+        string(),
+        (name : string, mixed : string) : string => {
+            if (/^.+@.+$/.test(mixed)) {
+                return mixed;
+            } else {
+                throw new Error(`${name} must be an email address, received ${mixed}`);
+            }
+        }
+    );
+}

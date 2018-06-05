@@ -49,4 +49,26 @@ function varChar(arg0, arg1) {
     return stringLength(arg0, arg1);
 }
 exports.varChar = varChar;
+function match(regex) {
+    return operator_1.and(basic_1.string(), (name, mixed) => {
+        if (regex.test(mixed)) {
+            return mixed;
+        }
+        else {
+            throw new Error(`${name} does not match ${regex.source}, received ${mixed}`);
+        }
+    });
+}
+exports.match = match;
+function email() {
+    return operator_1.and(basic_1.string(), (name, mixed) => {
+        if (/^.+@.+$/.test(mixed)) {
+            return mixed;
+        }
+        else {
+            throw new Error(`${name} must be an email address, received ${mixed}`);
+        }
+    });
+}
+exports.email = email;
 //# sourceMappingURL=string.js.map
