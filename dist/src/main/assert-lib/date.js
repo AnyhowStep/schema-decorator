@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const number_1 = require("./number");
+const operator_1 = require("./operator");
 //Only checks if Date
 function validDate() {
     return (name, mixed) => {
@@ -33,4 +34,30 @@ function date() {
     };
 }
 exports.date = date;
+function dateTimeWithoutMillisecond() {
+    return operator_1.and(date(), (_name, mixed) => {
+        //To remove the millisecond part,
+        //+ Divide by 1000 to get the time in seconds
+        //+ Convert to an integer
+        //+ Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
+        const withoutMs = new Date(Math.floor(mixed.getTime() / 1000) * 1000);
+        return withoutMs;
+    });
+}
+exports.dateTimeWithoutMillisecond = dateTimeWithoutMillisecond;
+//Behaves like MySQL DATETIME, alias for dateTimeWithoutMillisecond()
+function dateTime() {
+    return dateTimeWithoutMillisecond();
+}
+exports.dateTime = dateTime;
+//Alias for date()
+function dateTimeWithMillisecond() {
+    return date();
+}
+exports.dateTimeWithMillisecond = dateTimeWithMillisecond;
+//Behaves like MySQL DATETIME(3), alias for date()
+function dateTime3() {
+    return date();
+}
+exports.dateTime3 = dateTime3;
 //# sourceMappingURL=date.js.map

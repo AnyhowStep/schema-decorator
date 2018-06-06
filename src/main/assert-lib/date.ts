@@ -1,5 +1,6 @@
 import {AssertDelegate} from "../types";
 import {finiteNumber} from "./number";
+import {and} from "./operator";
 
 //Only checks if Date
 export function validDate () : AssertDelegate<Date> {
@@ -28,4 +29,31 @@ export function date () : AssertDelegate<Date> {
             throw new Error(`Expected ${name} to be a Date, Date string, or Date number`);
         }
     };
+}
+
+export function dateTimeWithoutMillisecond () : AssertDelegate<Date> {
+    return and(
+        date(),
+        (_name : string, mixed : Date) : Date => {
+            //To remove the millisecond part,
+            //+ Divide by 1000 to get the time in seconds
+            //+ Convert to an integer
+            //+ Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
+            const withoutMs = new Date(Math.floor(mixed.getTime() / 1000) * 1000);
+            return withoutMs;
+        }
+    );
+}
+//Behaves like MySQL DATETIME, alias for dateTimeWithoutMillisecond()
+export function dateTime () : AssertDelegate<Date> {
+    return dateTimeWithoutMillisecond();
+}
+
+//Alias for date()
+export function dateTimeWithMillisecond () : AssertDelegate<Date> {
+    return date();
+}
+//Behaves like MySQL DATETIME(3), alias for date()
+export function dateTime3 () : AssertDelegate<Date> {
+    return date();
 }
