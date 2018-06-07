@@ -18,6 +18,8 @@ export declare class Field<NameT extends string, TypeT> {
     notNullable(): Field<NameT, Exclude<TypeT, null>>;
     withName<NewNameT extends string>(name: NewNameT): Field<NewNameT, TypeT>;
     withAssert<NewTypeT>(assert: AssertFunc<NewTypeT>): Field<NameT, NewTypeT>;
+    assertType(name: string, mixed: any): TypeT;
+    assertType(mixed: any): TypeT;
 }
 export declare type AnyField = Field<any, any>;
 export declare function nested<T>(ctor: Constructor<T>): AssertDelegate<T>;

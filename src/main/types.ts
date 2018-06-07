@@ -85,6 +85,15 @@ export class Field<NameT extends string, TypeT> {
             assert
         );
     }
+    public assertType (name : string, mixed : any) : TypeT;
+    public assertType (mixed : any) : TypeT;
+    public assertType (arg0 : any, arg1? : any) : TypeT {
+        if (arg1 == undefined) {
+            return this.assertDelegate(this.name, arg0);
+        } else {
+            return this.assertDelegate(arg0, arg1);
+        }
+    }
 }
 export type AnyField = Field<any, any>;
 

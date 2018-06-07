@@ -32,6 +32,14 @@ class Field {
     withAssert(assert) {
         return new Field(this.name, assert);
     }
+    assertType(arg0, arg1) {
+        if (arg1 == undefined) {
+            return this.assertDelegate(this.name, arg0);
+        }
+        else {
+            return this.assertDelegate(arg0, arg1);
+        }
+    }
 }
 exports.Field = Field;
 function nested(ctor) {
