@@ -15,46 +15,54 @@ export type RouteMap = {
         any
     >
 };
-export type ApiMixin<RouteMapT extends RouteMap> = {
+export type ApiMixin<RouteMapT extends RouteMap> = (
+    Api &
+    {
+        [routeName in keyof RouteMapT] : () => (
+            RouteMapT[routeName] extends Route<
+                infer RawParamT,
+                infer ParamT,
+                infer QueryT,
+                infer BodyT,
+                infer ResponseT,
+                infer AccessTokenT,
+                infer MethodLiteralT
+            > ?
+                (
+                    ParamT extends Param<RawParamT> ?
+                        Request<
+                            Empty,
+                            Empty,
+                            Empty,
+                            undefined,
+                            RawParamT,
+                            ParamT,
+                            QueryT,
+                            BodyT,
+                            ResponseT,
+                            AccessTokenT
+                        > :
+                        never
+                ) :
+                never
+        )
+    }
+);
+export type ApiMixinType<RouteMapT extends RouteMap> = {
     new (config: ApiConfiguration) : (
-        Api &
-        {
-            [routeName in keyof RouteMapT] : () => (
-                RouteMapT[routeName] extends Route<
-                    infer RawParamT,
-                    infer ParamT,
-                    infer QueryT,
-                    infer BodyT,
-                    infer ResponseT,
-                    infer AccessTokenT,
-                    infer MethodLiteralT
-                > ?
-                    (
-                        ParamT extends Param<RawParamT> ?
-                            Request<
-                                Empty,
-                                Empty,
-                                Empty,
-                                undefined,
-                                RawParamT,
-                                ParamT,
-                                QueryT,
-                                BodyT,
-                                ResponseT,
-                                AccessTokenT
-                            > :
-                            never
-                    ) :
-                    never
-            )
-        }
+        ApiMixin<RouteMapT>
     ),
     readonly route : Readonly<RouteMapT>
 }
+export type ApiInstance<ApiMixinTypeT extends ApiMixinType<any>> = (
+    ApiMixinTypeT extends ApiMixinType<infer RouteMapT> ?
+        ApiMixin<RouteMapT> :
+        never
+);
 
 export function toApi<RouteMapT extends RouteMap> (
     routeMap : RouteMapT
-) : ApiMixin<RouteMapT> {
+) : ApiMixinType<RouteMapT> {
     @rename("ApiMixin")
     class _ApiMixin extends Api {
 
