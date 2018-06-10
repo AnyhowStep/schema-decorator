@@ -3,6 +3,7 @@ export * from "./api/Api";
 export * from "./api/Param";
 export * from "./api/Request";
 export * from "./api/Route";
+export * from "./api/to-api";
 
 export * from "./assert-lib";
 
