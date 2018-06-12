@@ -110,9 +110,26 @@ export function schema (...fields : AnyField[]) : AssertDelegate<any> {
 
 export function toSchema<
     RawFieldCollectionT extends RawFieldCollection
-> (raw : RawFieldCollectionT) : AssertDelegate<{
-    [name in keyof RawFieldCollectionT] : TypeOf<RawFieldCollectionT[name]>
-}> {
+> (raw : RawFieldCollectionT) : AssertDelegate<
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends TypeOf<RawFieldCollectionT[k]> ?
+                    never :
+                    k
+            )
+        }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
+    } &
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends TypeOf<RawFieldCollectionT[k]> ?
+                    k :
+                    never
+            )
+        }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
+    }
+> {
     const fieldCollection = fields(raw);
     const fieldArray : Field<string, any>[] = [];
     for (let k in fieldCollection) {

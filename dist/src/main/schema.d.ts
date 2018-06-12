@@ -5157,5 +5157,11 @@ export declare function schema<F0 extends AnyField, F1 extends AnyField, F2 exte
 }) : never)>;
 export declare function schema(...fields: AnyField[]): AssertDelegate<any>;
 export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT): AssertDelegate<{
-    [name in keyof RawFieldCollectionT]: TypeOf<RawFieldCollectionT[name]>;
+    [name in {
+        [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? never : k);
+    }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
+} & {
+    [name in {
+        [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? k : never);
+    }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
 }>;
