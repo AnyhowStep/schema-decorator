@@ -26,7 +26,7 @@ export function date () : AssertDelegate<Date> {
         } else if (mixed instanceof Date) {
             return validDate()(name, mixed);
         } else {
-            throw new Error(`Expected ${name} to be a Date, Date string, or Date number`);
+            throw new Error(`Expected ${name} to be a Date, Date string, or Date number; received ${typeof mixed}`);
         }
     };
 }

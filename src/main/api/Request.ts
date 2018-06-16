@@ -200,17 +200,17 @@ export class Request<P, Q, B, A,
         ParamT,
         QueryT,
         BodyT,
-        Empty, /*ResponseT*/
+        ResponseT,
         AccessTokenT
-    >) : Promise<axios.AxiosResponse<any>>;
+    >) : Promise<axios.AxiosResponse<ResponseT>>;
     public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
         RawParamT,
         ParamT,
         QueryT,
         BodyT,
-        ResponseT,
+        Empty, /*ResponseT*/
         AccessTokenT
-    >) : Promise<axios.AxiosResponse<ResponseT>>;
+    >) : Promise<axios.AxiosResponse<any>>;
     public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
         RawParamT,
         ParamT,

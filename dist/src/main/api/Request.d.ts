@@ -26,6 +26,6 @@ export declare class Request<P, Q, B, A, RawParamT, ParamT extends Param<RawPara
     setAccessToken<NewT extends AccessTokenT>(this: Request<P, Q, B, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>, n: NewT): Request<P, Q, B, NewT, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     setHeader(key: string, value: undefined | string | (string[])): Request<P, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
     setOnTransformBody(onTransformBody: TransformBodyDelegate): Request<P, Q, B, A, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
-    send(this: Request<ParamT, QueryT, BodyT, AccessTokenT, RawParamT, ParamT, QueryT, BodyT, Empty, /*ResponseT*/ AccessTokenT>): Promise<axios.AxiosResponse<any>>;
     send(this: Request<ParamT, QueryT, BodyT, AccessTokenT, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>): Promise<axios.AxiosResponse<ResponseT>>;
+    send(this: Request<ParamT, QueryT, BodyT, AccessTokenT, RawParamT, ParamT, QueryT, BodyT, Empty, /*ResponseT*/ AccessTokenT>): Promise<axios.AxiosResponse<any>>;
 }
