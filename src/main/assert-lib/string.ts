@@ -75,6 +75,10 @@ export function varChar (arg0 : number, arg1? : number) : AssertDelegate<string>
     return stringLength(arg0, arg1);
 }
 
+export function char (length : number) : AssertDelegate<string> {
+    return stringLength(length, length);
+}
+
 export function match (regex : RegExp) : AssertDelegate<string> {
     return and(
         string(),

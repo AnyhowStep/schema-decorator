@@ -11,5 +11,6 @@ export declare function stringLength(arg0: number, arg1?: number): AssertDelegat
 export declare function varChar(max: number): AssertDelegate<string>;
 export declare function varChar(min: number, max: number): AssertDelegate<string>;
 export declare function varChar(arg0: number, arg1?: number): AssertDelegate<string>;
+export declare function char(length: number): AssertDelegate<string>;
 export declare function match(regex: RegExp): AssertDelegate<string>;
 export declare function email(): AssertDelegate<string>;

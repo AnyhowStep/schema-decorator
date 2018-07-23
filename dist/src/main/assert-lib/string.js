@@ -49,6 +49,10 @@ function varChar(arg0, arg1) {
     return stringLength(arg0, arg1);
 }
 exports.varChar = varChar;
+function char(length) {
+    return stringLength(length, length);
+}
+exports.char = char;
 function match(regex) {
     return operator_1.and(basic_1.string(), (name, mixed) => {
         if (regex.test(mixed)) {
