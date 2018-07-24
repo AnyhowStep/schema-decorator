@@ -244,7 +244,8 @@ export class Request<P, Q, B, A,
         }
         const config : axios.AxiosRequestConfig = {
             method : route.getMethod(),
-            url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT)),
+            url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT))
+                .replace(/\/{2,}/g, "/"),
             params : toRaw("query", this.args.query, r.queryT),
             data : rawBody,
             headers : headers,
