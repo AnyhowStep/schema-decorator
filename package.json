@@ -1,6 +1,6 @@
 {
   "name": "schema-decorator",
-  "version": "1.43.1",
+  "version": "1.44.0",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
@@ -19,13 +19,13 @@
     "@anyhowstep/type-util": "^1.9.1",
     "@types/underscore": "^1.8.6",
     "axios": "^0.17.1",
-    "typescript": "^2.9.0-dev.20180516",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "@anyhowstep/data-validation": "^1.15.0",
     "@types/node": "^8.5.2",
     "@types/tape": "^4.2.31",
+    "typescript": "^2.9.0-dev.20180516",
     "tape": "^4.8.0",
     "ts-node": "^4.1.0"
   }

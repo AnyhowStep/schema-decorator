@@ -17,3 +17,5 @@ export * from "./util";
 
 export * from "./field";
 export * from "./schema";
+
+export * from "./to-parameter";

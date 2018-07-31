@@ -17,4 +17,5 @@ __export(require("./types"));
 __export(require("./util"));
 __export(require("./field"));
 __export(require("./schema"));
+__export(require("./to-parameter"));
 //# sourceMappingURL=index.js.map
