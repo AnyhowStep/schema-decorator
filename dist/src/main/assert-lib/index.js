@@ -14,6 +14,7 @@ __export(require("./enum"));
 __export(require("./json"));
 __export(require("./missing-value"));
 __export(require("./number"));
+__export(require("./object"));
 __export(require("./operator"));
 __export(require("./string"));
 //# sourceMappingURL=index.js.map

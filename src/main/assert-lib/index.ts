@@ -9,5 +9,6 @@ export * from "./enum";
 export * from "./json";
 export * from "./missing-value";
 export * from "./number";
+export * from "./object";
 export * from "./operator";
 export * from "./string";

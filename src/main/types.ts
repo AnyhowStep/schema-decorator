@@ -10,10 +10,10 @@ import {
 
 /*
     Everything should be converted into an AssertDelegate.
-
 */
-
-export type AssertDelegate<T> = (name : string, mixed : any) => T;
+export type AssertDelegate<T> = ((name : string, mixed : any) => T)/* & {
+    __accepts? : any
+}*/;
 export type Constructor<T> = {new():T};
 export type AssertFunc<T> = Constructor<T>|AssertDelegate<T>|Field<string, T>;
 export type AnyAssertFunc = AssertFunc<any>;
@@ -134,3 +134,26 @@ export function toAssertDelegateExact<F extends AnyAssertFunc> (assertFunc : F) 
         return assertFunc as any;
     }
 }
+/*
+export type Accepts<F extends AnyAssertFunc> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegate<infer T> ?
+    (
+        "__accepts" extends keyof F ?
+            F["__accepts"] :
+            T
+    ) :
+    F extends Field<string, infer T> ?
+    (
+        "__accepts" extends keyof F["assertDelegate"] ?
+            F["assertDelegate"]["__accepts"] :
+            T
+    ) :
+    never
+);
+
+declare const x : (() => number) & { __accepts : string }
+const f = new Field("f", x);
+declare const a : Accepts<typeof f>;
+declare const t : TypeOf<typeof f>;*/
