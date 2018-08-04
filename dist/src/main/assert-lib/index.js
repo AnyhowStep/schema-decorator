@@ -5,7 +5,6 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./array-like"));
 __export(require("./array"));
-__export(require("./assertion"));
 __export(require("./basic"));
 __export(require("./boolean"));
 __export(require("./cast"));

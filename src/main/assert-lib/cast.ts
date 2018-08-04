@@ -2,6 +2,7 @@ import {
     AnyAssertFunc,
     AssertDelegate,
     TypeOf,
+    AcceptsOf,
     toAssertDelegateExact
 } from "../types";
 
@@ -14,10 +15,10 @@ export function cast<
     canCast : FromF,
     castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
     assert : ToF
-) : AssertDelegate<TypeOf<ToF>> {
+) : AssertDelegate<TypeOf<ToF>> & { __accepts : AcceptsOf<FromF>|AcceptsOf<ToF> } {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : TypeOf<ToF> => {
+    return ((name : string, mixed : any) : TypeOf<ToF> => {
         try {
             //If this works, we are already the desired data type
             return assertDelegate(name, mixed);
@@ -28,7 +29,7 @@ export function cast<
             //One final check
             return assertDelegate(name, to);
         }
-    };
+    }) as any;
 }
 export function castFirst<
     FromF extends AnyAssertFunc,
@@ -37,10 +38,10 @@ export function castFirst<
     canCast : FromF,
     castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
     assert : ToF
-) : AssertDelegate<TypeOf<ToF>> {
+) : AssertDelegate<TypeOf<ToF>> & { __accepts : AcceptsOf<FromF>|AcceptsOf<ToF> } {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : TypeOf<ToF> => {
+    return ((name : string, mixed : any) : TypeOf<ToF> => {
         try {
             //Attempt to cast first
             const from = canCastDelegate(name, mixed);
@@ -51,5 +52,5 @@ export function castFirst<
             //We failed to cast, check if the original value is the desired type
             return assertDelegate(name, mixed);
         }
-    };
+    }) as any;
 }

@@ -1,19 +1,10 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const a = require("../assert-lib");
-const convert_1 = require("../convert");
-const assert_1 = require("../assert");
 class Path {
     constructor(arr = [], str = "") {
         this.arr = arr;
         this.str = str;
-        this._dummyT;
+        this._dummyParamKeys;
     }
     append(part) {
         if (part.length == 0) {
@@ -75,127 +66,48 @@ class Path {
                 result += `/${encodeURIComponent(value)}`;
             }
         }
-        return result;
+        return result.replace(/\/{2,}/g, "/");
     }
 }
 exports.Path = Path;
-let Empty = class Empty {
-};
-__decorate([
-    assert_1.assert(a.any())
-], Empty.prototype, "_dummy", void 0);
-Empty = __decorate([
-    convert_1.ignoreExtraVariables
-], Empty);
-exports.Empty = Empty;
 ;
 class Route {
-    constructor(args) {
-        this.args = Object.assign({}, args);
+    constructor(_method, data) {
+        this._method = _method;
+        this.data = data;
     }
     static Create() {
-        return new Route({
+        return new Route("Contextual", {
             path: new Path(),
-            paramT: {
-                isCtor: true,
-                func: Empty,
-            },
-            queryT: {
-                isCtor: true,
-                func: Empty,
-            },
-            bodyT: {
-                isCtor: true,
-                func: Empty,
-            },
-            responseT: {
-                isCtor: true,
-                func: Empty,
-            },
-            method: "Contextual",
         });
     }
     append(part) {
-        return new Route(Object.assign({}, this.args, { path: this.args.path.append(part) }));
+        return new Route(this._method, Object.assign({}, this.data, { path: this.data.path.append(part) }));
     }
     appendParam(param, regex) {
-        return new Route(Object.assign({}, this.args, { path: this.args.path.appendParam(param, regex) }));
+        return new Route(this._method, Object.assign({}, this.data, { path: this.data.path.appendParam(param, regex) }));
     }
-    param(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: {
-                isCtor: true,
-                func: paramT,
-            } }));
+    param(paramF) {
+        return new Route(this._method, Object.assign({}, this.data, { paramF: paramF }));
     }
-    query(queryT) {
-        return new Route(Object.assign({}, this.args, { queryT: {
-                isCtor: true,
-                func: queryT,
-            } }));
+    query(queryF) {
+        return new Route(this._method, Object.assign({}, this.data, { queryF: queryF }));
     }
-    body(bodyT) {
-        return new Route(Object.assign({}, this.args, { bodyT: {
-                isCtor: true,
-                func: bodyT,
-            } }));
+    body(bodyF) {
+        return new Route(this._method, Object.assign({}, this.data, { bodyF: bodyF }));
     }
-    response(responseT) {
-        return new Route(Object.assign({}, this.args, { responseT: {
-                isCtor: true,
-                func: responseT,
-            } }));
+    header(headerF) {
+        return new Route(this._method, Object.assign({}, this.data, { headerF: headerF }));
     }
-    paramDelegate(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: {
-                isCtor: false,
-                func: paramT,
-            } }));
-    }
-    queryDelegate(queryT) {
-        return new Route(Object.assign({}, this.args, { queryT: {
-                isCtor: false,
-                func: queryT,
-            } }));
-    }
-    bodyDelegate(bodyT) {
-        return new Route(Object.assign({}, this.args, { bodyT: {
-                isCtor: false,
-                func: bodyT,
-            } }));
-    }
-    responseDelegate(responseT) {
-        return new Route(Object.assign({}, this.args, { responseT: {
-                isCtor: false,
-                func: responseT,
-            } }));
-    }
-    paramAssertion(assertion) {
-        return new Route(Object.assign({}, this.args, { paramT: assertion }));
-    }
-    queryAssertion(assertion) {
-        return new Route(Object.assign({}, this.args, { queryT: assertion }));
-    }
-    bodyAssertion(assertion) {
-        return new Route(Object.assign({}, this.args, { bodyT: assertion }));
-    }
-    responseAssertion(assertion) {
-        return new Route(Object.assign({}, this.args, { responseT: assertion }));
-    }
-    requireAccessToken() {
-        return new Route(Object.assign({}, this.args));
-    }
-    optionalAccessToken() {
-        return new Route(Object.assign({}, this.args));
-    }
-    denyAccessToken() {
-        return new Route(Object.assign({}, this.args));
+    response(responseF) {
+        return new Route(this._method, Object.assign({}, this.data, { responseF: responseF }));
     }
     method(method) {
-        return new Route(Object.assign({}, this.args, { method: method }));
+        return new Route(method, this.data);
     }
     getMethod() {
-        if (this.args.method == "Contextual") {
-            if (this.args.bodyT.func == Empty) {
+        if (this._method == "Contextual") {
+            if (this.data.bodyF == undefined) {
                 return "GET";
             }
             else {
@@ -203,44 +115,21 @@ class Route {
             }
         }
         else {
-            return this.args.method;
+            return this._method;
         }
     }
     withoutParam() {
-        return new Route(Object.assign({}, this.args, { paramT: {
-                isCtor: true,
-                func: Empty,
-            } }));
+        const newData = Object.assign({}, this.data);
+        delete newData["paramF"];
+        return new Route(this._method, newData);
     }
     //Dangerous to use unless you know what you're doing.
     //Will allow you to bypass checks for this call but there are still other
     //checks like on the class type.
     //This hack is only necessary because of,
     //https://github.com/Microsoft/TypeScript/issues/23673
-    anyParam(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: {
-                isCtor: true,
-                func: paramT,
-            } }));
-    }
-    //Dangerous to use unless you know what you're doing.
-    //Will allow you to bypass checks for this call but there are still other
-    //checks like on the class type.
-    //This hack is only necessary because of,
-    //https://github.com/Microsoft/TypeScript/issues/23673
-    anyParamDelegate(paramT) {
-        return new Route(Object.assign({}, this.args, { paramT: {
-                isCtor: false,
-                func: paramT,
-            } }));
-    }
-    //Dangerous to use unless you know what you're doing.
-    //Will allow you to bypass checks for this call but there are still other
-    //checks like on the class type.
-    //This hack is only necessary because of,
-    //https://github.com/Microsoft/TypeScript/issues/23673
-    anyParamAssertion(assertion) {
-        return new Route(Object.assign({}, this.args, { paramT: assertion }));
+    anyParam(paramF) {
+        return new Route(this._method, Object.assign({}, this.data, { paramF: paramF }));
     }
 }
 exports.Route = Route;

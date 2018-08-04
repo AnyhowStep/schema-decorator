@@ -1,10 +1,12 @@
-import {AssertDelegate} from "../types";
 import {finiteNumber} from "./number";
-import {and} from "./operator";
+import {chain, or} from "./operator";
+import {cast} from "./cast";
+import {string} from "./basic";
+import {number} from "./number";
 
 //Only checks if Date
-export function validDate () : AssertDelegate<Date> {
-    return (name : string, mixed : any) : Date => {
+export function validDate () {
+    return (name : string, mixed : unknown) : Date => {
         if (!(mixed instanceof Date)) {
             throw new Error(`${name} is not a Date`);
         }
@@ -15,24 +17,24 @@ export function validDate () : AssertDelegate<Date> {
 }
 
 //Converts string|number to Date
-export function date () : AssertDelegate<Date> {
-    return (name : string, mixed : any) : Date => {
-        if (typeof mixed == "string") {
-            const result = new Date(mixed);
-            return validDate()(name, result);
-        } else if (typeof mixed == "number") {
-            const result = new Date(mixed);
-            return validDate()(name, result);
-        } else if (mixed instanceof Date) {
-            return validDate()(name, mixed);
-        } else {
-            throw new Error(`Expected ${name} to be a Date, Date string, or Date number; received ${typeof mixed}`);
-        }
-    };
+export function date () {
+    return or(
+        cast(
+            string(),
+            (from) => new Date(from),
+            validDate()
+        ),
+        cast(
+            number(),
+            (from) => new Date(from),
+            validDate()
+        ),
+        validDate()
+    );
 }
 
-export function dateTimeWithoutMillisecond () : AssertDelegate<Date> {
-    return and(
+export function dateTimeWithoutMillisecond () {
+    return chain(
         date(),
         (_name : string, mixed : Date) : Date => {
             //To remove the millisecond part,
@@ -45,15 +47,15 @@ export function dateTimeWithoutMillisecond () : AssertDelegate<Date> {
     );
 }
 //Behaves like MySQL DATETIME, alias for dateTimeWithoutMillisecond()
-export function dateTime () : AssertDelegate<Date> {
+export function dateTime () {
     return dateTimeWithoutMillisecond();
 }
 
 //Alias for date()
-export function dateTimeWithMillisecond () : AssertDelegate<Date> {
+export function dateTimeWithMillisecond () {
     return date();
 }
 //Behaves like MySQL DATETIME(3), alias for date()
-export function dateTime3 () : AssertDelegate<Date> {
+export function dateTime3 () {
     return date();
 }

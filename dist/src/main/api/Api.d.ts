@@ -1,20 +1,18 @@
 import * as axios from "axios";
-import { Route, MethodLiteral, Empty } from "./Route";
-import { Request, TransformBodyDelegate } from "./Request";
-import { AccessTokenType } from "./AccessToken";
-import { Param } from "./Param";
-export declare type InjectHeadersDelegate = (route: Route<any, any, any, any, any, any, any>) => {
-    [key: string]: undefined | string | (string[]);
-};
+import { Route } from "./Route";
+import { Request, TransformBodyDelegate, InjectHeaderDelegate, TransformResponseDelegate } from "./Request";
 export interface ApiConfiguration {
     domain: string;
     root?: string;
-    onInjectHeaders?: InjectHeadersDelegate;
     onTransformBody?: TransformBodyDelegate;
+    onInjectHeader?: InjectHeaderDelegate;
+    onTransformResponse?: TransformResponseDelegate;
 }
 export declare class Api {
     readonly instance: axios.AxiosInstance;
     private readonly config;
     constructor(config: ApiConfiguration);
-    request<RawParamT, ParamT extends Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined>(route: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodLiteral>): Request<Empty, Empty, Empty, undefined, RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT>;
+    request<RouteT extends Route<any>>(route: RouteT): Request<{
+        route: RouteT;
+    }>;
 }

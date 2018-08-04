@@ -1,4 +1,21 @@
-import { AnyAssertFunc, TypeOf, Field } from "../types";
+import { AnyAssertFunc, TypeOf, AssertDelegate, AcceptsOf } from "../types";
 import { CastDelegate } from "./cast";
-export declare function rename<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (name: string, mixed: any) => { [field in ToFieldNameT]: AssertFuncT extends new () => infer T ? T : AssertFuncT extends (name: string, mixed: any) => infer T ? T : AssertFuncT extends Field<string, infer T> ? T : never; };
-export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT extends string, FromF extends AnyAssertFunc, ToF extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, canCast: FromF, castDelegate: CastDelegate<TypeOf<FromF>, TypeOf<ToF>>, assert: ToF): (name: string, mixed: any) => { [field in FromFieldNameT | ToFieldNameT]: field extends FromFieldNameT ? FromF extends new () => infer T ? T : FromF extends (name: string, mixed: any) => infer T ? T : FromF extends Field<string, infer T> ? T : never : field extends ToFieldNameT ? ToF extends new () => infer T ? T : ToF extends (name: string, mixed: any) => infer T ? T : ToF extends Field<string, infer T> ? T : never : never; };
+export declare function rename<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (AssertDelegate<{
+    [field in ToFieldNameT]: TypeOf<AssertFuncT>;
+}> & {
+    __accepts: ({
+        [from in FromFieldNameT]: AcceptsOf<AssertFuncT>;
+    } | {
+        [to in ToFieldNameT]: AcceptsOf<AssertFuncT>;
+    });
+});
+export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT extends string, FromF extends AnyAssertFunc, ToF extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, canCast: FromF, castDelegate: CastDelegate<TypeOf<FromF>, TypeOf<ToF>>, assert: ToF): (AssertDelegate<{
+    [field in FromFieldNameT | ToFieldNameT]: (field extends FromFieldNameT ? TypeOf<FromF> : field extends ToFieldNameT ? TypeOf<ToF> : never);
+}> & {
+    __accepts: {
+        [from in FromFieldNameT]: (AcceptsOf<FromF> | AcceptsOf<ToF>);
+    };
+});
+export declare function instanceOf<T>(ctor: new (...args: any[]) => T): (AssertDelegate<T> & {
+    __accepts: T;
+});

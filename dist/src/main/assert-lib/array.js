@@ -3,21 +3,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 function array(assert) {
     const assertDelegate = types_1.toAssertDelegateExact(assert);
-    return (name, mixed) => {
+    const result = (name, mixed) => {
         if (!(mixed instanceof Array)) {
             throw new Error(`Expected ${name} to be an array, received ${typeof mixed}`);
         }
+        let result = mixed;
         let isCopy = false;
-        for (let i = 0; i < mixed.length; ++i) {
-            const cur = assertDelegate(`${name}[${i}]`, mixed[i]);
-            if (cur !== mixed[i] && !isCopy) {
-                mixed = mixed.slice();
+        for (let i = 0; i < result.length; ++i) {
+            const cur = assertDelegate(`${name}[${i}]`, result[i]);
+            if (cur !== result[i] && !isCopy) {
+                result = result.slice();
                 isCopy = true;
             }
-            mixed[i] = cur;
+            result[i] = cur;
         }
-        return mixed;
+        return result;
     };
+    return result;
 }
 exports.array = array;
 //# sourceMappingURL=array.js.map

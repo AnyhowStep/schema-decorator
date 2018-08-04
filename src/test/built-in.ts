@@ -8,10 +8,11 @@ tape("date", (t) => {
         @schema.assert(schema.date())
         var : Date = new Date(0);
     }
+    const d = new Date();
     myUtil.test(t, Foo, {
-        var : new Date()
+        var : d
     }, {
-        var : new Date()
+        var : d
     });
     t.end();
 });

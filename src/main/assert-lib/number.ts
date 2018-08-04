@@ -1,11 +1,13 @@
-import {AssertDelegate} from "../types";
-import {and} from "./operator";
+import {chain} from "./operator";
 import {unsafeNumber} from "./basic";
 
-export function finiteNumber () : AssertDelegate<number> {
-    return and(
+export function finiteNumber () {
+    return chain(
         unsafeNumber(),
         (name : string, num : number) : number => {
+            if (typeof num != "number") {
+                throw new Error("");
+            }
             if (isNaN(num)) {
                 throw new Error(`${name} cannot be NaN, received ${num}`);
             }
@@ -17,12 +19,12 @@ export function finiteNumber () : AssertDelegate<number> {
     );
 }
 //Alias for finiteNumber()
-export function number () : AssertDelegate<number> {
+export function number () {
     return finiteNumber();
 }
 
-export function integer () : AssertDelegate<number> {
-    return and(
+export function integer () {
+    return chain(
         finiteNumber(),
         (name : string, num : number) : number => {
             if (Math.floor(num) !== num) {
@@ -32,8 +34,8 @@ export function integer () : AssertDelegate<number> {
         }
     );
 }
-export function nonNegativeNumber () : AssertDelegate<number> {
-    return and(
+export function nonNegativeNumber () {
+    return chain(
         finiteNumber(),
         (name : string, num : number) : number => {
             if (num < 0) {
@@ -43,9 +45,57 @@ export function nonNegativeNumber () : AssertDelegate<number> {
         }
     );
 }
-export function naturalNumber () : AssertDelegate<number> {
-    return and(
+export function naturalNumber () {
+    return chain(
         integer(),
         nonNegativeNumber()
+    );
+}
+export function gt (x : number) {
+    return chain(
+        finiteNumber(),
+        (name : string, num : number) => {
+            if (num > x) {
+                return num;
+            } else {
+                throw new Error(`${name} must be greater than ${x}; received ${num}`);
+            }
+        }
+    );
+}
+export function lt (x : number) {
+    return chain(
+        finiteNumber(),
+        (name : string, num : number) => {
+            if (num < x) {
+                return num;
+            } else {
+                throw new Error(`${name} must be less than ${x}; received ${num}`);
+            }
+        }
+    );
+}
+export function gtEq (x : number) {
+    return chain(
+        finiteNumber(),
+        (name : string, num : number) => {
+            if (num >= x) {
+                return num;
+            } else {
+                throw new Error(`${name} must be greater than, or equal to ${x}; received ${num}`);
+            }
+        }
+    );
+}
+export function ltEq (x : number) {
+    return chain(
+        finiteNumber(),
+        (name : string, num : number) => {
+            if (num <= x) {
+                return num;
+            } else {
+                throw new Error(`${name} must be less than, or equal to ${x}; received ${num}`);
+            }
+        }
     );
 }

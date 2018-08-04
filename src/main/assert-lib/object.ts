@@ -2,51 +2,68 @@ import {
     AnyAssertFunc,
     toAssertDelegateExact,
     TypeOf,
-    Field
+    Field,
+    AssertDelegate,
+    AcceptsOf,
 } from "../types";
 import {CastDelegate, cast} from "./cast";
 
 Field;
 
 /*
-    Modifies `mixed` directly
+    Use with `and()`
 
     const f = rename("x", "y", sd.stringToNaturalNumber())
 
-    f("obj", { x : "34" })  //Gives us { y : 34 }
-    f("obj", { y : "34" })  //Gives us { y : 34 }
-    f("obj", { })           //Error
+    f("obj", { x : "34" })              //Gives us { y : 34 }
+    f("obj", { y : "34" })              //Gives us { y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { y : 99 }
+    f("obj", { })                       //Error
 */
 export function rename<
     FromFieldNameT extends string,
     ToFieldNameT extends string,
     AssertFuncT extends AnyAssertFunc
-> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) {
+> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+    AssertDelegate<{
+        [field in ToFieldNameT] : TypeOf<AssertFuncT>
+    }> &
+    {
+        __accepts : (
+            { [from in FromFieldNameT] : AcceptsOf<AssertFuncT> } |
+            { [to in ToFieldNameT]     : AcceptsOf<AssertFuncT> }
+        )
+    }
+) {
     const d = toAssertDelegateExact(assert);
-    return (name : string, mixed : any) : {
+    const result : AssertDelegate<{
+        [field in ToFieldNameT] : TypeOf<AssertFuncT>
+    }> = (name : string, mixed : any) : {
         [field in ToFieldNameT] : TypeOf<AssertFuncT>
     } => {
-        if (mixed.hasOwnProperty(fromKey)) {
-            const fromValue = mixed[fromKey];
-            mixed[toKey] = d(
-                `[${name}.${fromKey} -> ${name}.${toKey}]`,
-                fromValue
-            );
-            delete mixed[fromKey];
-            return mixed;
-        } else {
+        if (mixed.hasOwnProperty(toKey)) {
             const toValue = mixed[toKey];
-            mixed[toKey] = d(
+            const obj : any = {};
+            obj[toKey] = d(
                 `${name}.${toKey}`,
                 toValue
             );
-            return mixed;
+            return obj;
+        } else {
+            const fromValue = mixed[fromKey];
+            const obj : any = {};
+            obj[toKey] = d(
+                `[${name}.${fromKey} -> ${name}.${toKey}]`,
+                fromValue
+            );
+            return obj;
         }
     };
+    return result as any;
 }
 
 /*
-    Modifies `mixed` directly
+    Use with `and()`
 
     const f = deriveFrom(
         "x",
@@ -72,11 +89,37 @@ export function deriveFrom<
     canCast : FromF,
     castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
     assert : ToF
+) : (
+    AssertDelegate<{
+        [field in FromFieldNameT|ToFieldNameT] : (
+            field extends FromFieldNameT ?
+            TypeOf<FromF> :
+            field extends ToFieldNameT ?
+            TypeOf<ToF> :
+            never
+        )
+    }> &
+    {
+        __accepts : {
+            [from in FromFieldNameT] : (
+                AcceptsOf<FromF>|
+                AcceptsOf<ToF>
+            )
+        }
+    }
 ) {
     const canCastD = toAssertDelegateExact(canCast);
     const castD = cast(canCast, castDelegate, assert);
 
-    return (name : string, mixed : any) : {
+    const result : AssertDelegate<{
+        [field in FromFieldNameT|ToFieldNameT] : (
+            field extends FromFieldNameT ?
+            TypeOf<FromF> :
+            field extends ToFieldNameT ?
+            TypeOf<ToF> :
+            never
+        )
+    }> = (name : string, mixed : any) : {
         [field in FromFieldNameT|ToFieldNameT] : (
             field extends FromFieldNameT ?
             TypeOf<FromF> :
@@ -85,15 +128,34 @@ export function deriveFrom<
             never
         )
     } => {
-        mixed[fromKey] = canCastD(
+        const obj : any = {};
+
+        obj[fromKey] = canCastD(
             `${name}.${fromKey}`,
             mixed[fromKey]
         );
 
-        mixed[toKey] = castD(
+        obj[toKey] = castD(
             `[${name}.${fromKey} > ${name}.${toKey}]`,
-            mixed[fromKey]
+            obj[fromKey]
         );
-        return mixed;
+        return obj;
     };
+    return result as any;
+}
+
+export function instanceOf<T> (ctor : new (...args : any[]) => T) : (
+    AssertDelegate<T> &
+    {
+        __accepts : T
+    }
+) {
+    const result : AssertDelegate<T> = (name : string, mixed : unknown) : T => {
+        if (mixed instanceof ctor) {
+            return mixed;
+        } else {
+            throw new Error(`Expected ${name} to be an instance of ${ctor.name}`);
+        }
+    };
+    return result as any;
 }

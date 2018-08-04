@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const operator_1 = require("./operator");
 const basic_1 = require("./basic");
 function jsonObjectStr() {
-    return operator_1.and(basic_1.string(), (name, str) => {
+    return operator_1.chain(basic_1.string(), (name, str) => {
         let jsonObject = undefined;
         try {
             jsonObject = JSON.parse(str);
@@ -20,21 +20,33 @@ function jsonObjectStr() {
     });
 }
 exports.jsonObjectStr = jsonObjectStr;
-function jsonObject() {
-    return (name, mixed) => {
-        if (typeof mixed == "string") {
-            //If this assertion doesn't throw an error,
-            //this object is safe to use
-            jsonObjectStr()(name, mixed);
-            return JSON.parse(mixed);
+function jsonObjectToString() {
+    return ((name, mixed) => {
+        if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array) || (mixed instanceof Function)) {
+            throw new Error(`${name} is not a valid JSON object; expected an object; received ${mixed}`);
         }
-        else {
-            //If this assertion doesn't throw an error,
-            //this object is safe to use
-            jsonObjectStr()(name, JSON.stringify(mixed));
-            return mixed;
+        try {
+            return JSON.stringify(mixed);
+        }
+        catch (err) {
+            throw new Error(`${name} is not a valid JSON object; ${err.message}`);
+        }
+    });
+}
+exports.jsonObjectToString = jsonObjectToString;
+function jsonStringToObject() {
+    return (name, str) => {
+        try {
+            return JSON.parse(str);
+        }
+        catch (err) {
+            throw new Error(`${name} is not a valid JSON string; ${err.message}`);
         }
     };
+}
+exports.jsonStringToObject = jsonStringToObject;
+function jsonObject() {
+    return operator_1.or(operator_1.chain(jsonObjectStr(), jsonStringToObject()), operator_1.chain(jsonObjectToString(), jsonObjectStr(), jsonStringToObject()));
 }
 exports.jsonObject = jsonObject;
 //# sourceMappingURL=json.js.map

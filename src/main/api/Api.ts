@@ -1,18 +1,19 @@
 import * as axios from "axios";
-import {Route, MethodLiteral, Empty} from "./Route";
-import {Request, TransformBodyDelegate} from "./Request";
-import {AccessTokenType} from "./AccessToken";
-import {Param} from "./Param";
-
-export type InjectHeadersDelegate = (route : Route<any, any, any, any, any, any, any>) => {
-    [key : string] : undefined|string|(string[])
-};
+import {Route} from "./Route";
+import {
+    Request,
+    TransformBodyDelegate,
+    InjectHeaderDelegate,
+    TransformResponseDelegate
+} from "./Request";
 
 export interface ApiConfiguration {
     domain : string,
     root? : string,
-    onInjectHeaders? : InjectHeadersDelegate,
+
     onTransformBody? : TransformBodyDelegate,
+    onInjectHeader? : InjectHeaderDelegate,
+    onTransformResponse? : TransformResponseDelegate,
 }
 
 export class Api {
@@ -30,42 +31,12 @@ export class Api {
         this.config = config;
     }
 
-    request<
-        RawParamT,
-        ParamT extends Param<RawParamT>,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT extends AccessTokenType|undefined
-    > (route : Route<
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT,
-        MethodLiteral
-    >) : Request<Empty, Empty, Empty, undefined,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        let result = Request.Create(this, route);
-        if (this.config.onInjectHeaders != undefined) {
-            const headers = this.config.onInjectHeaders(route);
-            for (let k in headers) {
-                if (headers.hasOwnProperty(k)) {
-                    result = result.setHeader(k, headers[k]);
-                }
-            }
-        }
-        if (this.config.onTransformBody != undefined) {
-            result = result.setOnTransformBody(this.config.onTransformBody);
-        }
-        return result;
-
+    request<RouteT extends Route<any>> (route : RouteT) : Request<{
+        route : RouteT
+    }> {
+        return Request.Create(this, route)
+            .setOnTransformBody(this.config.onTransformBody)
+            .setOnTransformBody(this.config.onTransformBody)
+            .setOnTransformResponse(this.config.onTransformResponse);
     }
 }

@@ -137,15 +137,6 @@ function toRaw(name, instance, ignoreInstancesOf) {
     return result;
 }
 exports.toRaw = toRaw;
-function toClassOrAssert(name, raw, assertion) {
-    if (assertion.isCtor) {
-        return toClass(name, raw, assertion.func);
-    }
-    else {
-        return assertion.func(name, raw);
-    }
-}
-exports.toClassOrAssert = toClassOrAssert;
 //Given two classes, Base and Derived, toClassExact<Base>() will convert Derived to Base, if possible
 function toClassExact(name, raw, ctor) {
     if (myUtil.isExactInstanceOf(raw, ctor)) {

@@ -1,58 +1,38 @@
 import {
     AnyAssertFunc,
-    AssertDelegate,
-    TypeOf,
     toAssertDelegateExact
 } from "../types";
 import {or} from "./operator";
-import {oneOf} from "./basic";
+import {literal, excludeLiteral} from "./basic";
 
-export function optional<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|undefined> {
+export function optional<F extends AnyAssertFunc> (assert : F) {
     const assertDelegate = toAssertDelegateExact(assert);
     return or(
-        oneOf(undefined),
+        literal(undefined),
         assertDelegate
     );
 }
-export function nullable<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|null> {
+export function nullable<F extends AnyAssertFunc> (assert : F) {
     const assertDelegate = toAssertDelegateExact(assert);
     return or(
-        oneOf(null),
+        literal(null),
         assertDelegate
     );
 }
-export function maybe<F extends AnyAssertFunc> (assert : F) : AssertDelegate<TypeOf<F>|undefined|null> {
+export function maybe<F extends AnyAssertFunc> (assert : F) {
     const assertDelegate = toAssertDelegateExact(assert);
     return or(
-        oneOf(undefined, null),
+        literal(undefined, null),
         assertDelegate
     );
 }
 
-export function notOptional<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, undefined>> {
-    const assertDelegate = toAssertDelegateExact(assert);
-    return ((name : string, mixed : any) => {
-        if (mixed === undefined) {
-            throw new Error(`${name} cannot be undefined, received ${mixed}`);
-        }
-        return assertDelegate(name, mixed);
-    }) as any;
+export function notOptional<F extends AnyAssertFunc> (assert : F) {
+    return excludeLiteral(assert, undefined);
 }
-export function notNullable<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, null>> {
-    const assertDelegate = toAssertDelegateExact(assert);
-    return ((name : string, mixed : any) => {
-        if (mixed === null) {
-            throw new Error(`${name} cannot be null, received ${mixed}`);
-        }
-        return assertDelegate(name, mixed);
-    }) as any;
+export function notNullable<F extends AnyAssertFunc> (assert : F) {
+    return excludeLiteral(assert, null);
 }
-export function notMaybe<F extends AnyAssertFunc> (assert : F) : AssertDelegate<Exclude<TypeOf<F>, null|undefined>> {
-    const assertDelegate = toAssertDelegateExact(assert);
-    return ((name : string, mixed : any) => {
-        if (mixed === null || mixed === undefined) {
-            throw new Error(`${name} cannot be null|undefined, received ${mixed}`);
-        }
-        return assertDelegate(name, mixed);
-    }) as any;
+export function notMaybe<F extends AnyAssertFunc> (assert : F) {
+    return excludeLiteral(assert, null, undefined);
 }

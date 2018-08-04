@@ -1,265 +1,399 @@
 import * as axios from "axios";
-import {Route, MethodLiteral, Empty} from "./Route";
+import {Route, RouteData} from "./Route";
 import {Api} from "./Api";
-import {AccessTokenType, AccessTokenUtil} from "./AccessToken";
-import * as convert from "../convert";
-import {Assertion} from "../Assertion";
-import {Param} from "./Param";
+import {
+    ChainedAssertFunc,
+    AcceptsOf,
+    TypeOf,
+    toAssertDelegateExact,
+    AssertFunc
+} from "../types";
 
-export type TransformBodyDelegate = (rawBody : any) => any;
+export type TransformBodyDelegate = (rawBody : any|undefined) => any;
+export type InjectHeaderDelegate  = (route : Route<RouteData>) => any;
+export type TransformResponseDelegate = (rawResponse : any) => any;
 
-export interface RequestArgs<P, Q, B, A,
-    RawParamT,
-    ParamT extends Param<RawParamT>,
-    QueryT,
-    BodyT,
-    ResponseT,
-    AccessTokenT extends AccessTokenType|undefined
-> {
-    readonly param : P,
-    readonly query : Q,
-    readonly body  : B,
-    readonly accessTokenType : A,
-    readonly headers : { [key : string] : undefined|string|string[] },
-    readonly onTransformBody? : TransformBodyDelegate,
+export interface RequestData {
+    readonly route : Route<RouteData>;
 
-    readonly route : Route<
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT,
-        MethodLiteral
-    >,
-    readonly api : Api;
+    readonly param?  : any;
+    readonly query?  : any;
+    readonly body?   : any;
+    readonly header? : any;
 }
-export class Request<P, Q, B, A,
-    RawParamT,
-    ParamT extends Param<RawParamT>,
-    QueryT,
-    BodyT,
-    ResponseT,
-    AccessTokenT extends AccessTokenType|undefined
-> {
-    public static Create<
-        RawParamT,
-        ParamT extends Param<RawParamT>,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT extends AccessTokenType|undefined
-    > (api : Api, route : Route<
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT,
-        MethodLiteral
-    >) : Request<Empty, Empty, Empty, undefined,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            param : new Empty(),
-            query : new Empty(),
-            body  : new Empty(),
-            accessTokenType  : undefined,
-            headers : {},
-            route : route,
-            api   : api,
-        });
-    }
-    public readonly args : RequestArgs<P, Q, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >;
-    private constructor (args : RequestArgs<P, Q, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >) {
-        this.args = args;
-    }
-    public setParam<NewT extends ParamT> (this : Request<Empty, Q, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >, n : NewT) : Request<NewT, Q, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            ...this.args,
-            param : n,
-        });
-    }
-    public setQuery<NewT extends QueryT> (this : Request<P, Empty, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >, n : NewT) : Request<P, NewT, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            ...this.args,
-            query : n,
-        });
-    }
-    public setBody<NewT extends BodyT> (this : Request<P, Q, Empty, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >, n : NewT) : Request<P, Q, NewT, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            ...this.args,
-            body : n,
-        });
-    }
-    public setAccessToken<NewT extends AccessTokenT> (this : Request<P, Q, B, undefined,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >, n : NewT) : Request<P, Q, B, NewT,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            ...this.args,
-            accessTokenType : n,
-        });
-    }
-    public setHeader (key : string, value : undefined|string|(string[])) : Request<P, Q, B, A,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    > {
-        return new Request({
-            ...this.args,
-            headers : {
-                ...this.args.headers,
-                [key] : value,
-            }
-        });
-    }
-    public setOnTransformBody (onTransformBody : TransformBodyDelegate) {
-        return new Request({
-            ...this.args,
-            onTransformBody : onTransformBody,
-        });
-    }
-    public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >) : Promise<axios.AxiosResponse<ResponseT>>;
-    public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        Empty, /*ResponseT*/
-        AccessTokenT
-    >) : Promise<axios.AxiosResponse<any>>;
-    public async send (this : Request<ParamT, QueryT, BodyT, AccessTokenT,
-        RawParamT,
-        ParamT,
-        QueryT,
-        BodyT,
-        ResponseT,
-        AccessTokenT
-    >) : Promise<axios.AxiosResponse<any>> {
-        const route = this.args.route;
-        const r = route.args;
+export interface RequestExtraData {
+    readonly api : Api;
+    readonly onTransformBody? : TransformBodyDelegate;
+    readonly onInjectHeader?  : InjectHeaderDelegate;
+    readonly onTransformResponse? : TransformResponseDelegate;
+}
 
-        const toRaw = <T>(name : string, mixed : any, t : Assertion<T>) => {
-            if (t.isCtor) {
-                return convert.toRaw(name, convert.toClass(name, mixed, t.func));
-            } else {
-                const v = t.func(name, mixed);
-                return convert.anyToRaw(name, v);
+export class Request<DataT extends RequestData> {
+    public static Create<RouteT extends Route<any>> (
+        api : Api,
+        route : RouteT
+    ) : (
+        Request<{
+            route : RouteT,
+        }>
+    ) {
+        return new Request(
+            {
+                route : route,
+            },
+            {
+                api   : api,
             }
-        };
+        );
+    }
+    private constructor (
+        public readonly data : DataT,
+        public readonly extraData : RequestExtraData,
+    ) {
+    }
+    public setParam (
+        this : (
+            DataT extends {
+                route : {
+                    data : {
+                        paramF : ChainedAssertFunc<any>
+                    }
+                },
+            } ?
+                (
+                    "param" extends keyof DataT ?
+                        never :
+                        Request<DataT>
+                ) :
+                never
+        ),
+        param : AcceptsOf<Exclude<
+            DataT["route"]["data"]["paramF"],
+            undefined
+        >>
+    ) : (
+        Request<
+            DataT &
+            {
+                param : TypeOf<Exclude<
+                    DataT["route"]["data"]["paramF"],
+                    undefined
+                >>
+            }
+        >
+    ) {
+        const d = toAssertDelegateExact(this.data.route.data.paramF);
+        return new Request(
+            {
+                ...(this.data as any),
+                param : d("param", param),
+            },
+            this.extraData
+        );
+    }
+    public setQuery (
+        this : (
+            DataT extends {
+                route : {
+                    data : {
+                        queryF : AssertFunc<any>
+                    }
+                },
+            } ?
+                (
+                    "query" extends keyof DataT ?
+                        never :
+                        Request<DataT>
+                ) :
+                never
+        ),
+        query : AcceptsOf<Exclude<
+            DataT["route"]["data"]["queryF"],
+            undefined
+        >>
+    ) : (
+        Request<
+            DataT &
+            {
+                query : TypeOf<Exclude<
+                    DataT["route"]["data"]["queryF"],
+                    undefined
+                >>
+            }
+        >
+    ) {
+        const d = toAssertDelegateExact(this.data.route.data.queryF);
+        return new Request(
+            {
+                ...(this.data as any),
+                query : d("query", query),
+            },
+            this.extraData
+        );
+    }
+    public setBody (
+        this : (
+            DataT extends {
+                route : {
+                    data : {
+                        bodyF : AssertFunc<any>
+                    }
+                },
+            } ?
+                (
+                    "body" extends keyof DataT ?
+                        never :
+                        Request<DataT>
+                ) :
+                never
+        ),
+        body : AcceptsOf<Exclude<
+            DataT["route"]["data"]["bodyF"],
+            undefined
+        >>
+    ) : (
+        Request<
+            DataT &
+            {
+                body : TypeOf<Exclude<
+                    DataT["route"]["data"]["bodyF"],
+                    undefined
+                >>
+            }
+        >
+    ) {
+        const d = toAssertDelegateExact(this.data.route.data.bodyF);
+        return new Request(
+            {
+                ...(this.data as any),
+                body : d("body", body),
+            },
+            this.extraData
+        );
+    }
+    //Special, does not eliminate extra header keys,
+    //But does not check their values, either
+    public setHeader (
+        this : (
+            DataT extends {
+                route : {
+                    data : {
+                        headerF : AssertFunc<any>
+                    }
+                },
+            } ?
+                (
+                    "header" extends keyof DataT ?
+                        never :
+                        Request<DataT>
+                ) :
+                never
+        ),
+        header : AcceptsOf<Exclude<
+            DataT["route"]["data"]["headerF"],
+            undefined
+        >>
+    ) : (
+        Request<
+            DataT &
+            {
+                header : TypeOf<Exclude<
+                    DataT["route"]["data"]["headerF"],
+                    undefined
+                >>
+            }
+        >
+    ) {
+        const d = toAssertDelegateExact(this.data.route.data.headerF);
+        return new Request(
+            {
+                ...(this.data as any),
+                header : {
+                    ...(header as any),
+                    ...d("header", header),
+                },
+            },
+            this.extraData
+        );
+    }
+    public setOnTransformBody (onTransformBody : TransformBodyDelegate|undefined) : (
+        Request<
+            DataT &
+            {
+                onTransformBody? : TransformBodyDelegate|undefined
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onTransformBody : onTransformBody,
+            },
+            this.extraData
+        );
+    }
+    public setOnInjectHeader (onInjectHeader : InjectHeaderDelegate|undefined) : (
+        Request<
+            DataT &
+            {
+                onInjectHeader? : InjectHeaderDelegate|undefined
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onInjectHeader : onInjectHeader,
+            },
+            this.extraData
+        );
+    }
+    public setOnTransformResponse (onTransformResponse : TransformResponseDelegate|undefined) : (
+        Request<
+            DataT &
+            {
+                onTransformResponse? : TransformResponseDelegate|undefined
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onTransformResponse : onTransformResponse,
+            },
+            this.extraData
+        );
+    }
+    public async send (
+        this : (
+            (
+                (
+                    "paramF" extends keyof DataT["route"]["data"] ?
+                        (
+                            "param" extends keyof DataT ?
+                                true :
+                                false
+                        ) :
+                        true
+                ) &
+                (
+                    "queryF" extends DataT["route"]["data"] ?
+                        (
+                            "query" extends keyof DataT ?
+                                true :
+                                false
+                        ) :
+                        true
+                ) &
+                (
+                    "bodyF" extends DataT["route"]["data"] ?
+                        (
+                            "body" extends keyof DataT ?
+                                true :
+                                false
+                        ) :
+                        true
+                ) &
+                (
+                    "headerF" extends DataT["route"]["data"] ?
+                        (
+                            "header" extends keyof DataT ?
+                                true :
+                                false
+                        ) :
+                        true
+                )
+            ) extends true ?
+                Request<DataT> :
+                never
+        )
+    ) : (
+        Promise<axios.AxiosResponse<
+            "responseF" extends keyof DataT["route"]["data"] ?
+                TypeOf<Exclude<
+                    DataT["route"]["data"]["responseF"],
+                    undefined
+                >> :
+                unknown
+        >>
 
-        const headers : {
-            [key : string] : undefined|string|(string[])
-        } = {
-            ...this.args.headers,
-        };
-        let rawBody = (this.args.body instanceof Empty) ?
+    ) {
+        const data = this.data;
+        const routeData = data.route.data;
+        const extraData = this.extraData;
+
+        const param = (routeData.paramF == undefined) ?
+            {} :
+            toAssertDelegateExact(routeData.paramF)(
+                `${routeData.path.getRouterPath()} : param`,
+                data.param
+            );
+        const method = data.route.getMethod();
+        const path = routeData.path.getCallingPath(param);
+
+        let debugName = `${method} ${path}`;
+
+        const query = (routeData.queryF == undefined) ?
             undefined :
-            toRaw("body", this.args.body, r.bodyT);
-        if (this.args.onTransformBody != undefined && rawBody != undefined) {
-            rawBody = this.args.onTransformBody(rawBody);
+            toAssertDelegateExact(routeData.queryF)(
+                `${debugName} : query`,
+                data.query
+            );
+
+        if (query != undefined && Object.keys(query).length > 0) {
+            debugName += `?${JSON.stringify(query)}`;
         }
+        const body = (routeData.bodyF == undefined) ?
+            undefined :
+            toAssertDelegateExact(routeData.bodyF)(
+                `${debugName} : body`,
+                data.body
+            );
+        //Headers are special
+        const injectedHeader = (extraData.onInjectHeader == undefined) ?
+            {} :
+            await extraData.onInjectHeader(data.route);
+        const header = (routeData.headerF == undefined) ?
+            injectedHeader :
+            {
+                //Injected headers are applied first,
+                //and may be over-written
+                ...injectedHeader,
+                //There may be extra header values given
+                //that are not asserted
+                ...data.header,
+                //This assert delegate possibly modifies the values
+                //of the header
+                ...toAssertDelegateExact(routeData.headerF)(
+                    `${debugName} : header`,
+                    data.header
+                ),
+            };
+
+        const transformedBody = (extraData.onTransformBody == undefined) ?
+            body :
+            await extraData.onTransformBody(body);
+
         const config : axios.AxiosRequestConfig = {
-            method : route.getMethod(),
-            url : r.path.getCallingPath(toRaw("param", this.args.param, r.paramT))
-                .replace(/\/{2,}/g, "/"),
-            params : toRaw("query", this.args.query, r.queryT),
-            data : rawBody,
-            headers : headers,
+            method : method,
+            url : path,
+            params : query,
+            data : transformedBody,
+            headers : header,
         };
-        const accessTokenType : AccessTokenType|undefined = this.args.accessTokenType;
-        if (accessTokenType != null) {
-            const accessTokenString = await AccessTokenUtil.GetAccessTokenString(accessTokenType);
-            headers["Access-Token"] = accessTokenString;
-        }
-        const result = await this.args.api.instance.request(config);
-        if (r.responseT.func == Empty) {
+        const result = await this.extraData.api.instance.request(config);
+
+        if (routeData.responseF == undefined) {
             return result;
         } else {
-            result.data = toRaw("response", result.data, r.responseT);
+            const rawResponse = (extraData.onTransformResponse == undefined) ?
+                result.data :
+                await extraData.onTransformResponse(result.data);
+            const response = toAssertDelegateExact(routeData.responseF)(
+                `${debugName} : response`,
+                rawResponse
+            );
+            result.data = response;
             return result;
         }
     }

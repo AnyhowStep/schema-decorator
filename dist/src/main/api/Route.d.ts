@@ -1,71 +1,74 @@
-import { AccessTokenType } from "./AccessToken";
-import { Assertion } from "../Assertion";
-import { AssertDelegate } from "../types";
-import { Param } from "./Param";
-export interface PathParam<T> {
-    param: keyof T;
+import { AnyAssertFunc, ChainedAssertFunc, Chainable } from "../types";
+import { Param, AnyParam } from "./Param";
+export interface PathParam<ParamKeys extends string> {
+    param: ParamKeys;
     regex?: RegExp;
 }
-export declare class Path<T = {}> {
+export declare class Path<ParamKeys extends string> {
     private arr;
     private readonly str;
-    private readonly _dummyT?;
-    constructor(arr?: (string | PathParam<T>)[], str?: string);
-    append(part: string): Path<T>;
-    appendParam<P extends string>(param: P, regex?: RegExp): Path<T & {
-        [f in P]: string;
-    }>;
+    readonly _dummyParamKeys?: ParamKeys;
+    constructor(arr?: (string | PathParam<ParamKeys>)[], str?: string);
+    append(part: string): Path<ParamKeys>;
+    appendParam<P extends string>(param: P, regex?: RegExp): Path<ParamKeys | P>;
     getRouterPath(): string;
-    getCallingPath(p: Param<T>): string;
-}
-export declare class Empty {
-    _dummy?: undefined;
+    getCallingPath(p: AnyParam<ParamKeys>): string;
 }
 export declare type MethodLiteral = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT" | "Contextual";
-export interface RouteArgs<RawParamT, ParamT extends Empty | Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined, MethodT extends MethodLiteral> {
-    readonly path: Path<RawParamT>;
-    readonly paramT: Assertion<ParamT>;
-    readonly queryT: Assertion<QueryT>;
-    readonly bodyT: Assertion<BodyT>;
-    readonly responseT: Assertion<ResponseT>;
-    readonly _accessToken?: AccessTokenT;
-    readonly method: MethodT;
+export interface RouteData {
+    readonly path: Path<string>;
+    readonly paramF?: undefined | ChainedAssertFunc<any>;
+    readonly queryF?: undefined | AnyAssertFunc;
+    readonly bodyF?: undefined | AnyAssertFunc;
+    readonly headerF?: undefined | AnyAssertFunc;
+    readonly responseF?: undefined | AnyAssertFunc;
 }
-export declare class Route<RawParamT, ParamT extends Empty | Param<RawParamT>, QueryT, BodyT, ResponseT, AccessTokenT extends AccessTokenType | undefined = undefined, MethodT extends MethodLiteral = "Contextual"> {
-    static Create(): Route<{}, Empty, Empty, Empty, Empty, undefined, "Contextual">;
-    readonly args: RouteArgs<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+export declare class Route<DataT extends RouteData> {
+    private readonly _method;
+    readonly data: DataT;
+    static Create(): Route<{
+        path: Path<never>;
+    }>;
     private constructor();
-    append(part: string): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    appendParam<P extends string>(this: Route<RawParamT, Empty, /*ParamT*/ QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, param: P, regex?: RegExp): Route<RawParamT & { [f in P]: string; }, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    param<P extends Param<RawParamT>>(this: Route<RawParamT, Empty, /*ParamT*/ QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
-        new (): P;
-    }): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    query<Q>(queryT: {
-        new (): Q;
-    }): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
-    body<B>(bodyT: {
-        new (): B;
-    }): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
-    response<R>(responseT: {
-        new (): R;
-    }): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
-    paramDelegate<P extends Param<RawParamT>>(this: Route<RawParamT, Empty, /*ParamT*/ QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: AssertDelegate<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    queryDelegate<Q>(queryT: AssertDelegate<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
-    bodyDelegate<B>(bodyT: AssertDelegate<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
-    responseDelegate<R>(responseT: AssertDelegate<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
-    paramAssertion<P extends Param<RawParamT>>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    queryAssertion<Q>(assertion: Assertion<Q>): Route<RawParamT, ParamT, Q, BodyT, ResponseT, AccessTokenT, MethodT>;
-    bodyAssertion<B>(assertion: Assertion<B>): Route<RawParamT, ParamT, QueryT, B, ResponseT, AccessTokenT, MethodT>;
-    responseAssertion<R>(assertion: Assertion<R>): Route<RawParamT, ParamT, QueryT, BodyT, R, AccessTokenT, MethodT>;
-    requireAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType, MethodT>;
-    optionalAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenType | undefined, MethodT>;
-    denyAccessToken(): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, undefined, MethodT>;
-    method<M extends MethodLiteral>(method: M): Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, M>;
-    getMethod(): "GET" | "POST" | MethodT;
-    withoutParam(this: Route<RawParamT, ParamT, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>): Route<RawParamT, Empty, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    anyParam<P>(this: Route<RawParamT, Empty, /*ParamT*/ QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: {
-        new (): P;
-    }): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    anyParamDelegate<P>(this: Route<RawParamT, Empty, /*ParamT*/ QueryT, BodyT, ResponseT, AccessTokenT, MethodT>, paramT: AssertDelegate<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
-    anyParamAssertion<P>(assertion: Assertion<P>): Route<RawParamT, P, QueryT, BodyT, ResponseT, AccessTokenT, MethodT>;
+    append(part: string): Route<DataT>;
+    appendParam<P extends string>(this: (DataT["paramF"] extends ChainedAssertFunc<any> ? never : any), param: P, regex?: RegExp): (Route<{
+        [key in keyof DataT]: (key extends "path" ? Path<Extract<DataT["path"]["_dummyParamKeys"] | P, string>> : DataT[key]);
+    }>);
+    param<P extends ChainedAssertFunc<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>>>(this: (DataT["paramF"] extends ChainedAssertFunc<any> ? never : Route<DataT>), paramF: P): (Chainable<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>, P> extends true ? Route<{
+        [key in keyof DataT]: (key extends "paramF" ? P : DataT[key]);
+    } & {
+        paramF: P;
+    }> : never);
+    query<Q extends AnyAssertFunc>(queryF: Q): (Route<{
+        [key in keyof DataT]: (key extends "queryF" ? Q : DataT[key]);
+    } & {
+        queryF: Q;
+    }>);
+    body<B extends AnyAssertFunc>(bodyF: B): (Route<{
+        [key in keyof DataT]: (key extends "bodyF" ? B : DataT[key]);
+    } & {
+        bodyF: B;
+    }>);
+    header<H extends AnyAssertFunc>(headerF: H): (Route<{
+        [key in keyof DataT]: (key extends "headerF" ? H : DataT[key]);
+    } & {
+        headerF: H;
+    }>);
+    response<R extends AnyAssertFunc>(responseF: R): (Route<{
+        [key in keyof DataT]: (key extends "responseF" ? R : DataT[key]);
+    } & {
+        responseF: R;
+    }>);
+    method(method: MethodLiteral): (Route<DataT>);
+    getMethod(): "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT";
+    withoutParam(): (Route<{
+        [key in Exclude<(keyof DataT) | (keyof RouteData), "paramF">]: (key extends keyof DataT ? DataT[key] : never);
+    }>);
+    anyParam<P extends ChainedAssertFunc<any>>(this: (DataT extends {
+        paramF: ChainedAssertFunc<any>;
+    } ? never : Route<DataT>), paramF: P): (Route<{
+        [key in keyof DataT]: (key extends "paramF" ? P : DataT[key]);
+    } & {
+        paramF: P;
+    }>);
 }

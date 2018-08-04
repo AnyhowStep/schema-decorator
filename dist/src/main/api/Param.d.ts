@@ -1,4 +1,6 @@
-export declare type ParamValue = any;
-export declare type Param<RawParamT> = {
-    [k in keyof RawParamT]: ParamValue;
+export declare type Param<ParamKeys extends string> = {
+    [k in ParamKeys]: string;
+};
+export declare type AnyParam<ParamKeys extends string> = {
+    [k in ParamKeys]: any;
 };

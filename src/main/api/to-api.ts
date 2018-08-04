@@ -1,50 +1,36 @@
-import {Route, Empty} from "./Route";
+import {Route} from "./Route";
 import {ApiConfiguration, Api} from "./Api";
-import {Param} from "./Param";
 import {Request} from "./Request";
 import {rename} from "@anyhowstep/type-util";
 
 export type RouteMap = {
-    [routeName : string] : Route<
-        any,
-        any,
-        any,
-        any,
-        any,
-        any,
-        any
-    >
+    [routeName : string] : Route<any>
 };
+
 export type ApiMixin<RouteMapT extends RouteMap> = (
     Api &
     {
         [routeName in keyof RouteMapT] : () => (
-            RouteMapT[routeName] extends Route<
-                infer RawParamT,
-                infer ParamT,
-                infer QueryT,
-                infer BodyT,
-                infer ResponseT,
-                infer AccessTokenT,
-                infer MethodLiteralT
-            > ?
+            Extract<
+                RouteMapT[routeName]["data"]["path"]["_dummyParamKeys"],
+                string
+            > extends never ?
+                //No param checks to perform
+                Request<{
+                    api : Api,
+                    route : RouteMapT[routeName]
+                }> :
+                //We have some param checks to perform
                 (
-                    ParamT extends Param<RawParamT> ?
-                        Request<
-                            Empty,
-                            Empty,
-                            Empty,
-                            undefined,
-                            RawParamT,
-                            ParamT,
-                            QueryT,
-                            BodyT,
-                            ResponseT,
-                            AccessTokenT
-                        > :
+                    "paramF" extends keyof RouteMapT[routeName]["data"] ?
+                        //Successfully set an assertion for param
+                        Request<{
+                            api : Api,
+                            route : RouteMapT[routeName]
+                        }> :
+                        //Didn't set one yet
                         never
-                ) :
-                never
+                )
         )
     }
 );

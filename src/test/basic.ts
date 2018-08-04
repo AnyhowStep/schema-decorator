@@ -41,8 +41,8 @@ tape("type", (t) => {
 tape("typeAndType", (t) => {
     class Foo {
         @schema.assert(schema.and(
-            schema.oneOf(3,4),
-            schema.oneOf(4,5)
+            schema.literal(3,4),
+            schema.literal(4,5)
         ))
         var : (3|4)&(4|5) = 4;
     }
@@ -91,10 +91,10 @@ tape("typeAndType", (t) => {
     });
     t.end();
 });
-tape("oneOfOrType", (t) => {
+tape("literalOrType", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             validation.Number.assertNaturalNumber
         ))
         var : number|"allowed" = 0;
@@ -132,10 +132,10 @@ tape("oneOfOrType", (t) => {
     });
     t.end();
 });
-tape("oneOfOrCast", (t) => {
+tape("literalOrCast", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             schema.cast(
                 validation.NumberString.assertNaturalNumberString,
                 parseInt,

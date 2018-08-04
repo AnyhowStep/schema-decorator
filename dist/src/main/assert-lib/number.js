@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const operator_1 = require("./operator");
 const basic_1 = require("./basic");
 function finiteNumber() {
-    return operator_1.and(basic_1.unsafeNumber(), (name, num) => {
+    return operator_1.chain(basic_1.unsafeNumber(), (name, num) => {
+        if (typeof num != "number") {
+            throw new Error("");
+        }
         if (isNaN(num)) {
             throw new Error(`${name} cannot be NaN, received ${num}`);
         }
@@ -20,7 +23,7 @@ function number() {
 }
 exports.number = number;
 function integer() {
-    return operator_1.and(finiteNumber(), (name, num) => {
+    return operator_1.chain(finiteNumber(), (name, num) => {
         if (Math.floor(num) !== num) {
             throw new Error(`${name} must be an integer, received ${num}`);
         }
@@ -29,7 +32,7 @@ function integer() {
 }
 exports.integer = integer;
 function nonNegativeNumber() {
-    return operator_1.and(finiteNumber(), (name, num) => {
+    return operator_1.chain(finiteNumber(), (name, num) => {
         if (num < 0) {
             throw new Error(`${name} cannot be negative, received ${num}`);
         }
@@ -38,7 +41,51 @@ function nonNegativeNumber() {
 }
 exports.nonNegativeNumber = nonNegativeNumber;
 function naturalNumber() {
-    return operator_1.and(integer(), nonNegativeNumber());
+    return operator_1.chain(integer(), nonNegativeNumber());
 }
 exports.naturalNumber = naturalNumber;
+function gt(x) {
+    return operator_1.chain(finiteNumber(), (name, num) => {
+        if (num > x) {
+            return num;
+        }
+        else {
+            throw new Error(`${name} must be greater than ${x}; received ${num}`);
+        }
+    });
+}
+exports.gt = gt;
+function lt(x) {
+    return operator_1.chain(finiteNumber(), (name, num) => {
+        if (num < x) {
+            return num;
+        }
+        else {
+            throw new Error(`${name} must be less than ${x}; received ${num}`);
+        }
+    });
+}
+exports.lt = lt;
+function gtEq(x) {
+    return operator_1.chain(finiteNumber(), (name, num) => {
+        if (num >= x) {
+            return num;
+        }
+        else {
+            throw new Error(`${name} must be greater than, or equal to ${x}; received ${num}`);
+        }
+    });
+}
+exports.gtEq = gtEq;
+function ltEq(x) {
+    return operator_1.chain(finiteNumber(), (name, num) => {
+        if (num <= x) {
+            return num;
+        }
+        else {
+            throw new Error(`${name} must be less than, or equal to ${x}; received ${num}`);
+        }
+    });
+}
+exports.ltEq = ltEq;
 //# sourceMappingURL=number.js.map

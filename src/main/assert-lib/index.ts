@@ -1,6 +1,5 @@
 export * from "./array-like";
 export * from "./array";
-export * from "./assertion";
 export * from "./basic";
 export * from "./boolean";
 export * from "./cast";

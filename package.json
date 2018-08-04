@@ -1,13 +1,13 @@
 {
   "name": "schema-decorator",
-  "version": "1.45.0",
+  "version": "2.00.0",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
   "scripts": {
     "test": "ts-node",
     "test-all": "ts-node ./src/test/test-all.ts",
-    "build": "(rm -r ./dist || true) && tsc -d"
+    "build": "(rm -r ./dist || true) && tsc -d --diagnostics"
   },
   "author": "anyhowstep",
   "license": "ISC",
@@ -25,8 +25,8 @@
     "@anyhowstep/data-validation": "^1.15.0",
     "@types/node": "^8.5.2",
     "@types/tape": "^4.2.31",
-    "typescript": "^2.9.0-dev.20180516",
     "tape": "^4.8.0",
-    "ts-node": "^4.1.0"
+    "ts-node": "^4.1.0",
+    "typescript": "^3.0.1"
   }
 }

@@ -1,4 +1,4 @@
-import {AssertDelegate} from "../types";
+import {TypeOf, AssertDelegate, AnyAssertFunc, toAssertDelegateExact} from "../types";
 
 function toTypeStr (arr : any[]) : string {
     const mapped = arr.map((i) => {
@@ -12,28 +12,51 @@ function toTypeStr (arr : any[]) : string {
     });
     return mapped.join("|")
 }
-export function oneOf<T0 extends string> (...arr : (T0)[]) : AssertDelegate<T0>;
-export function oneOf<T0 extends number> (...arr : (T0)[]) : AssertDelegate<T0>;
-export function oneOf<T0 extends boolean> (...arr : (T0)[]) : AssertDelegate<T0>;
-export function oneOf<T0> (...arr : (T0)[]) : AssertDelegate<T0>;
-export function oneOf<T0, T1> (...arr : (T0|T1)[]) : AssertDelegate<T0|T1>;
-export function oneOf<T0, T1, T2> (...arr : (T0|T1|T2)[]) : AssertDelegate<T0|T1|T2>;
-export function oneOf<T0, T1, T2, T3> (...arr : (T0|T1|T2|T3)[]) : AssertDelegate<T0|T1|T2|T3>;
-export function oneOf<T0, T1, T2, T3, T4> (...arr : (T0|T1|T2|T3|T4)[]) : AssertDelegate<T0|T1|T2|T3|T4>;
-export function oneOf (...arr : (any)[]) : AssertDelegate<any>;
-export function oneOf<T> (...arr : T[]) : AssertDelegate<T> {
-    return (name : string, mixed : any) : T => {
+
+export type LiteralType = string|number|boolean|undefined|null;
+export type LiteralValues<ArrT extends LiteralType[]> = (
+    ArrT extends Array<infer T> ?
+        T:
+        never
+)
+export function literal<ArrT extends LiteralType[]> (...arr : ArrT) : (
+    AssertDelegate<LiteralValues<ArrT>>
+) {
+    return (name : string, mixed : unknown) : (
+        LiteralValues<ArrT>
+    ) => {
         for (let item of arr) {
             if (mixed === item) {
-                return mixed;
+                return mixed as any;
             }
         }
         throw new Error(`Expected ${name} to be one of ${toTypeStr(arr)}; received ${typeof mixed}(${mixed})`);
     };
 }
 
+export function excludeLiteral<
+    F extends AnyAssertFunc,
+    ArrT extends LiteralType[]
+> (assert : F, ...arr : ArrT) : (
+    AssertDelegate<Exclude<
+        TypeOf<F>,
+        LiteralValues<ArrT>
+    >>
+) {
+    const assertDelegate = toAssertDelegateExact(assert);
+    return (name : string, mixed : unknown) => {
+        const value = assertDelegate(name, mixed);
+        for (let item of arr) {
+            if (value === item) {
+                throw new Error(`${name} cannot be one of ${toTypeStr(arr)}; received ${typeof value}(${value})`);
+            }
+        }
+        return value as any;
+    };
+}
+
 export function boolean () : AssertDelegate<boolean> {
-    return (name : string, mixed : any) : boolean => {
+    return (name : string, mixed : unknown) : boolean => {
         if (typeof mixed != "boolean") {
             throw new Error(`${name} must be a boolean, received ${typeof mixed}(${mixed})`);
         }
@@ -41,7 +64,7 @@ export function boolean () : AssertDelegate<boolean> {
     };
 }
 export function unsafeNumber () : AssertDelegate<number> {
-    return (name : string, mixed : any) : number => {
+    return (name : string, mixed : unknown) : number => {
         if (typeof mixed != "number") {
             throw new Error(`${name} must be a number, received ${typeof mixed}(${mixed})`);
         }
@@ -50,7 +73,7 @@ export function unsafeNumber () : AssertDelegate<number> {
 }
 
 export function string () : AssertDelegate<string> {
-    return (name : string, mixed : any) : string => {
+    return (name : string, mixed : unknown) : string => {
         if (typeof mixed != "string") {
             throw new Error(`${name} must be a string, received ${typeof mixed}(${mixed})`);
         }
@@ -59,24 +82,24 @@ export function string () : AssertDelegate<string> {
 }
 
 export function nil () : AssertDelegate<null> {
-    return (name : string, mixed : any) => {
+    return (name : string, mixed : unknown) => {
         if (mixed === null) {
-            return mixed;
+            return null;
         }
         throw new Error(`Expected ${name} to be null, received ${typeof mixed}`);
     };
 }
 export function undef () : AssertDelegate<undefined> {
-    return (name : string, mixed : any) => {
+    return (name : string, mixed : unknown) => {
         if (mixed === undefined) {
-            return mixed;
+            return undefined;
         }
         throw new Error(`Expected ${name} to be undefined, received ${typeof mixed}`);
     };
 }
 
-export function any () : AssertDelegate<any> {
-    return (_name : string, mixed : any) : any => {
+export function unknown () : AssertDelegate<unknown> {
+    return (_name : string, mixed : unknown) : unknown => {
         return mixed;
-    };
+    }
 }

@@ -4,33 +4,36 @@ const types_1 = require("../types");
 const cast_1 = require("./cast");
 types_1.Field;
 /*
-    Modifies `mixed` directly
+    Use with `and()`
 
     const f = rename("x", "y", sd.stringToNaturalNumber())
 
-    f("obj", { x : "34" })  //Gives us { y : 34 }
-    f("obj", { y : "34" })  //Gives us { y : 34 }
-    f("obj", { })           //Error
+    f("obj", { x : "34" })              //Gives us { y : 34 }
+    f("obj", { y : "34" })              //Gives us { y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { y : 99 }
+    f("obj", { })                       //Error
 */
 function rename(fromKey, toKey, assert) {
     const d = types_1.toAssertDelegateExact(assert);
-    return (name, mixed) => {
-        if (mixed.hasOwnProperty(fromKey)) {
-            const fromValue = mixed[fromKey];
-            mixed[toKey] = d(`[${name}.${fromKey} -> ${name}.${toKey}]`, fromValue);
-            delete mixed[fromKey];
-            return mixed;
+    const result = (name, mixed) => {
+        if (mixed.hasOwnProperty(toKey)) {
+            const toValue = mixed[toKey];
+            const obj = {};
+            obj[toKey] = d(`${name}.${toKey}`, toValue);
+            return obj;
         }
         else {
-            const toValue = mixed[toKey];
-            mixed[toKey] = d(`${name}.${toKey}`, toValue);
-            return mixed;
+            const fromValue = mixed[fromKey];
+            const obj = {};
+            obj[toKey] = d(`[${name}.${fromKey} -> ${name}.${toKey}]`, fromValue);
+            return obj;
         }
     };
+    return result;
 }
 exports.rename = rename;
 /*
-    Modifies `mixed` directly
+    Use with `and()`
 
     const f = deriveFrom(
         "x",
@@ -48,11 +51,25 @@ exports.rename = rename;
 function deriveFrom(fromKey, toKey, canCast, castDelegate, assert) {
     const canCastD = types_1.toAssertDelegateExact(canCast);
     const castD = cast_1.cast(canCast, castDelegate, assert);
-    return (name, mixed) => {
-        mixed[fromKey] = canCastD(`${name}.${fromKey}`, mixed[fromKey]);
-        mixed[toKey] = castD(`[${name}.${fromKey} > ${name}.${toKey}]`, mixed[fromKey]);
-        return mixed;
+    const result = (name, mixed) => {
+        const obj = {};
+        obj[fromKey] = canCastD(`${name}.${fromKey}`, mixed[fromKey]);
+        obj[toKey] = castD(`[${name}.${fromKey} > ${name}.${toKey}]`, obj[fromKey]);
+        return obj;
     };
+    return result;
 }
 exports.deriveFrom = deriveFrom;
+function instanceOf(ctor) {
+    const result = (name, mixed) => {
+        if (mixed instanceof ctor) {
+            return mixed;
+        }
+        else {
+            throw new Error(`Expected ${name} to be an instance of ${ctor.name}`);
+        }
+    };
+    return result;
+}
+exports.instanceOf = instanceOf;
 //# sourceMappingURL=object.js.map

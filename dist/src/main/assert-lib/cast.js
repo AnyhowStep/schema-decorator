@@ -4,7 +4,7 @@ const types_1 = require("../types");
 function cast(canCast, castDelegate, assert) {
     const canCastDelegate = types_1.toAssertDelegateExact(canCast);
     const assertDelegate = types_1.toAssertDelegateExact(assert);
-    return (name, mixed) => {
+    return ((name, mixed) => {
         try {
             //If this works, we are already the desired data type
             return assertDelegate(name, mixed);
@@ -16,13 +16,13 @@ function cast(canCast, castDelegate, assert) {
             //One final check
             return assertDelegate(name, to);
         }
-    };
+    });
 }
 exports.cast = cast;
 function castFirst(canCast, castDelegate, assert) {
     const canCastDelegate = types_1.toAssertDelegateExact(canCast);
     const assertDelegate = types_1.toAssertDelegateExact(assert);
-    return (name, mixed) => {
+    return ((name, mixed) => {
         try {
             //Attempt to cast first
             const from = canCastDelegate(name, mixed);
@@ -34,7 +34,7 @@ function castFirst(canCast, castDelegate, assert) {
             //We failed to cast, check if the original value is the desired type
             return assertDelegate(name, mixed);
         }
-    };
+    });
 }
 exports.castFirst = castFirst;
 //# sourceMappingURL=cast.js.map

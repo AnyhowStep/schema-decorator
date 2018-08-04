@@ -8,81 +8,92 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Route_1 = require("./Route");
-const AccessToken_1 = require("./AccessToken");
-const convert = require("../convert");
+const types_1 = require("../types");
 class Request {
-    constructor(args) {
-        this.args = args;
+    constructor(data, extraData) {
+        this.data = data;
+        this.extraData = extraData;
     }
     static Create(api, route) {
         return new Request({
-            param: new Route_1.Empty(),
-            query: new Route_1.Empty(),
-            body: new Route_1.Empty(),
-            accessTokenType: undefined,
-            headers: {},
             route: route,
+        }, {
             api: api,
         });
     }
-    setParam(n) {
-        return new Request(Object.assign({}, this.args, { param: n }));
+    setParam(param) {
+        const d = types_1.toAssertDelegateExact(this.data.route.data.paramF);
+        return new Request(Object.assign({}, this.data, { param: d("param", param) }), this.extraData);
     }
-    setQuery(n) {
-        return new Request(Object.assign({}, this.args, { query: n }));
+    setQuery(query) {
+        const d = types_1.toAssertDelegateExact(this.data.route.data.queryF);
+        return new Request(Object.assign({}, this.data, { query: d("query", query) }), this.extraData);
     }
-    setBody(n) {
-        return new Request(Object.assign({}, this.args, { body: n }));
+    setBody(body) {
+        const d = types_1.toAssertDelegateExact(this.data.route.data.bodyF);
+        return new Request(Object.assign({}, this.data, { body: d("body", body) }), this.extraData);
     }
-    setAccessToken(n) {
-        return new Request(Object.assign({}, this.args, { accessTokenType: n }));
-    }
-    setHeader(key, value) {
-        return new Request(Object.assign({}, this.args, { headers: Object.assign({}, this.args.headers, { [key]: value }) }));
+    //Special, does not eliminate extra header keys,
+    //But does not check their values, either
+    setHeader(header) {
+        const d = types_1.toAssertDelegateExact(this.data.route.data.headerF);
+        return new Request(Object.assign({}, this.data, { header: Object.assign({}, header, d("header", header)) }), this.extraData);
     }
     setOnTransformBody(onTransformBody) {
-        return new Request(Object.assign({}, this.args, { onTransformBody: onTransformBody }));
+        return new Request(Object.assign({}, this.data, { onTransformBody: onTransformBody }), this.extraData);
+    }
+    setOnInjectHeader(onInjectHeader) {
+        return new Request(Object.assign({}, this.data, { onInjectHeader: onInjectHeader }), this.extraData);
+    }
+    setOnTransformResponse(onTransformResponse) {
+        return new Request(Object.assign({}, this.data, { onTransformResponse: onTransformResponse }), this.extraData);
     }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
-            const route = this.args.route;
-            const r = route.args;
-            const toRaw = (name, mixed, t) => {
-                if (t.isCtor) {
-                    return convert.toRaw(name, convert.toClass(name, mixed, t.func));
-                }
-                else {
-                    const v = t.func(name, mixed);
-                    return convert.anyToRaw(name, v);
-                }
-            };
-            const headers = Object.assign({}, this.args.headers);
-            let rawBody = (this.args.body instanceof Route_1.Empty) ?
+            const data = this.data;
+            const routeData = data.route.data;
+            const extraData = this.extraData;
+            const param = (routeData.paramF == undefined) ?
+                {} :
+                types_1.toAssertDelegateExact(routeData.paramF)(`${routeData.path.getRouterPath()} : param`, data.param);
+            const method = data.route.getMethod();
+            const path = routeData.path.getCallingPath(param);
+            let debugName = `${method} ${path}`;
+            const query = (routeData.queryF == undefined) ?
                 undefined :
-                toRaw("body", this.args.body, r.bodyT);
-            if (this.args.onTransformBody != undefined && rawBody != undefined) {
-                rawBody = this.args.onTransformBody(rawBody);
+                types_1.toAssertDelegateExact(routeData.queryF)(`${debugName} : query`, data.query);
+            if (query != undefined && Object.keys(query).length > 0) {
+                debugName += `?${JSON.stringify(query)}`;
             }
+            const body = (routeData.bodyF == undefined) ?
+                undefined :
+                types_1.toAssertDelegateExact(routeData.bodyF)(`${debugName} : body`, data.body);
+            //Headers are special
+            const injectedHeader = (extraData.onInjectHeader == undefined) ?
+                {} :
+                yield extraData.onInjectHeader(data.route);
+            const header = (routeData.headerF == undefined) ?
+                injectedHeader : Object.assign({}, injectedHeader, data.header, types_1.toAssertDelegateExact(routeData.headerF)(`${debugName} : header`, data.header));
+            const transformedBody = (extraData.onTransformBody == undefined) ?
+                body :
+                yield extraData.onTransformBody(body);
             const config = {
-                method: route.getMethod(),
-                url: r.path.getCallingPath(toRaw("param", this.args.param, r.paramT))
-                    .replace(/\/{2,}/g, "/"),
-                params: toRaw("query", this.args.query, r.queryT),
-                data: rawBody,
-                headers: headers,
+                method: method,
+                url: path,
+                params: query,
+                data: transformedBody,
+                headers: header,
             };
-            const accessTokenType = this.args.accessTokenType;
-            if (accessTokenType != null) {
-                const accessTokenString = yield AccessToken_1.AccessTokenUtil.GetAccessTokenString(accessTokenType);
-                headers["Access-Token"] = accessTokenString;
-            }
-            const result = yield this.args.api.instance.request(config);
-            if (r.responseT.func == Route_1.Empty) {
+            const result = yield this.extraData.api.instance.request(config);
+            if (routeData.responseF == undefined) {
                 return result;
             }
             else {
-                result.data = toRaw("response", result.data, r.responseT);
+                const rawResponse = (extraData.onTransformResponse == undefined) ?
+                    result.data :
+                    yield extraData.onTransformResponse(result.data);
+                const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
+                result.data = response;
                 return result;
             }
         });

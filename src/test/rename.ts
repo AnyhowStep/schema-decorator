@@ -15,6 +15,10 @@ tape(__filename + "-basic", (t) => {
         f("obj", { y : "34" }),
         { y : 34 }
     );
+    t.deepEquals(
+        f("obj", { x : "34", y : "99" }),
+        { y : 99 }
+    );
 
     t.end();
 });

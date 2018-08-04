@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const number_1 = require("./number");
 const operator_1 = require("./operator");
+const cast_1 = require("./cast");
+const basic_1 = require("./basic");
+const number_2 = require("./number");
 //Only checks if Date
 function validDate() {
     return (name, mixed) => {
@@ -16,26 +19,11 @@ function validDate() {
 exports.validDate = validDate;
 //Converts string|number to Date
 function date() {
-    return (name, mixed) => {
-        if (typeof mixed == "string") {
-            const result = new Date(mixed);
-            return validDate()(name, result);
-        }
-        else if (typeof mixed == "number") {
-            const result = new Date(mixed);
-            return validDate()(name, result);
-        }
-        else if (mixed instanceof Date) {
-            return validDate()(name, mixed);
-        }
-        else {
-            throw new Error(`Expected ${name} to be a Date, Date string, or Date number; received ${typeof mixed}`);
-        }
-    };
+    return operator_1.or(cast_1.cast(basic_1.string(), (from) => new Date(from), validDate()), cast_1.cast(number_2.number(), (from) => new Date(from), validDate()), validDate());
 }
 exports.date = date;
 function dateTimeWithoutMillisecond() {
-    return operator_1.and(date(), (_name, mixed) => {
+    return operator_1.chain(date(), (_name, mixed) => {
         //To remove the millisecond part,
         //+ Divide by 1000 to get the time in seconds
         //+ Convert to an integer

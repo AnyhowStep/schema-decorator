@@ -6,26 +6,26 @@ const number_1 = require("./number");
 const cast_1 = require("./cast");
 const array_like_1 = require("./array-like");
 function finiteNumberString() {
-    return operator_1.and(basic_1.string(), (name, mixed) => {
-        const toCheck = parseFloat(mixed);
+    return operator_1.chain(basic_1.string(), (name, str) => {
+        const toCheck = parseFloat(str);
         number_1.finiteNumber()(`${name}'s number value`, toCheck);
-        return mixed;
+        return str;
     });
 }
 exports.finiteNumberString = finiteNumberString;
 function integerString() {
-    return operator_1.and(basic_1.string(), (name, mixed) => {
-        const toCheck = parseFloat(mixed);
+    return operator_1.chain(basic_1.string(), (name, str) => {
+        const toCheck = parseFloat(str);
         number_1.integer()(`${name}'s number value`, toCheck);
-        return mixed;
+        return str;
     });
 }
 exports.integerString = integerString;
 function naturalNumberString() {
-    return operator_1.and(basic_1.string(), (name, mixed) => {
-        const toCheck = parseFloat(mixed);
+    return operator_1.chain(basic_1.string(), (name, str) => {
+        const toCheck = parseFloat(str);
         number_1.naturalNumber()(`${name}'s number value`, toCheck);
-        return mixed;
+        return str;
     });
 }
 exports.naturalNumberString = naturalNumberString;
@@ -42,7 +42,7 @@ function stringToNaturalNumber() {
 }
 exports.stringToNaturalNumber = stringToNaturalNumber;
 function stringLength(arg0, arg1) {
-    return operator_1.and(basic_1.string(), array_like_1.length(arg0, arg1));
+    return array_like_1.length(basic_1.string(), arg0, arg1);
 }
 exports.stringLength = stringLength;
 function varChar(arg0, arg1) {
@@ -54,7 +54,7 @@ function char(length) {
 }
 exports.char = char;
 function match(regex) {
-    return operator_1.and(basic_1.string(), (name, mixed) => {
+    return operator_1.chain(basic_1.string(), (name, mixed) => {
         if (regex.test(mixed)) {
             return mixed;
         }
@@ -65,7 +65,7 @@ function match(regex) {
 }
 exports.match = match;
 function email() {
-    return operator_1.and(basic_1.string(), (name, mixed) => {
+    return operator_1.chain(basic_1.string(), (name, mixed) => {
         if (/^.+@.+$/.test(mixed)) {
             return mixed;
         }

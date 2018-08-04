@@ -1,4 +1,3 @@
-import { Assertion } from "./Assertion";
 export declare const REGEX_IGNORE_VARIABLE_NAMES: RegExp;
 export declare function keepVariableName(name: string): boolean;
 export declare const IGNORE_EXTRA_VARIABLES = "____hijacked-by-schema-decorator-IGNORE_EXTRA_VARIABLES";
@@ -19,7 +18,6 @@ export declare type Raw<T> = {
 export declare function toRaw<T>(name: string, instance: T, ignoreInstancesOf?: {
     new (...args: any[]): any;
 }[]): Raw<T>;
-export declare function toClassOrAssert<T>(name: string, raw: any, assertion: Assertion<T>): T;
 export declare function toClassExact<T>(name: string, raw: any, ctor: {
     new (): T;
 }): T;

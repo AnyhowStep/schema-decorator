@@ -1,17 +1,16 @@
 import {
     Field,
-    AssertFunc,
-    TypeOf
+    AnyAssertFunc
 } from "./types";
 
-export type RawFieldCollection = { [name : string] : AssertFunc<any> };
+export type RawFieldCollection = { [name : string] : AnyAssertFunc };
 export type FieldCollection<RawFieldCollectionT extends RawFieldCollection> = {
-    [name in Extract<keyof RawFieldCollectionT, string>] : Field<name, TypeOf<RawFieldCollectionT[name]>>
+    [name in Extract<keyof RawFieldCollectionT, string>] : Field<name, RawFieldCollectionT[name]>
 };
 
-export function field<NameT extends string, TypeT> (
+export function field<NameT extends string, F extends AnyAssertFunc> (
     name : NameT,
-    assert : AssertFunc<TypeT>
+    assert : F
 ) {
     return new Field(name, assert);
 }

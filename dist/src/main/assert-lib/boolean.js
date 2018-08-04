@@ -22,11 +22,11 @@ function stringToBoolean() {
 }
 exports.stringToBoolean = stringToBoolean;
 function numberToTrue() {
-    return operator_1.and(numberToBoolean(), basic_1.oneOf(true));
+    return operator_1.chain(numberToBoolean(), basic_1.unknown(), basic_1.literal(true));
 }
 exports.numberToTrue = numberToTrue;
 function numberToFalse() {
-    return operator_1.and(numberToBoolean(), basic_1.oneOf(false));
+    return operator_1.chain(numberToBoolean(), basic_1.unknown(), basic_1.literal(false));
 }
 exports.numberToFalse = numberToFalse;
 //# sourceMappingURL=boolean.js.map

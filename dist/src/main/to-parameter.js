@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("./types");
-//This returns a function that
-//automatically calls `AssertT` on the first parameter
-//to validate its type, before passing to to `FuncT`.
-//This just reduces boilerplate code.
-function toParameter(assert, func) {
-    const assertDelegate = types_1.toAssertDelegateExact(assert);
-    return (args) => {
-        args = assertDelegate("args", args);
-        return func(args);
+function toParameter(...args) {
+    const asserts = args.slice(0, args.length - 1);
+    const func = args[args.length - 1];
+    const assertDelegates = asserts.map(types_1.toAssertDelegateExact);
+    return (...args) => {
+        const values = [];
+        for (let i = 0; i < assertDelegates.length; ++i) {
+            values.push(assertDelegates[i](`args[${i}]`, args[i]));
+        }
+        return func(...values);
     };
 }
 exports.toParameter = toParameter;

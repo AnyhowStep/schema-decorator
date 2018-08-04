@@ -13,19 +13,10 @@ class Api {
         this.config = config;
     }
     request(route) {
-        let result = Request_1.Request.Create(this, route);
-        if (this.config.onInjectHeaders != undefined) {
-            const headers = this.config.onInjectHeaders(route);
-            for (let k in headers) {
-                if (headers.hasOwnProperty(k)) {
-                    result = result.setHeader(k, headers[k]);
-                }
-            }
-        }
-        if (this.config.onTransformBody != undefined) {
-            result = result.setOnTransformBody(this.config.onTransformBody);
-        }
-        return result;
+        return Request_1.Request.Create(this, route)
+            .setOnTransformBody(this.config.onTransformBody)
+            .setOnTransformBody(this.config.onTransformBody)
+            .setOnTransformResponse(this.config.onTransformResponse);
     }
 }
 exports.Api = Api;

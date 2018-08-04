@@ -1,10 +1,9 @@
-import {AssertDelegate} from "../types";
 import {cast} from "./cast";
 import {finiteNumber} from "./number";
-import {boolean, string, oneOf} from "./basic";
-import {and} from "./operator";
+import {boolean, string, literal, unknown} from "./basic";
+import {chain} from "./operator";
 
-export function numberToBoolean () : AssertDelegate<boolean> {
+export function numberToBoolean () {
     return cast(
         finiteNumber(),
         (raw : number) => {
@@ -13,7 +12,7 @@ export function numberToBoolean () : AssertDelegate<boolean> {
         boolean()
     );
 }
-export function stringToBoolean () : AssertDelegate<boolean> {
+export function stringToBoolean () {
     return cast(
         string(),
         (raw : string) => {
@@ -27,15 +26,17 @@ export function stringToBoolean () : AssertDelegate<boolean> {
     );
 }
 
-export function numberToTrue () : AssertDelegate<true> {
-    return and(
+export function numberToTrue () {
+    return chain(
         numberToBoolean(),
-        oneOf(true)
+        unknown(),
+        literal(true)
     );
 }
-export function numberToFalse () : AssertDelegate<false> {
-    return and(
+export function numberToFalse () {
+    return chain(
         numberToBoolean(),
-        oneOf(false)
+        unknown(),
+        literal(false)
     );
 }

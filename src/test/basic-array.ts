@@ -40,7 +40,7 @@ tape("arrayOfOneOfOrType", (t) => {
     class Foo {
         @schema.assert(schema.array(
             schema.or(
-                schema.oneOf("allowed"),
+                schema.literal("allowed"),
                 validation.Number.assertNaturalNumber
             )
         ))
@@ -55,7 +55,7 @@ tape("arrayOfOneOfOrCast", (t) => {
     class Foo {
         @schema.assert(schema.array(
             schema.or(
-                schema.oneOf("allowed"),
+                schema.literal("allowed"),
                 schema.cast(validation.NumberString.assertNaturalNumberString, parseInt, validation.Number.assertNaturalNumber)
             )
         ))
@@ -84,10 +84,10 @@ tape("arrayOfCast", (t) => {
 });
 
 
-tape("oneOfOrArrayOfType", (t) => {
+tape("literalOrArrayOfType", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             schema.array(validation.Number.assertNaturalNumber)
         ))
         var : "allowed"|(number[]) = [];
@@ -100,12 +100,12 @@ tape("oneOfOrArrayOfType", (t) => {
     });
     t.end();
 });
-tape("oneOfOrArrayOfOneOfOrType", (t) => {
+tape("literalOrArrayOfOneOfOrType", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             schema.array(schema.or(
-                schema.oneOf("allowed-sub"),
+                schema.literal("allowed-sub"),
                 validation.Number.assertNaturalNumber
             ))
         ))
@@ -119,12 +119,12 @@ tape("oneOfOrArrayOfOneOfOrType", (t) => {
     });
     t.end();
 });
-tape("oneOfOrArrayOfOneOfOrCast", (t) => {
+tape("literalOrArrayOfOneOfOrCast", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             schema.array(schema.or(
-                schema.oneOf("allowed-sub"),
+                schema.literal("allowed-sub"),
                 schema.cast(
                     validation.NumberString.assertNaturalNumberString,
                     parseInt,
@@ -144,10 +144,10 @@ tape("oneOfOrArrayOfOneOfOrCast", (t) => {
     });
     t.end();
 });
-tape("oneOfOrArrayOfCast", (t) => {
+tape("literalOrArrayOfCast", (t) => {
     class Foo {
         @schema.assert(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             schema.array(schema.cast(
                 validation.NumberString.assertNaturalNumberString,
                 parseInt,
@@ -250,7 +250,7 @@ tape("arrayOfMaybe", (t) => {
 tape("optionalArrayOfOneOfOrType", (t) => {
     class Foo {
         @schema.assert(schema.optional(schema.array(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             validation.Number.assertNaturalNumber
         ))))
         var : undefined|((number|"allowed")[]) = [];
@@ -268,7 +268,7 @@ tape("optionalArrayOfOneOfOrType", (t) => {
 tape("nullableArrayOfOneOfOrType", (t) => {
     class Foo {
         @schema.assert(schema.nullable(schema.array(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             validation.Number.assertNaturalNumber
         ))))
         var : null|((number|"allowed")[]) = [];
@@ -284,7 +284,7 @@ tape("nullableArrayOfOneOfOrType", (t) => {
 tape("maybeArrayOfOneOfOrType", (t) => {
     class Foo {
         @schema.assert(schema.maybe(schema.array(schema.or(
-            schema.oneOf("allowed"),
+            schema.literal("allowed"),
             validation.Number.assertNaturalNumber
         ))))
         var : null|undefined|((number|"allowed")[]) = [];
@@ -592,7 +592,7 @@ tape("optionalArrayOfOneOfOrCast", (t) => {
     class Foo {
         @schema.assert(schema.optional(schema.array(
             schema.or(
-                schema.oneOf("allowed"),
+                schema.literal("allowed"),
                 schema.cast(
                     validation.NumberString.assertNaturalNumberString,
                     parseInt,
@@ -618,7 +618,7 @@ tape("nullableArrayOfOneOfOrCast", (t) => {
     class Foo {
         @schema.assert(schema.nullable(schema.array(
             schema.or(
-                schema.oneOf("allowed"),
+                schema.literal("allowed"),
                 schema.cast(
                     validation.NumberString.assertNaturalNumberString,
                     parseInt,
@@ -642,7 +642,7 @@ tape("maybeArrayOfOneOfOrCast", (t) => {
     class Foo {
         @schema.assert(schema.maybe(schema.array(
             schema.or(
-                schema.oneOf("allowed"),
+                schema.literal("allowed"),
                 schema.cast(
                     validation.NumberString.assertNaturalNumberString,
                     parseInt,

@@ -1,36 +1,95 @@
-import {AssertDelegate} from "../types";
-import {notMaybe} from "./missing-value";
+import {AssertDelegate, AnyAssertFunc, TypeOf, toAssertDelegateExact, AcceptsOf} from "../types";
 import {naturalNumber} from "./number";
-import {and} from "./operator";
+import {chain} from "./operator";
 
-export function maxLength (max : number) : AssertDelegate<{ length : number }> {
-    return notMaybe((name : string, mixed : any) : { length : number } => {
-        const length = naturalNumber()(`${name}.length`, mixed.length);
+export function maxLength<F extends AnyAssertFunc> (
+    assert : F,
+    max : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+) {
+    const assertDelegate = toAssertDelegateExact(assert);
+
+    const result : AssertDelegate<TypeOf<F> & { length : number }> =  (name : string, mixed : unknown) => {
+        const value : any = assertDelegate(name, mixed);
+        const length = naturalNumber()(`${name}.length`, value.length);
         if (length > max) {
-            throw new Error(`${name} cannot be longer than ${max}, received ${mixed.length}`);
+            throw new Error(`${name} cannot be longer than ${max}, received ${length}`);
         }
-        return mixed;
-    })
+        return value;
+    };
+    return result as any;
 }
-export function minLength (max : number) : AssertDelegate<{ length : number }> {
-    return notMaybe((name : string, mixed : any) : { length : number } => {
-        const length = naturalNumber()(`${name}.length`, mixed.length);
-        if (length < max) {
-            throw new Error(`${name} cannot be shorter than ${max}, received ${mixed.length}`);
+export function minLength<F extends AnyAssertFunc> (
+    assert : F,
+    min : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+) {
+    const assertDelegate = toAssertDelegateExact(assert);
+
+    const result : AssertDelegate<TypeOf<F> & { length : number }> =  (name : string, mixed : unknown) => {
+        const value : any = assertDelegate(name, mixed);
+        const length = naturalNumber()(`${name}.length`, value.length);
+        if (length < min) {
+            throw new Error(`${name} cannot be shorter than ${min}, received ${length}`);
         }
-        return mixed;
-    })
+        return value;
+    };
+    return result as any;
 }
-export function length (max : number) : AssertDelegate<{ length : number }>;
-export function length (min : number, max : number) : AssertDelegate<{ length : number }>;
-export function length (arg0 : number, arg1? : number) : AssertDelegate<{ length : number }>;
-export function length (arg0 : number, arg1? : number) : AssertDelegate<{ length : number }> {
+
+export function length<F extends AnyAssertFunc> (
+    assert : F,
+    max : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+)
+export function length<F extends AnyAssertFunc> (
+    assert : F,
+    min : number,
+    max : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+)
+export function length<F extends AnyAssertFunc> (
+    assert : F,
+    arg0 : number,
+    arg1? : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+)
+export function length<F extends AnyAssertFunc> (
+    assert : F,
+    arg0 : number,
+    arg1? : number
+) : (
+    AssertDelegate<TypeOf<F> & { length : number }> &
+    {
+        __accepts : AcceptsOf<F>
+    }
+) {
     if (arg1 == undefined) {
-        return maxLength(arg0);
+        return maxLength(assert, arg0);
     } else {
-        return and(
-            minLength(arg0),
-            maxLength(arg1)
+        return chain(
+            minLength(assert, arg0),
+            maxLength(assert, arg1)
         );
     }
 }

@@ -9,7 +9,7 @@ tape("intersect", (t) => {
     class Foo {
         @schema.assert(validation.Number.assertNaturalNumber)
         foo : number = 0;
-        @schema.assert(schema.oneOf("hello", "world"))
+        @schema.assert(schema.literal("hello", "world"))
         same : "hello"|"world" = "hello";
     }
     //Important to ignore extra variables...
@@ -17,7 +17,7 @@ tape("intersect", (t) => {
     class Bar {
         @schema.assert(validation.Number.assertNaturalNumber)
         bar : number = 0;
-        @schema.assert(schema.oneOf("world"))
+        @schema.assert(schema.literal("world"))
         same : "world" = "world";
     }
     //Important to ignore extra variables...
