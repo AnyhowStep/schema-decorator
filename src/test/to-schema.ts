@@ -247,3 +247,29 @@ tape("rename-to-schema", (t) => {
     myUtil.fail(t, Foo, new Date());
     t.end();
 });
+
+tape(__filename + "-should-not-be-assignable-statically", (t) => {
+    const schema = sd.toSchema({
+        required : sd.string(),
+        optional : sd.optional(sd.number())
+    });
+    /*
+    const errorCase : {
+        required : string,
+        optional? : boolean
+    } = schema("errorCase", {
+        required : "required",
+        optional : 34
+    });
+    //*/
+    const passingCase : {
+        required : string,
+        optional? : number
+    } = schema("passingCase", {
+        required : "required",
+        optional : 34
+    });
+    t.deepEquals(passingCase, { required : "required", optional : 34 });
+
+    t.end();
+});

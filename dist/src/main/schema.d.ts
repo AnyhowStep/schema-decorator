@@ -10356,7 +10356,7 @@ export declare function schema<F0 extends AnyField, F1 extends AnyField, F2 exte
     }));
 });
 export declare function schema(...fields: AnyField[]): AssertDelegate<any>;
-export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT): (AssertDelegate<{
+declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
     [name in {
         [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? never : k);
     }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
@@ -10364,14 +10364,21 @@ export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>
     [name in {
         [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? k : never);
     }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
+});
+declare type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = ({
+    [name in {
+        [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? never : k);
+    }[keyof RawFieldCollectionT]]: AcceptsOf<RawFieldCollectionT[name]>;
+} & {
+    [name in {
+        [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? k : never);
+    }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
+});
+export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT): (AssertDelegate<{
+    [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]>);
 }> & {
     __accepts: ({
-        [name in {
-            [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? never : k);
-        }[keyof RawFieldCollectionT]]: AcceptsOf<RawFieldCollectionT[name]>;
-    } & {
-        [name in {
-            [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? k : never);
-        }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
+        [name in keyof ToSchemaAccepts<RawFieldCollectionT>]: (AcceptsOf<RawFieldCollectionT[name]>);
     });
 });
+export {};

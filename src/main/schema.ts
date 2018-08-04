@@ -1693,48 +1693,65 @@ export function schema (...fields : AnyField[]) : AssertDelegate<any> {
     };
 }
 
+type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = (
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends TypeOf<RawFieldCollectionT[k]> ?
+                    never :
+                    k
+            )
+        }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
+    } &
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends TypeOf<RawFieldCollectionT[k]> ?
+                    k :
+                    never
+            )
+        }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
+    }
+);
+
+type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends AcceptsOf<RawFieldCollectionT[k]> ?
+                    never :
+                    k
+            )
+        }[keyof RawFieldCollectionT]]: AcceptsOf<RawFieldCollectionT[name]>;
+    } &
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends AcceptsOf<RawFieldCollectionT[k]> ?
+                    k :
+                    never
+            )
+        }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
+    }
+);
+
+//https://github.com/Microsoft/TypeScript/issues/26207
 export function toSchema<
     RawFieldCollectionT extends RawFieldCollection
 > (raw : RawFieldCollectionT) : (
     AssertDelegate<
         {
-            [name in {
-                [k in keyof RawFieldCollectionT] : (
-                    undefined extends TypeOf<RawFieldCollectionT[k]> ?
-                        never :
-                        k
-                )
-            }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
-        } &
-        {
-            [name in {
-                [k in keyof RawFieldCollectionT] : (
-                    undefined extends TypeOf<RawFieldCollectionT[k]> ?
-                        k :
-                        never
-                )
-            }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>
+            )
         }
     > &
     {
         __accepts : (
             {
-                [name in {
-                    [k in keyof RawFieldCollectionT] : (
-                        undefined extends AcceptsOf<RawFieldCollectionT[k]> ?
-                            never :
-                            k
-                    )
-                }[keyof RawFieldCollectionT]]: AcceptsOf<RawFieldCollectionT[name]>;
-            } &
-            {
-                [name in {
-                    [k in keyof RawFieldCollectionT] : (
-                        undefined extends AcceptsOf<RawFieldCollectionT[k]> ?
-                            k :
-                            never
-                    )
-                }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
+                    AcceptsOf<RawFieldCollectionT[name]>
+                )
             }
         )
     }
