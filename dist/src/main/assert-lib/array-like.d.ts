@@ -1,26 +1,36 @@
-import { AssertDelegate, AnyAssertFunc, TypeOf, AcceptsOf } from "../types";
-export declare function maxLength<F extends AnyAssertFunc>(assert: F, max: number): (AssertDelegate<TypeOf<F> & {
+import { AssertDelegate } from "../types";
+export declare function maxLength(max: number): (AssertDelegate<{
     length: number;
 }> & {
-    __accepts: AcceptsOf<F>;
+    __accepts: {
+        length: number;
+    };
 });
-export declare function minLength<F extends AnyAssertFunc>(assert: F, min: number): (AssertDelegate<TypeOf<F> & {
+export declare function minLength(min: number): (AssertDelegate<{
     length: number;
 }> & {
-    __accepts: AcceptsOf<F>;
+    __accepts: {
+        length: number;
+    };
 });
-export declare function length<F extends AnyAssertFunc>(assert: F, max: number): (AssertDelegate<TypeOf<F> & {
+export declare function length(max: number): (AssertDelegate<{
     length: number;
 }> & {
-    __accepts: AcceptsOf<F>;
+    __accepts: {
+        length: number;
+    };
 });
-export declare function length<F extends AnyAssertFunc>(assert: F, min: number, max: number): (AssertDelegate<TypeOf<F> & {
+export declare function length(min: number, max: number): (AssertDelegate<{
     length: number;
 }> & {
-    __accepts: AcceptsOf<F>;
+    __accepts: {
+        length: number;
+    };
 });
-export declare function length<F extends AnyAssertFunc>(assert: F, arg0: number, arg1?: number): (AssertDelegate<TypeOf<F> & {
+export declare function length(arg0: number, arg1?: number): (AssertDelegate<{
     length: number;
 }> & {
-    __accepts: AcceptsOf<F>;
+    __accepts: {
+        length: number;
+    };
 });

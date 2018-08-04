@@ -72,4 +72,22 @@ function instanceOf(ctor) {
     return result;
 }
 exports.instanceOf = instanceOf;
+function dictionary(assert) {
+    const assertDelegate = types_1.toAssertDelegateExact(assert);
+    const result = (name, mixed) => {
+        if (!(mixed instanceof Object) ||
+            (mixed instanceof Date) ||
+            (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an dictionary object, received ${typeof mixed}(${mixed})`);
+        }
+        const keys = Object.keys(mixed);
+        const obj = {};
+        for (let k of keys) {
+            obj[k] = assertDelegate(`${name}[${k}]`, mixed[k]);
+        }
+        return obj;
+    };
+    return result;
+}
+exports.dictionary = dictionary;
 //# sourceMappingURL=object.js.map

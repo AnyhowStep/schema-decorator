@@ -159,3 +159,34 @@ export function instanceOf<T> (ctor : new (...args : any[]) => T) : (
     };
     return result as any;
 }
+
+export function dictionary<F extends AnyAssertFunc> (assert : F) : (
+    AssertDelegate<{
+        [key : string] : TypeOf<F>
+    }> &
+    {
+        __accepts : {
+            [key : string] : AcceptsOf<F>
+        }
+    }
+) {
+    const assertDelegate = toAssertDelegateExact(assert);
+    const result : AssertDelegate<{
+        [key : string] : TypeOf<F>
+    }> = (name : string, mixed : unknown) => {
+        if (
+            !(mixed instanceof Object) ||
+            (mixed instanceof Date) ||
+            (mixed instanceof Array)
+        ) {
+            throw new Error(`Expected ${name} to be an dictionary object, received ${typeof mixed}(${mixed})`);
+        }
+        const keys = Object.keys(mixed);
+        const obj : any = {};
+        for (let k of keys) {
+            obj[k] = assertDelegate(`${name}[${k}]`, (mixed as any)[k])
+        }
+        return obj;
+    };
+    return result as any;
+}

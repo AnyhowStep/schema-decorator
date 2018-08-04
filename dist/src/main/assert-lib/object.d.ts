@@ -19,3 +19,10 @@ export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT e
 export declare function instanceOf<T>(ctor: new (...args: any[]) => T): (AssertDelegate<T> & {
     __accepts: T;
 });
+export declare function dictionary<F extends AnyAssertFunc>(assert: F): (AssertDelegate<{
+    [key: string]: TypeOf<F>;
+}> & {
+    __accepts: {
+        [key: string]: AcceptsOf<F>;
+    };
+});

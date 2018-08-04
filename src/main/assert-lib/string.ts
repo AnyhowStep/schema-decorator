@@ -1,5 +1,5 @@
 import {AssertDelegate} from "../types";
-import {chain} from "./operator";
+import {chain, and} from "./operator";
 import {string} from "./basic";
 import {finiteNumber, integer, naturalNumber} from "./number";
 import {cast} from "./cast";
@@ -62,10 +62,9 @@ export function stringLength (max : number) : AssertDelegate<string>;
 export function stringLength (min : number, max : number) : AssertDelegate<string>;
 export function stringLength (arg0 : number, arg1? : number) : AssertDelegate<string>;
 export function stringLength (arg0 : number, arg1? : number) : AssertDelegate<string> {
-    return length(
+    return and(
         string(),
-        arg0,
-        arg1
+        length(arg0, arg1)
     );
 }
 

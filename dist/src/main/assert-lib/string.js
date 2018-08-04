@@ -42,7 +42,7 @@ function stringToNaturalNumber() {
 }
 exports.stringToNaturalNumber = stringToNaturalNumber;
 function stringLength(arg0, arg1) {
-    return array_like_1.length(basic_1.string(), arg0, arg1);
+    return operator_1.and(basic_1.string(), array_like_1.length(arg0, arg1));
 }
 exports.stringLength = stringLength;
 function varChar(arg0, arg1) {
