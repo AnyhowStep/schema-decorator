@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const field_1 = require("./field");
 function schema(...fields) {
-    return (name, mixed) => {
+    const d = (name, mixed) => {
         if (!(mixed instanceof Object)) {
             throw new Error(`Expected ${name} to be an object; received ${typeof mixed}(${mixed})`);
         }
@@ -12,8 +12,10 @@ function schema(...fields) {
         }
         return result;
     };
+    return d;
 }
 exports.schema = schema;
+//https://github.com/Microsoft/TypeScript/issues/26207
 function toSchema(raw) {
     const fieldCollection = field_1.fields(raw);
     const fieldArray = [];
