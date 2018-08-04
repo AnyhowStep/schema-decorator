@@ -275,7 +275,7 @@ export class Request<DataT extends RequestData> {
                                 false
                         ) :
                         true
-                ) &
+                ) |
                 (
                     "queryF" extends DataT["route"]["data"] ?
                         (
@@ -284,7 +284,7 @@ export class Request<DataT extends RequestData> {
                                 false
                         ) :
                         true
-                ) &
+                ) |
                 (
                     "bodyF" extends DataT["route"]["data"] ?
                         (
@@ -293,7 +293,7 @@ export class Request<DataT extends RequestData> {
                                 false
                         ) :
                         true
-                ) &
+                ) |
                 (
                     "headerF" extends DataT["route"]["data"] ?
                         (
