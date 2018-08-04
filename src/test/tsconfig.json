@@ -19,6 +19,7 @@
         "noImplicitUseStrict": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "noErrorTruncation": true,
 
         "strict": true,
 

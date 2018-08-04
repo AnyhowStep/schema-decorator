@@ -112,6 +112,50 @@ export type TypeOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     never
 );
 
+//Like TypeOf, but unsafe
+export type UnsafeTypeOf<F> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegateAccepts<infer T> ?
+    T :
+    F extends AssertDelegate<infer T> ?
+    T :
+    F extends ChainedAssertDelegate<infer T> ?
+    T :
+    F extends Field<string, infer F2> ?
+    (
+        F2 extends Constructor<infer T> ?
+        T :
+        F2 extends AssertDelegateAccepts<infer T> ?
+        T :
+        F2 extends AssertDelegate<infer T> ?
+        T :
+        F2 extends Field<string, infer F3> ?
+        (
+            F3 extends Constructor<infer T> ?
+            T :
+            F3 extends AssertDelegateAccepts<infer T> ?
+            T :
+            F3 extends AssertDelegate<infer T> ?
+            T :
+            F3 extends Field<string, infer F4> ?
+            (
+                F4 extends Constructor<infer T> ?
+                T :
+                F4 extends AssertDelegateAccepts<infer T> ?
+                T :
+                F4 extends AssertDelegate<infer T> ?
+                T :
+                //This is enough recursion, right?
+                never
+            ) :
+            never
+        ) :
+        never
+    ) :
+    never
+);
+
 export type AcceptsOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     F extends Constructor<infer T> ?
     T :

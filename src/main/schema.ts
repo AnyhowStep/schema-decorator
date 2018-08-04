@@ -177,7 +177,7 @@ export function schema<Arr extends AnyField[]> (...fields : Arr) : (
     return d as any;
 }
 
-type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = (
+export type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = (
     {
         [name in {
             [k in keyof RawFieldCollectionT] : (
@@ -198,7 +198,7 @@ type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = (
     }
 );
 
-type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
+export type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
     {
         [name in {
             [k in keyof RawFieldCollectionT] : (
@@ -220,7 +220,7 @@ type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
 );
 
 //https://github.com/Microsoft/TypeScript/issues/26207
-export function toSchema<
+function toSchemaImpl<
     RawFieldCollectionT extends RawFieldCollection
 > (raw : RawFieldCollectionT) : (
     AssertDelegate<
@@ -250,3 +250,104 @@ export function toSchema<
     }
     return schema(...fieldArray) as any;
 }
+
+export const toSchema : <
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) => (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
+                    AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        )
+    }
+) = toSchemaImpl;
+export const toSchema2 : <
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) => (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
+                    AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        )
+    }
+) = toSchemaImpl;
+export const toSchema3 : <
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) => (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
+                    AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        )
+    }
+) = toSchemaImpl;
+export const toSchema4 : <
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) => (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
+                    AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        )
+    }
+) = toSchemaImpl;
+
+/*
+Demonstration of the bug, and why toSchema() requires multiple copies
+per level of nesting.
+
+import {number} from "./assert-lib/number";
+
+const n2 = toSchema({
+    z : number()
+});
+const n3 = toSchema({
+    z3 : number()
+});
+const raw = {
+    nested2 : n2,
+    nested3 : n3
+};
+const ts = toSchema(raw);
+const ts2 = toSchema2(raw);
+*/

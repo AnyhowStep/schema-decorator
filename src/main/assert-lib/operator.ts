@@ -6,10 +6,11 @@ import {
     AcceptsOf,
     toAssertDelegateExact,
     AssertFunc,
-    Chainable
+    Chainable,
+    UnsafeTypeOf
 } from "../types";
-import {spread} from "@anyhowstep/type-util";
 import {deepEqual} from "../deep-equal";
+import {deepMerge} from "../deep-merge";
 import {isLiteralOrDate} from "../is-literal-or-date";
 
 /*
@@ -403,7 +404,76 @@ arr.push(gen(i));
 }
 arr.join("\n");
 */
-export function intersect<F0 extends AssertFunc<object>> (f0 : F0) : AssertDelegate<TypeOf<F0>> & { __accepts : AcceptsOf<F0> };
+
+type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string> = (
+    IndexT extends keyof Arr ?
+        (
+            Arr[IndexT] extends AssertFunc<any> ?
+                UnsafeTypeOf<Arr[IndexT]> :
+                {}
+        ) :
+        {}
+);
+/*
+function gen (n) {
+let args0 = [];
+for (let i=0; i<n; ++i) {
+    args0.push(`ObjectTypeAt<Arr, "${i}">`);
+}
+return args0.join(" &\n\t").replace(/\t/g, "    ");
+}
+gen(20)
+*/
+type Intersection<Arr extends AssertFunc<object>[]> = (
+    ObjectTypeAt<Arr, "0"> &
+    ObjectTypeAt<Arr, "1"> &
+    ObjectTypeAt<Arr, "2"> &
+    ObjectTypeAt<Arr, "3"> &
+    ObjectTypeAt<Arr, "4"> &
+    ObjectTypeAt<Arr, "5"> &
+    ObjectTypeAt<Arr, "6"> &
+    ObjectTypeAt<Arr, "7"> &
+    ObjectTypeAt<Arr, "8"> &
+    ObjectTypeAt<Arr, "9"> &
+    ObjectTypeAt<Arr, "10"> &
+    ObjectTypeAt<Arr, "11"> &
+    ObjectTypeAt<Arr, "12"> &
+    ObjectTypeAt<Arr, "13"> &
+    ObjectTypeAt<Arr, "14"> &
+    ObjectTypeAt<Arr, "15"> &
+    ObjectTypeAt<Arr, "16"> &
+    ObjectTypeAt<Arr, "17"> &
+    ObjectTypeAt<Arr, "18"> &
+    ObjectTypeAt<Arr, "19">
+);
+export function intersect<Arr extends AssertFunc<object>[]> (
+    ...assertions : Arr
+) : (
+    AssertDelegate<{
+        [k in keyof Intersection<Arr>] : Intersection<Arr>[k]
+    }>
+);
+
+/*
+== Old style ==
+function gen (n) {
+let args0 = [];
+let args1 = [];
+let args2 = [];
+for (let i=0; i<n; ++i) {
+    args0.push(`F${i} extends AssertFunc<object>`);
+    args1.push(`f${i} : F${i}`);
+    args2.push(`TypeOf<F${i}>`);
+}
+return `export function intersect<${args0.join(", ")}> (${args1.join(", ")}) : AssertDelegate<${args2.join("&")}>;`;
+}
+arr = [];
+for (let i=1; i<21; ++i) {
+arr.push(gen(i));
+}
+arr.join("\n");
+*/
+/*export function intersect<F0 extends AssertFunc<object>> (f0 : F0) : AssertDelegate<TypeOf<F0>> & { __accepts : AcceptsOf<F0> };
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>> (f0 : F0, f1 : F1) : AssertDelegate<TypeOf<F0>&TypeOf<F1>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1> };
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2> };
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3> };
@@ -422,7 +492,7 @@ export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<o
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3>&AcceptsOf<F4>&AcceptsOf<F5>&AcceptsOf<F6>&AcceptsOf<F7>&AcceptsOf<F8>&AcceptsOf<F9>&AcceptsOf<F10>&AcceptsOf<F11>&AcceptsOf<F12>&AcceptsOf<F13>&AcceptsOf<F14>&AcceptsOf<F15>&AcceptsOf<F16> };
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3>&AcceptsOf<F4>&AcceptsOf<F5>&AcceptsOf<F6>&AcceptsOf<F7>&AcceptsOf<F8>&AcceptsOf<F9>&AcceptsOf<F10>&AcceptsOf<F11>&AcceptsOf<F12>&AcceptsOf<F13>&AcceptsOf<F14>&AcceptsOf<F15>&AcceptsOf<F16>&AcceptsOf<F17> };
 export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>, F18 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3>&AcceptsOf<F4>&AcceptsOf<F5>&AcceptsOf<F6>&AcceptsOf<F7>&AcceptsOf<F8>&AcceptsOf<F9>&AcceptsOf<F10>&AcceptsOf<F11>&AcceptsOf<F12>&AcceptsOf<F13>&AcceptsOf<F14>&AcceptsOf<F15>&AcceptsOf<F16>&AcceptsOf<F17>&AcceptsOf<F18> };
-export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>, F18 extends AssertFunc<object>, F19 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18, f19 : F19) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>&TypeOf<F19>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3>&AcceptsOf<F4>&AcceptsOf<F5>&AcceptsOf<F6>&AcceptsOf<F7>&AcceptsOf<F8>&AcceptsOf<F9>&AcceptsOf<F10>&AcceptsOf<F11>&AcceptsOf<F12>&AcceptsOf<F13>&AcceptsOf<F14>&AcceptsOf<F15>&AcceptsOf<F16>&AcceptsOf<F17>&AcceptsOf<F18>&AcceptsOf<F19> };
+export function intersect<F0 extends AssertFunc<object>, F1 extends AssertFunc<object>, F2 extends AssertFunc<object>, F3 extends AssertFunc<object>, F4 extends AssertFunc<object>, F5 extends AssertFunc<object>, F6 extends AssertFunc<object>, F7 extends AssertFunc<object>, F8 extends AssertFunc<object>, F9 extends AssertFunc<object>, F10 extends AssertFunc<object>, F11 extends AssertFunc<object>, F12 extends AssertFunc<object>, F13 extends AssertFunc<object>, F14 extends AssertFunc<object>, F15 extends AssertFunc<object>, F16 extends AssertFunc<object>, F17 extends AssertFunc<object>, F18 extends AssertFunc<object>, F19 extends AssertFunc<object>> (f0 : F0, f1 : F1, f2 : F2, f3 : F3, f4 : F4, f5 : F5, f6 : F6, f7 : F7, f8 : F8, f9 : F9, f10 : F10, f11 : F11, f12 : F12, f13 : F13, f14 : F14, f15 : F15, f16 : F16, f17 : F17, f18 : F18, f19 : F19) : AssertDelegate<TypeOf<F0>&TypeOf<F1>&TypeOf<F2>&TypeOf<F3>&TypeOf<F4>&TypeOf<F5>&TypeOf<F6>&TypeOf<F7>&TypeOf<F8>&TypeOf<F9>&TypeOf<F10>&TypeOf<F11>&TypeOf<F12>&TypeOf<F13>&TypeOf<F14>&TypeOf<F15>&TypeOf<F16>&TypeOf<F17>&TypeOf<F18>&TypeOf<F19>> & { __accepts : AcceptsOf<F0>&AcceptsOf<F1>&AcceptsOf<F2>&AcceptsOf<F3>&AcceptsOf<F4>&AcceptsOf<F5>&AcceptsOf<F6>&AcceptsOf<F7>&AcceptsOf<F8>&AcceptsOf<F9>&AcceptsOf<F10>&AcceptsOf<F11>&AcceptsOf<F12>&AcceptsOf<F13>&AcceptsOf<F14>&AcceptsOf<F15>&AcceptsOf<F16>&AcceptsOf<F17>&AcceptsOf<F18>&AcceptsOf<F19> };*/
 export function intersect<F extends AssertFunc<object>> (...assertions : F[]) : AssertDelegate<TypeOf<F>> {
     const assertDelegates = assertions.map(toAssertDelegateExact);
 
@@ -431,7 +501,7 @@ export function intersect<F extends AssertFunc<object>> (...assertions : F[]) : 
         for (let d of assertDelegates) {
             result.push(d(name, mixed));
         }
-        return spread(...result);
+        return deepMerge(...result);
     };
 }
 
@@ -506,6 +576,6 @@ export function and<Arr extends AnyAssertFunc[]> (...arr : Arr) : AssertDelegate
                 throw new Error(`${name} fails check ${i}; received ${mixed}, expected to be an object, found ${v}`);
             }
         }
-        return spread(...(values as any[]));
+        return deepMerge(...(values as any[]));
     };
 }

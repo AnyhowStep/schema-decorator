@@ -32,7 +32,7 @@ export declare function schema<Arr extends AnyField[]>(...fields: Arr): (AssertD
         [name in keyof SchemaAccepts<Arr>]: (SchemaAccepts<Arr>[name]);
     });
 });
-declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
+export declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
     [name in {
         [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? never : k);
     }[keyof RawFieldCollectionT]]: TypeOf<RawFieldCollectionT[name]>;
@@ -41,7 +41,7 @@ declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
         [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? k : never);
     }[keyof RawFieldCollectionT]]?: TypeOf<RawFieldCollectionT[name]>;
 });
-declare type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = ({
+export declare type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = ({
     [name in {
         [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? never : k);
     }[keyof RawFieldCollectionT]]: AcceptsOf<RawFieldCollectionT[name]>;
@@ -50,7 +50,28 @@ declare type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
         [k in keyof RawFieldCollectionT]: (undefined extends AcceptsOf<RawFieldCollectionT[k]> ? k : never);
     }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
 });
-export declare function toSchema<RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT): (AssertDelegate<{
+export declare const toSchema: <RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT) => (AssertDelegate<{
+    [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]>);
+}> & {
+    __accepts: ({
+        [name in keyof ToSchemaAccepts<RawFieldCollectionT>]: (AcceptsOf<RawFieldCollectionT[name]>);
+    });
+});
+export declare const toSchema2: <RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT) => (AssertDelegate<{
+    [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]>);
+}> & {
+    __accepts: ({
+        [name in keyof ToSchemaAccepts<RawFieldCollectionT>]: (AcceptsOf<RawFieldCollectionT[name]>);
+    });
+});
+export declare const toSchema3: <RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT) => (AssertDelegate<{
+    [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]>);
+}> & {
+    __accepts: ({
+        [name in keyof ToSchemaAccepts<RawFieldCollectionT>]: (AcceptsOf<RawFieldCollectionT[name]>);
+    });
+});
+export declare const toSchema4: <RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT) => (AssertDelegate<{
     [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]>);
 }> & {
     __accepts: ({

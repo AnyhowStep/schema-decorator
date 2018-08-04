@@ -16,7 +16,7 @@ function schema(...fields) {
 }
 exports.schema = schema;
 //https://github.com/Microsoft/TypeScript/issues/26207
-function toSchema(raw) {
+function toSchemaImpl(raw) {
     const fieldCollection = field_1.fields(raw);
     const fieldArray = [];
     for (let k in fieldCollection) {
@@ -27,5 +27,27 @@ function toSchema(raw) {
     }
     return schema(...fieldArray);
 }
-exports.toSchema = toSchema;
+exports.toSchema = toSchemaImpl;
+exports.toSchema2 = toSchemaImpl;
+exports.toSchema3 = toSchemaImpl;
+exports.toSchema4 = toSchemaImpl;
+/*
+Demonstration of the bug, and why toSchema() requires multiple copies
+per level of nesting.
+
+import {number} from "./assert-lib/number";
+
+const n2 = toSchema({
+    z : number()
+});
+const n3 = toSchema({
+    z3 : number()
+});
+const raw = {
+    nested2 : n2,
+    nested3 : n3
+};
+const ts = toSchema(raw);
+const ts2 = toSchema2(raw);
+*/ 
 //# sourceMappingURL=schema.js.map
