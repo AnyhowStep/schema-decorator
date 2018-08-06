@@ -121,8 +121,8 @@ export declare function chain<F0 extends AnyAssertFunc, F1 extends ChainedAssert
     __accepts: AcceptsOf<F0>;
 } : never;
 export declare function chain<Arr extends AnyAssertFunc[]>(...arr: Arr): (AssertDelegate<unknown>);
-declare type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string> = (IndexT extends keyof Arr ? (Arr[IndexT] extends AssertFunc<any> ? UnsafeTypeOf<Arr[IndexT]> : {}) : {});
-declare type Intersection<Arr extends AssertFunc<object>[]> = (ObjectTypeAt<Arr, "0"> & ObjectTypeAt<Arr, "1"> & ObjectTypeAt<Arr, "2"> & ObjectTypeAt<Arr, "3"> & ObjectTypeAt<Arr, "4"> & ObjectTypeAt<Arr, "5"> & ObjectTypeAt<Arr, "6"> & ObjectTypeAt<Arr, "7"> & ObjectTypeAt<Arr, "8"> & ObjectTypeAt<Arr, "9"> & ObjectTypeAt<Arr, "10"> & ObjectTypeAt<Arr, "11"> & ObjectTypeAt<Arr, "12"> & ObjectTypeAt<Arr, "13"> & ObjectTypeAt<Arr, "14"> & ObjectTypeAt<Arr, "15"> & ObjectTypeAt<Arr, "16"> & ObjectTypeAt<Arr, "17"> & ObjectTypeAt<Arr, "18"> & ObjectTypeAt<Arr, "19">);
+export declare type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string> = (IndexT extends keyof Arr ? (Arr[IndexT] extends AssertFunc<any> ? UnsafeTypeOf<Arr[IndexT]> : {}) : {});
+export declare type Intersection<Arr extends AssertFunc<object>[]> = (ObjectTypeAt<Arr, "0"> & ObjectTypeAt<Arr, "1"> & ObjectTypeAt<Arr, "2"> & ObjectTypeAt<Arr, "3"> & ObjectTypeAt<Arr, "4"> & ObjectTypeAt<Arr, "5"> & ObjectTypeAt<Arr, "6"> & ObjectTypeAt<Arr, "7"> & ObjectTypeAt<Arr, "8"> & ObjectTypeAt<Arr, "9"> & ObjectTypeAt<Arr, "10"> & ObjectTypeAt<Arr, "11"> & ObjectTypeAt<Arr, "12"> & ObjectTypeAt<Arr, "13"> & ObjectTypeAt<Arr, "14"> & ObjectTypeAt<Arr, "15"> & ObjectTypeAt<Arr, "16"> & ObjectTypeAt<Arr, "17"> & ObjectTypeAt<Arr, "18"> & ObjectTypeAt<Arr, "19">);
 export declare function intersect<Arr extends AssertFunc<object>[]>(...assertions: Arr): (AssertDelegate<{
     [k in keyof Intersection<Arr>]: Intersection<Arr>[k];
 }>);
@@ -187,4 +187,3 @@ export declare function and<F0 extends AnyAssertFunc, F1 extends AnyAssertFunc, 
     __accepts: AcceptsOf<F0> & AcceptsOf<F1> & AcceptsOf<F2> & AcceptsOf<F3> & AcceptsOf<F4> & AcceptsOf<F5> & AcceptsOf<F6> & AcceptsOf<F7> & AcceptsOf<F8> & AcceptsOf<F9> & AcceptsOf<F10> & AcceptsOf<F11> & AcceptsOf<F12> & AcceptsOf<F13> & AcceptsOf<F14> & AcceptsOf<F15> & AcceptsOf<F16> & AcceptsOf<F17> & AcceptsOf<F18> & AcceptsOf<F19>;
 };
 export declare function and<Arr extends AnyAssertFunc[]>(...arr: Arr): AssertDelegate<unknown>;
-export {};

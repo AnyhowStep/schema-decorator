@@ -405,7 +405,7 @@ arr.push(gen(i));
 arr.join("\n");
 */
 
-type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string> = (
+export type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string> = (
     IndexT extends keyof Arr ?
         (
             Arr[IndexT] extends AssertFunc<any> ?
@@ -424,7 +424,7 @@ return args0.join(" &\n\t").replace(/\t/g, "    ");
 }
 gen(20)
 */
-type Intersection<Arr extends AssertFunc<object>[]> = (
+export type Intersection<Arr extends AssertFunc<object>[]> = (
     ObjectTypeAt<Arr, "0"> &
     ObjectTypeAt<Arr, "1"> &
     ObjectTypeAt<Arr, "2"> &
