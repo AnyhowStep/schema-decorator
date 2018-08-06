@@ -59,7 +59,7 @@ function match(regex) {
             return mixed;
         }
         else {
-            throw new Error(`${name} does not match ${regex.source}, received ${mixed}`);
+            throw new Error(`${name} does not match ${regex.source}`);
         }
     });
 }
@@ -70,7 +70,7 @@ function email() {
             return mixed;
         }
         else {
-            throw new Error(`${name} must be an email address, received ${mixed}`);
+            throw new Error(`${name} must be an email address`);
         }
     });
 }

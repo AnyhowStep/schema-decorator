@@ -11,6 +11,11 @@ export declare function optional<F extends AnyAssertFunc>(assert: F): import("..
     __accepts: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | undefined;
+    __canAccept: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: unknown;
+    } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: unknown;
+    } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | undefined;
 };
 export declare function nullable<F extends AnyAssertFunc>(assert: F): import("../types").AssertDelegate<(F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
     __accepts: unknown;
@@ -24,6 +29,11 @@ export declare function nullable<F extends AnyAssertFunc>(assert: F): import("..
     __accepts: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | null;
+    __canAccept: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: unknown;
+    } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: unknown;
+    } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | null;
 };
 export declare function maybe<F extends AnyAssertFunc>(assert: F): import("../types").AssertDelegate<(F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
     __accepts: unknown;
@@ -37,6 +47,11 @@ export declare function maybe<F extends AnyAssertFunc>(assert: F): import("../ty
     __accepts: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | null | undefined;
+    __canAccept: (F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: unknown;
+    } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: unknown;
+    } ? F["__accepts"] : F extends import("../types").AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends import("../types").Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | null | undefined;
 };
 export declare function notOptional<F extends AnyAssertFunc>(assert: F): import("../types").AssertDelegate<Exclude<F extends import("../types").Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
     __accepts: unknown;

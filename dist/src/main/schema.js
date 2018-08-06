@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const field_1 = require("./field");
+const util_1 = require("./util");
 function schema(...fields) {
     const d = (name, mixed) => {
-        if (!(mixed instanceof Object)) {
-            throw new Error(`Expected ${name} to be an object; received ${typeof mixed}(${mixed})`);
+        if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an object; received ${util_1.toTypeStr(mixed)}`);
         }
         const result = {};
         for (let f of fields) {

@@ -4,6 +4,7 @@ const types_1 = require("../types");
 const deep_equal_1 = require("../deep-equal");
 const deep_merge_1 = require("../deep-merge");
 const is_literal_or_date_1 = require("../is-literal-or-date");
+const util_1 = require("../util");
 function or(...arr) {
     const assertDelegates = arr.map(types_1.toAssertDelegateExact);
     return (name, mixed) => {
@@ -95,7 +96,7 @@ function and(...arr) {
             for (let i = 1; i < values.length; ++i) {
                 const v = values[i];
                 if (!deep_equal_1.deepEqual(first, v)) {
-                    throw new Error(`${name} fails check ${i}; received ${mixed}, expected to match ${first}, found ${v}`);
+                    throw new Error(`${name} fails check ${i}; found ${util_1.toTypeStr(v)}`);
                 }
             }
             return first;
@@ -103,7 +104,7 @@ function and(...arr) {
         for (let i = 0; i < values.length; ++i) {
             const v = values[i];
             if (!(v instanceof Object) || (v instanceof Date)) {
-                throw new Error(`${name} fails check ${i}; received ${mixed}, expected to be an object, found ${v}`);
+                throw new Error(`${name} fails check ${i}; expected to be an object; found ${util_1.toTypeStr(v)}`);
             }
         }
         return deep_merge_1.deepMerge(...values);

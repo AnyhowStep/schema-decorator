@@ -130,3 +130,29 @@ export function isExactInstanceOf<T> (mixed : any, ctor : {new(...args:any[]):T}
     }
     return (Object.getPrototypeOf(mixed).constructor == ctor);
 }
+
+export function toTypeStr (mixed : unknown) : string {
+    if (mixed === null) {
+        return "null";
+    }
+    if (mixed === undefined) {
+        return "undefined"
+    }
+    const str = (typeof mixed);
+    if (str !== "object") {
+        return str;
+    }
+    const prototype = Object.getPrototypeOf(mixed);
+    if (prototype == undefined) {
+        return "[Unknown Type]";
+    }
+    const constructor = prototype.constructor;
+    if (constructor == undefined) {
+        return "[Unknown Prototype]";
+    }
+    const name = constructor.name;
+    if (typeof name === "string") {
+        return name;
+    }
+    return "[Unknown Name]";
+}

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const basic_1 = require("./basic");
 const operator_1 = require("./operator");
+const util_1 = require("../util");
 //Please only pass enums here
 var Enum;
 (function (Enum) {
@@ -56,7 +57,7 @@ function toEnumeration(e) {
                 ;
             }
         }
-        throw new Error(`Expected ${name} to be one of ${field.join("|")}}; received ${typeof mixed}(${mixed})`);
+        throw new Error(`Expected ${name} to be one of ${field.join("|")}}; received ${util_1.toTypeStr(mixed)}`);
     });
 }
 exports.toEnumeration = toEnumeration;
@@ -82,7 +83,7 @@ function toEnumerationKey(e) {
                 return k;
             }
         }
-        throw new Error(`Expected ${name} to be one of ${field.join("|")}; received ${typeof mixed}(${mixed})`);
+        throw new Error(`Expected ${name} to be one of ${field.join("|")}; received ${util_1.toTypeStr(mixed)}`);
     });
 }
 exports.toEnumerationKey = toEnumerationKey;

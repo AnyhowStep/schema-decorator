@@ -1,6 +1,7 @@
 import {AssertDelegate} from "../types";
 import {or, chain} from "./operator";
 import {string} from "./basic";
+import {toTypeStr} from "../util";
 
 export function jsonObjectStr () {
     return chain(
@@ -14,7 +15,7 @@ export function jsonObjectStr () {
             }
             const jsonStr = JSON.stringify(jsonObject);
             if (jsonStr[0] != "{") {
-                throw new Error(`Expected ${name} to be a JSON object, received ${jsonStr}`);
+                throw new Error(`Expected ${name} to be a JSON object`);
             }
             //We return the result of JSON.stringify() to use the minimal amount of space
             return jsonStr;
@@ -24,12 +25,12 @@ export function jsonObjectStr () {
 export function jsonObjectToString () : (
     AssertDelegate<string> &
     {
-        __accepts : Object
+        __accepts : object
     }
 ) {
     return ((name : string, mixed : unknown) => {
         if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array) || (mixed instanceof Function)) {
-            throw new Error(`${name} is not a valid JSON object; expected an object; received ${mixed}`);
+            throw new Error(`${name} is not a valid JSON object; expected an object; received ${toTypeStr(mixed)}`);
         }
         try {
             return JSON.stringify(mixed);
@@ -39,7 +40,7 @@ export function jsonObjectToString () : (
     }) as any;
 }
 export function jsonStringToObject () {
-    return (name : string, str : string) : Object => {
+    return (name : string, str : string) : object => {
         try {
             return JSON.parse(str);
         } catch (err) {

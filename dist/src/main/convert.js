@@ -32,7 +32,7 @@ function toClass(name, raw, ctor) {
         return raw;
     }
     if (!(raw instanceof Object)) {
-        throw new Error(`Cannot convert ${name} ${typeof raw}(${raw}) to ${ctor.name}`);
+        throw new Error(`Cannot convert ${name} ${myUtil.toTypeStr(raw)} to ${ctor.name}`);
     }
     let result = undefined;
     try {

@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = require("./util");
 function deepMergeImpl(a, b) {
     if (a === b) {
         return a;
     }
     if ((a instanceof Date) || (b instanceof Date)) {
         if (!(a instanceof Date)) {
-            throw new Error(`Cannot merge ${typeof a}(${a}) with a date`);
+            throw new Error(`Cannot merge ${util_1.toTypeStr(a)} with a Date`);
         }
         if (!(b instanceof Date)) {
-            throw new Error(`Cannot merge date with a ${typeof b}(${b})`);
+            throw new Error(`Cannot merge Date with a ${util_1.toTypeStr(b)}`);
         }
         if (a.getTime() === b.getTime()) {
             return a;
@@ -20,10 +21,10 @@ function deepMergeImpl(a, b) {
     }
     if ((a instanceof Array) || (b instanceof Array)) {
         if (!(a instanceof Array)) {
-            throw new Error(`Cannot merge ${typeof a}(${a}) with an array`);
+            throw new Error(`Cannot merge ${util_1.toTypeStr(a)} with an array`);
         }
         if (!(b instanceof Array)) {
-            throw new Error(`Cannot merge an array with a ${typeof b}(${b})`);
+            throw new Error(`Cannot merge an array with a ${util_1.toTypeStr(b)}`);
         }
         const newArray = [];
         const max = Math.max(a.length, b.length);
@@ -50,7 +51,7 @@ function deepMergeImpl(a, b) {
             return a;
         }
         else {
-            throw new Error(`Cannot merge ${typeof a}(${a}) and ${typeof b}(${b}); they are not equal`);
+            throw new Error(`Cannot merge ${util_1.toTypeStr(a)} and ${util_1.toTypeStr(b)}; they are not equal`);
         }
     }
     const aKeys = Object.keys(a);

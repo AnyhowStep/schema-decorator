@@ -7,6 +7,7 @@ import {
     notOptional,
     notNullable
 } from "./assert-lib/missing-value";
+import {strict, relaxed} from "./strict";
 
 /*
     Everything should be converted into an AssertDelegate.
@@ -20,6 +21,12 @@ export type AssertDelegateAccepts<T, AcceptsT=unknown> = (
 );
 export type ChainedAssertDelegate<T, AcceptsT=any> = (
     (name : string, accepts : AcceptsT) => T
+);
+export type AssertDelegateCanAccept<T, CanAcceptT=unknown> = (
+    ((name : string, mixed : unknown) => T) &
+    {
+        __canAccept : CanAcceptT
+    }
 );
 
 export type Constructor<T> = {new():T};
@@ -185,10 +192,43 @@ export type UnsafeAcceptsOf<F> = (
     never
 );
 
+export type CanAcceptOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegateCanAccept<infer T> ?
+    F["__canAccept"] :
+    F extends AssertDelegateAccepts<infer T> ?
+    F["__accepts"] :
+    F extends AssertDelegate<infer T> ?
+    T :
+    F extends ChainedAssertDelegate<any, infer AcceptsT> ?
+    AcceptsT :
+    F extends Field<string, any> ?
+    F["assertDelegate"]["__canAccept"] :
+    never
+);
+//Like CanAcceptOf, but unsafe
+export type UnsafeCanAcceptOf<F> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegateCanAccept<infer T> ?
+    F["__canAccept"] :
+    F extends AssertDelegateAccepts<infer T> ?
+    F["__accepts"] :
+    F extends AssertDelegate<infer T> ?
+    T :
+    F extends ChainedAssertDelegate<any, infer AcceptsT> ?
+    AcceptsT :
+    F extends Field<string, any> ?
+    F["assertDelegate"]["__canAccept"] :
+    never
+);
+
 export type ToAssertDelegate<F extends AnyAssertFunc> = (
     AssertDelegate<TypeOf<F>> &
     {
-        __accepts : AcceptsOf<F>
+        __accepts : AcceptsOf<F>,
+        __canAccept : CanAcceptOf<F>,
     }
 );
 
@@ -236,6 +276,18 @@ export class Field<NameT extends string, F extends AnyAssertFunc> {
         return new Field(
             this.name,
             notNullable(this.assertDelegate)
+        );
+    }
+    public strict () {
+        return new Field(
+            this.name,
+            strict(this.assertDelegate)
+        );
+    }
+    public relaxed () {
+        return new Field(
+            this.name,
+            relaxed(this.assertDelegate)
         );
     }
     public withName<NewNameT extends string> (name : NewNameT) {

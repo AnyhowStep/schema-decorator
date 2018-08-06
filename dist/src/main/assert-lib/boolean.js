@@ -29,4 +29,12 @@ function numberToFalse() {
     return operator_1.chain(numberToBoolean(), basic_1.unknown(), basic_1.literal(false));
 }
 exports.numberToFalse = numberToFalse;
+function stringToTrue() {
+    return operator_1.chain(stringToBoolean(), basic_1.unknown(), basic_1.literal(true));
+}
+exports.stringToTrue = stringToTrue;
+function stringToFalse() {
+    return operator_1.chain(stringToBoolean(), basic_1.unknown(), basic_1.literal(false));
+}
+exports.stringToFalse = stringToFalse;
 //# sourceMappingURL=boolean.js.map

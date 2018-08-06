@@ -99,3 +99,15 @@ export function ltEq (x : number) {
         }
     );
 }
+export function neq (x : number) {
+    return chain(
+        finiteNumber(),
+        (name : string, num : number) => {
+            if (num != x) {
+                return num;
+            } else {
+                throw new Error(`${name} cannot be ${x}; received ${num}`);
+            }
+        }
+    );
+}

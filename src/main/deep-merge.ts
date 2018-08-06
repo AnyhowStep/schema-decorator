@@ -1,3 +1,5 @@
+import {toTypeStr} from "./util";
+
 function deepMergeImpl (a : any, b : any) : any {
     if (a === b) {
         return a;
@@ -5,10 +7,10 @@ function deepMergeImpl (a : any, b : any) : any {
 
     if ((a instanceof Date) || (b instanceof Date)) {
         if (!(a instanceof Date)) {
-            throw new Error(`Cannot merge ${typeof a}(${a}) with a date`);
+            throw new Error(`Cannot merge ${toTypeStr(a)} with a Date`);
         }
         if (!(b instanceof Date)) {
-            throw new Error(`Cannot merge date with a ${typeof b}(${b})`);
+            throw new Error(`Cannot merge Date with a ${toTypeStr(b)}`);
         }
         if (a.getTime() === b.getTime()) {
             return a;
@@ -19,10 +21,10 @@ function deepMergeImpl (a : any, b : any) : any {
 
     if ((a instanceof Array) || (b instanceof Array)) {
         if (!(a instanceof Array)) {
-            throw new Error(`Cannot merge ${typeof a}(${a}) with an array`);
+            throw new Error(`Cannot merge ${toTypeStr(a)} with an array`);
         }
         if (!(b instanceof Array)) {
-            throw new Error(`Cannot merge an array with a ${typeof b}(${b})`);
+            throw new Error(`Cannot merge an array with a ${toTypeStr(b)}`);
         }
         const newArray : any[] = [];
         const max = Math.max(a.length, b.length);
@@ -49,7 +51,7 @@ function deepMergeImpl (a : any, b : any) : any {
         if (a === b) {
             return a;
         } else {
-            throw new Error(`Cannot merge ${typeof a}(${a}) and ${typeof b}(${b}); they are not equal`);
+            throw new Error(`Cannot merge ${toTypeStr(a)} and ${toTypeStr(b)}; they are not equal`);
         }
     }
 

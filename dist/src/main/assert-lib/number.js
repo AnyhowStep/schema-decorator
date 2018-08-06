@@ -88,4 +88,15 @@ function ltEq(x) {
     });
 }
 exports.ltEq = ltEq;
+function neq(x) {
+    return operator_1.chain(finiteNumber(), (name, num) => {
+        if (num != x) {
+            return num;
+        }
+        else {
+            throw new Error(`${name} cannot be ${x}; received ${num}`);
+        }
+    });
+}
+exports.neq = neq;
 //# sourceMappingURL=number.js.map

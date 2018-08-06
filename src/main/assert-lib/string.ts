@@ -86,7 +86,7 @@ export function match (regex : RegExp) {
             if (regex.test(mixed)) {
                 return mixed;
             } else {
-                throw new Error(`${name} does not match ${regex.source}, received ${mixed}`);
+                throw new Error(`${name} does not match ${regex.source}`);
             }
         }
     );
@@ -99,7 +99,7 @@ export function email () : AssertDelegate<string> {
             if (/^.+@.+$/.test(mixed)) {
                 return mixed;
             } else {
-                throw new Error(`${name} must be an email address, received ${mixed}`);
+                throw new Error(`${name} must be an email address`);
             }
         }
     );

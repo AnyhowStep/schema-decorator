@@ -5,8 +5,10 @@ import {
     Field,
     AssertDelegate,
     AcceptsOf,
+    CanAcceptOf
 } from "../types";
 import {CastDelegate, cast} from "./cast";
+import {toTypeStr} from "../util";
 
 Field;
 
@@ -30,6 +32,9 @@ export function rename<
     }> &
     {
         __accepts : (
+            { [to in ToFieldNameT]     : AcceptsOf<AssertFuncT> }
+        ),
+        __canAccept : (
             { [from in FromFieldNameT] : AcceptsOf<AssertFuncT> } |
             { [to in ToFieldNameT]     : AcceptsOf<AssertFuncT> }
         )
@@ -102,8 +107,12 @@ export function deriveFrom<
     {
         __accepts : {
             [from in FromFieldNameT] : (
-                AcceptsOf<FromF>|
-                AcceptsOf<ToF>
+                AcceptsOf<FromF>
+            )
+        },
+        __canAccept : {
+            [from in FromFieldNameT] : (
+                CanAcceptOf<FromF>|CanAcceptOf<ToF>
             )
         }
     }
@@ -147,14 +156,15 @@ export function deriveFrom<
 export function instanceOf<T> (ctor : new (...args : any[]) => T) : (
     AssertDelegate<T> &
     {
-        __accepts : T
+        __accepts : T,
+        __canAccept : T,
     }
 ) {
     const result : AssertDelegate<T> = (name : string, mixed : unknown) : T => {
         if (mixed instanceof ctor) {
             return mixed;
         } else {
-            throw new Error(`Expected ${name} to be an instance of ${ctor.name}`);
+            throw new Error(`Expected ${name} to be an instance of ${ctor.name}; found ${toTypeStr(mixed)}`);
         }
     };
     return result as any;
@@ -167,6 +177,9 @@ export function dictionary<F extends AnyAssertFunc> (assert : F) : (
     {
         __accepts : {
             [key : string] : AcceptsOf<F>
+        },
+        __canAccept : {
+            [key : string] : CanAcceptOf<F>
         }
     }
 ) {
@@ -179,7 +192,7 @@ export function dictionary<F extends AnyAssertFunc> (assert : F) : (
             (mixed instanceof Date) ||
             (mixed instanceof Array)
         ) {
-            throw new Error(`Expected ${name} to be an dictionary object, received ${typeof mixed}(${mixed})`);
+            throw new Error(`Expected ${name} to be an dictionary object, received ${toTypeStr(mixed)}`);
         }
         const keys = Object.keys(mixed);
         const obj : any = {};

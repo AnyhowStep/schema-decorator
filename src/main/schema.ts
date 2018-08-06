@@ -1,5 +1,6 @@
 import {Field, AnyField, AssertDelegate, TypeOf, AcceptsOf} from "./types";
 import {RawFieldCollection, fields} from "./field";
+import { toTypeStr } from "./util";
 
 /*
 This is necessary for the type inference to work correctly with deeper schema nesting, unfortunately...
@@ -165,8 +166,8 @@ export function schema<Arr extends AnyField[]> (...fields : Arr) : (
     }
 ) {
     const d = (name : string, mixed : any) : any => {
-        if (!(mixed instanceof Object)) {
-            throw new Error(`Expected ${name} to be an object; received ${typeof mixed}(${mixed})`);
+        if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an object; received ${toTypeStr(mixed)}`);
         }
         const result : any = {};
         for (let f of fields) {

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const convert = require("./convert");
 const missing_value_1 = require("./assert-lib/missing-value");
+const strict_1 = require("./strict");
 class Field {
     constructor(name, assert) {
         this.name = name;
@@ -25,6 +26,12 @@ class Field {
     }
     notNullable() {
         return new Field(this.name, missing_value_1.notNullable(this.assertDelegate));
+    }
+    strict() {
+        return new Field(this.name, strict_1.strict(this.assertDelegate));
+    }
+    relaxed() {
+        return new Field(this.name, strict_1.relaxed(this.assertDelegate));
     }
     withName(name) {
         return new Field(name, this.assert);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const cast_1 = require("./cast");
+const util_1 = require("../util");
 types_1.Field;
 /*
     Use with `and()`
@@ -66,7 +67,7 @@ function instanceOf(ctor) {
             return mixed;
         }
         else {
-            throw new Error(`Expected ${name} to be an instance of ${ctor.name}`);
+            throw new Error(`Expected ${name} to be an instance of ${ctor.name}; found ${util_1.toTypeStr(mixed)}`);
         }
     };
     return result;
@@ -78,7 +79,7 @@ function dictionary(assert) {
         if (!(mixed instanceof Object) ||
             (mixed instanceof Date) ||
             (mixed instanceof Array)) {
-            throw new Error(`Expected ${name} to be an dictionary object, received ${typeof mixed}(${mixed})`);
+            throw new Error(`Expected ${name} to be an dictionary object, received ${util_1.toTypeStr(mixed)}`);
         }
         const keys = Object.keys(mixed);
         const obj = {};

@@ -40,3 +40,18 @@ export function numberToFalse () {
         literal(false)
     );
 }
+
+export function stringToTrue () {
+    return chain(
+        stringToBoolean(),
+        unknown(),
+        literal(true)
+    );
+}
+export function stringToFalse () {
+    return chain(
+        stringToBoolean(),
+        unknown(),
+        literal(false)
+    );
+}

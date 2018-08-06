@@ -3,11 +3,24 @@ import {
     AssertDelegate,
     TypeOf,
     AcceptsOf,
-    toAssertDelegateExact
+    toAssertDelegateExact,
+    CanAcceptOf
 } from "../types";
 
 export type CastDelegate<FromT, ToT> = (from : FromT) => ToT;
-
+export type CastAssertDelegate<
+    FromF extends AnyAssertFunc,
+    ToF extends AnyAssertFunc
+> = (
+    AssertDelegate<TypeOf<ToF>> &
+    {
+        //By default, only accept what the destination type accepts.
+        //You can call relaxed<>() to accept everything that
+        //can be accepted
+        __accepts : AcceptsOf<ToF>,
+        __canAccept : CanAcceptOf<FromF>|CanAcceptOf<ToF>
+    }
+);
 export function cast<
     FromF extends AnyAssertFunc,
     ToF extends AnyAssertFunc
@@ -15,7 +28,9 @@ export function cast<
     canCast : FromF,
     castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
     assert : ToF
-) : AssertDelegate<TypeOf<ToF>> & { __accepts : AcceptsOf<FromF>|AcceptsOf<ToF> } {
+) : (
+    CastAssertDelegate<FromF, ToF>
+) {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
     return ((name : string, mixed : any) : TypeOf<ToF> => {
@@ -38,7 +53,9 @@ export function castFirst<
     canCast : FromF,
     castDelegate : CastDelegate<TypeOf<FromF>, TypeOf<ToF>>,
     assert : ToF
-) : AssertDelegate<TypeOf<ToF>> & { __accepts : AcceptsOf<FromF>|AcceptsOf<ToF> } {
+) : (
+    CastAssertDelegate<FromF, ToF>
+) {
     const canCastDelegate = toAssertDelegateExact(canCast);
     const assertDelegate = toAssertDelegateExact(assert);
     return ((name : string, mixed : any) : TypeOf<ToF> => {

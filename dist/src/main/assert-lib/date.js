@@ -5,11 +5,12 @@ const operator_1 = require("./operator");
 const cast_1 = require("./cast");
 const basic_1 = require("./basic");
 const number_2 = require("./number");
+const util_1 = require("../util");
 //Only checks if Date
 function validDate() {
     return (name, mixed) => {
         if (!(mixed instanceof Date)) {
-            throw new Error(`${name} is not a Date`);
+            throw new Error(`Expected ${name} to be a Date; received ${util_1.toTypeStr(mixed)}`);
         }
         const timestamp = mixed.getTime();
         number_1.finiteNumber()(`${name}'s UNIX timestamp`, timestamp);

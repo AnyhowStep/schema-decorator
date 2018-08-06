@@ -3,12 +3,13 @@ import {chain, or} from "./operator";
 import {cast} from "./cast";
 import {string} from "./basic";
 import {number} from "./number";
+import {toTypeStr} from "../util";
 
 //Only checks if Date
 export function validDate () {
     return (name : string, mixed : unknown) : Date => {
         if (!(mixed instanceof Date)) {
-            throw new Error(`${name} is not a Date`);
+            throw new Error(`Expected ${name} to be a Date; received ${toTypeStr(mixed)}`);
         }
         const timestamp = mixed.getTime();
         finiteNumber()(`${name}'s UNIX timestamp`, timestamp);

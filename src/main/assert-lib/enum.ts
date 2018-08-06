@@ -1,16 +1,15 @@
 import {AssertDelegate} from "../types";
 import {literal} from "./basic";
 import {or} from "./operator";
+import {toTypeStr} from "../util";
 
 //Please only pass enums here
 export enum Enum {}
 export function enumeration<E extends typeof Enum> (e : E) : (
     AssertDelegate<E[keyof E]> &
     {
-        __accepts : (
-            Extract<keyof E, string>|
-            E[keyof E]
-        )
+        __accepts : E[keyof E],
+        __canAccept : E[keyof E],
     }
 ) {
     const keys = Object.keys(e)
@@ -31,10 +30,8 @@ export function enumeration<E extends typeof Enum> (e : E) : (
 export function enumerationKey<E extends typeof Enum> (e : E) : (
     AssertDelegate<Extract<keyof E, string>> &
     {
-        __accepts : (
-            Extract<keyof E, string>|
-            E[keyof E]
-        )
+        __accepts : Extract<keyof E, string>,
+        __canAccept : Extract<keyof E, string>,
     }
 ) {
     const keys = Object.keys(e)
@@ -55,7 +52,8 @@ export function enumerationKey<E extends typeof Enum> (e : E) : (
 export function toEnumeration<E extends typeof Enum> (e : E) : (
     AssertDelegate<E[keyof E]> &
     {
-        __accepts : (
+        __accepts : E[keyof E],
+        __canAccept : (
             Extract<keyof E, string>|
             E[keyof E]
         )
@@ -86,7 +84,7 @@ export function toEnumeration<E extends typeof Enum> (e : E) : (
                     return (e as any)[k];;
                 }
             }
-            throw new Error(`Expected ${name} to be one of ${field.join("|")}}; received ${typeof mixed}(${mixed})`);
+            throw new Error(`Expected ${name} to be one of ${field.join("|")}}; received ${toTypeStr(mixed)}`);
         }
     ) as any;
 }
@@ -94,7 +92,8 @@ export function toEnumeration<E extends typeof Enum> (e : E) : (
 export function toEnumerationKey<E extends typeof Enum> (e : E) : (
     AssertDelegate<Extract<keyof E, string>> &
     {
-        __accepts : (
+        __accepts : Extract<keyof E, string>,
+        __canAccept : (
             Extract<keyof E, string>|
             E[keyof E]
         )
@@ -126,7 +125,7 @@ export function toEnumerationKey<E extends typeof Enum> (e : E) : (
                     return k;
                 }
             }
-            throw new Error(`Expected ${name} to be one of ${field.join("|")}; received ${typeof mixed}(${mixed})`);
+            throw new Error(`Expected ${name} to be one of ${field.join("|")}; received ${toTypeStr(mixed)}`);
         }
     ) as any;
 }
