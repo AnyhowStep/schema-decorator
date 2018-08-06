@@ -1,4 +1,4 @@
-import {AnyAssertFunc, ChainedAssertFunc, Chainable} from "../types";
+import {AnyAssertFunc, ChainedAssertFunc, Chainable, TypeOf} from "../types";
 import {Param, AnyParam} from "./Param";
 
 export interface PathParam<ParamKeys extends string> {
@@ -172,16 +172,23 @@ export class Route<DataT extends RouteData> {
             >>,
             P
         > extends true ?
-            Route<
-                {
-                    [key in keyof DataT] : (
-                        key extends "paramF" ?
-                        P :
-                        DataT[key]
-                    )
-                } &
-                { paramF : P }
-            > :
+            (
+                TypeOf<P> extends AnyParam<Extract<
+                    DataT["path"]["_dummyParamKeys"],
+                    string
+                >> ?
+                    Route<
+                        {
+                            [key in keyof DataT] : (
+                                key extends "paramF" ?
+                                P :
+                                DataT[key]
+                            )
+                        } &
+                        { paramF : P }
+                    > :
+                    never
+            ) :
             never
     ) {
         return new Route(

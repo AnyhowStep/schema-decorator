@@ -1,4 +1,4 @@
-import { AnyAssertFunc, ChainedAssertFunc, Chainable } from "../types";
+import { AnyAssertFunc, ChainedAssertFunc, Chainable, TypeOf } from "../types";
 import { Param, AnyParam } from "./Param";
 export interface PathParam<ParamKeys extends string> {
     param: ParamKeys;
@@ -34,11 +34,11 @@ export declare class Route<DataT extends RouteData> {
     appendParam<P extends string>(this: (DataT["paramF"] extends ChainedAssertFunc<any> ? never : any), param: P, regex?: RegExp): (Route<{
         [key in keyof DataT]: (key extends "path" ? Path<Extract<DataT["path"]["_dummyParamKeys"] | P, string>> : DataT[key]);
     }>);
-    param<P extends ChainedAssertFunc<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>>>(this: (DataT["paramF"] extends ChainedAssertFunc<any> ? never : Route<DataT>), paramF: P): (Chainable<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>, P> extends true ? Route<{
+    param<P extends ChainedAssertFunc<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>>>(this: (DataT["paramF"] extends ChainedAssertFunc<any> ? never : Route<DataT>), paramF: P): (Chainable<Param<Extract<DataT["path"]["_dummyParamKeys"], string>>, P> extends true ? (TypeOf<P> extends AnyParam<Extract<DataT["path"]["_dummyParamKeys"], string>> ? Route<{
         [key in keyof DataT]: (key extends "paramF" ? P : DataT[key]);
     } & {
         paramF: P;
-    }> : never);
+    }> : never) : never);
     query<Q extends AnyAssertFunc>(queryF: Q): (Route<{
         [key in keyof DataT]: (key extends "queryF" ? Q : DataT[key]);
     } & {

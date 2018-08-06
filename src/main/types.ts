@@ -362,6 +362,13 @@ export function toAssertDelegateExact<F extends AnyAssertFunc> (assertFunc : F) 
     }
 }
 
+/*
+From - Output   | To - Input        | extends           | Okay?
+{}              | { x : number }    |                   | No
+{ x : number }  | {}                | From extends To   | Yes
+number|undefined| number            |                   | No
+number          | number|undefined  | From extends To   | Yes
+*/
 export type Chainable<
     FromT extends any,
     ToF extends AnyAssertFunc|ChainedAssertDelegate<any>

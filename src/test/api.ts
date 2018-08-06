@@ -45,7 +45,6 @@ class CommentQuery {
     postId : number = 1;
 }
 
-
 const domain = "https://jsonplaceholder.typicode.com";
 const Api = schema.toApi({
     fetch : schema.Route.Create()
@@ -195,7 +194,7 @@ tape(__filename + "-string-to-number", async (t) => {
     await api.fetch()
         .setParam({
             //Notice how we're using a numeric-string
-            id : "1"
+            id : "1" as any
         })
         .send()
         .then((res) => {
