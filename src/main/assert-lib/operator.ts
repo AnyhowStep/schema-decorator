@@ -434,7 +434,7 @@ return args0.join(" &\n\t").replace(/\t/g, "    ");
 }
 gen(20)
 */
-export type IntersectionType<Arr extends AssertFunc<object>[]> = (
+export type IntersectTypeImpl<Arr extends AssertFunc<object>[]> = (
     ObjectTypeAt<Arr, "0"> &
     ObjectTypeAt<Arr, "1"> &
     ObjectTypeAt<Arr, "2"> &
@@ -466,7 +466,7 @@ return args0.join(" &\n\t").replace(/\t/g, "    ");
 }
 gen(20)
 */
-export type IntersectionAccepts<Arr extends AssertFunc<object>[]> = (
+export type IntersectAcceptsImpl<Arr extends AssertFunc<object>[]> = (
     ObjectAcceptsAt<Arr, "0"> &
     ObjectAcceptsAt<Arr, "1"> &
     ObjectAcceptsAt<Arr, "2"> &
@@ -488,17 +488,28 @@ export type IntersectionAccepts<Arr extends AssertFunc<object>[]> = (
     ObjectAcceptsAt<Arr, "18"> &
     ObjectAcceptsAt<Arr, "19">
 );
+export type IntersectType<Arr extends AssertFunc<object>[]> = (
+    {
+        [k in keyof IntersectTypeImpl<Arr>] : IntersectTypeImpl<Arr>[k]
+    }
+);
+export type IntersectAccepts<Arr extends AssertFunc<object>[]> = (
+    {
+        [k in keyof IntersectAcceptsImpl<Arr>] : IntersectAcceptsImpl<Arr>[k]
+    }
+);
+export type IntersectAssertDelegate<Arr extends AssertFunc<object>[]> = (
+    AssertDelegate<IntersectType<Arr>> &
+    {
+        __accepts : (
+            IntersectAccepts<Arr>
+        )
+    }
+);
 export function intersect<Arr extends AssertFunc<object>[]> (
     ...assertions : Arr
 ) : (
-    AssertDelegate<{
-        [k in keyof IntersectionType<Arr>] : IntersectionType<Arr>[k]
-    }> &
-    {
-        __accepts : (
-            IntersectionAccepts<Arr>
-        )
-    }
+    IntersectAssertDelegate<Arr>
 );
 
 /*
