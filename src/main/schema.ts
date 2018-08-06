@@ -1,4 +1,4 @@
-import {Field, AnyField, AssertDelegate, TypeOf, AcceptsOf} from "./types";
+import {Field, AnyField, AssertDelegate, TypeOf, AcceptsOf, CanAcceptOf} from "./types";
 import {RawFieldCollection, fields} from "./field";
 import { toTypeStr } from "./util";
 
@@ -109,6 +109,38 @@ type RequiredAcceptsNames<Arr extends AnyField[]> = (
         string
     >
 );
+type OptionalCanAcceptNames<Arr extends AnyField[]> = (
+    Extract<
+        {
+            [index in Exclude<keyof Arr, keyof any[]>] : (
+                Arr[index] extends AnyField ?
+                    (
+                        undefined extends CanAcceptOf<Arr[index]> ?
+                            Arr[index]["name"] :
+                            never
+                    ) :
+                    never
+            )
+        }[Exclude<keyof Arr, keyof any[]>],
+        string
+    >
+);
+type RequiredCanAcceptNames<Arr extends AnyField[]> = (
+    Extract<
+        {
+            [index in Exclude<keyof Arr, keyof any[]>] : (
+                Arr[index] extends AnyField ?
+                    (
+                        undefined extends CanAcceptOf<Arr[index]> ?
+                            never :
+                            Arr[index]["name"]
+                    ) :
+                    never
+            )
+        }[Exclude<keyof Arr, keyof any[]>],
+        string
+    >
+);
 type FieldWithName<Arr extends AnyField[], NameT extends string> = (
     {
         [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -146,6 +178,18 @@ type SchemaAccepts<Arr extends AnyField[]> = (
         )
     }
 );
+type SchemaCanAccept<Arr extends AnyField[]> = (
+    {
+        [requiredName in RequiredCanAcceptNames<Arr>] : (
+            CanAcceptOf<FieldWithName<Arr, requiredName>>
+        )
+    } &
+    {
+        [optionalName in OptionalCanAcceptNames<Arr>]? : (
+            CanAcceptOf<FieldWithName<Arr, optionalName>>
+        )
+    }
+);
 
 export function schema<Arr extends AnyField[]> (...fields : Arr) : (
     AssertDelegate<
@@ -160,6 +204,13 @@ export function schema<Arr extends AnyField[]> (...fields : Arr) : (
             {
                 [name in keyof SchemaAccepts<Arr>] : (
                     SchemaAccepts<Arr>[name]
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof SchemaCanAccept<Arr>] : (
+                    SchemaCanAccept<Arr>[name]
                 )
             }
         )
@@ -219,6 +270,26 @@ export type ToSchemaAccepts<RawFieldCollectionT extends RawFieldCollection> = (
         }[keyof RawFieldCollectionT]]?: AcceptsOf<RawFieldCollectionT[name]>;
     }
 );
+export type ToSchemaCanAccept<RawFieldCollectionT extends RawFieldCollection> = (
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends CanAcceptOf<RawFieldCollectionT[k]> ?
+                    never :
+                    k
+            )
+        }[keyof RawFieldCollectionT]]: CanAcceptOf<RawFieldCollectionT[name]>;
+    } &
+    {
+        [name in {
+            [k in keyof RawFieldCollectionT] : (
+                undefined extends CanAcceptOf<RawFieldCollectionT[k]> ?
+                    k :
+                    never
+            )
+        }[keyof RawFieldCollectionT]]?: CanAcceptOf<RawFieldCollectionT[name]>;
+    }
+);
 
 //https://github.com/Microsoft/TypeScript/issues/26207
 function toSchemaImpl<
@@ -236,6 +307,13 @@ function toSchemaImpl<
             {
                 [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
                     AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>] : (
+                    CanAcceptOf<RawFieldCollectionT[name]>
                 )
             }
         )
@@ -269,6 +347,13 @@ export const toSchema : <
                     AcceptsOf<RawFieldCollectionT[name]>
                 )
             }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>] : (
+                    CanAcceptOf<RawFieldCollectionT[name]>
+                )
+            }
         )
     }
 ) = toSchemaImpl;
@@ -287,6 +372,13 @@ export const toSchema2 : <
             {
                 [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
                     AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>] : (
+                    CanAcceptOf<RawFieldCollectionT[name]>
                 )
             }
         )
@@ -309,6 +401,13 @@ export const toSchema3 : <
                     AcceptsOf<RawFieldCollectionT[name]>
                 )
             }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>] : (
+                    CanAcceptOf<RawFieldCollectionT[name]>
+                )
+            }
         )
     }
 ) = toSchemaImpl;
@@ -327,6 +426,13 @@ export const toSchema4 : <
             {
                 [name in keyof ToSchemaAccepts<RawFieldCollectionT>] : (
                     AcceptsOf<RawFieldCollectionT[name]>
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>] : (
+                    CanAcceptOf<RawFieldCollectionT[name]>
                 )
             }
         )
