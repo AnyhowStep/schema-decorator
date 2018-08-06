@@ -7,7 +7,8 @@ import {
     toAssertDelegateExact,
     AssertFunc,
     Chainable,
-    UnsafeTypeOf
+    UnsafeTypeOf,
+    UnsafeAcceptsOf
 } from "../types";
 import {deepEqual} from "../deep-equal";
 import {deepMerge} from "../deep-merge";
@@ -414,6 +415,15 @@ export type ObjectTypeAt<Arr extends AssertFunc<object>[], IndexT extends string
         ) :
         {}
 );
+export type ObjectAcceptsAt<Arr extends AssertFunc<object>[], IndexT extends string> = (
+    IndexT extends keyof Arr ?
+        (
+            Arr[IndexT] extends AssertFunc<any> ?
+                UnsafeAcceptsOf<Arr[IndexT]> :
+                {}
+        ) :
+        {}
+);
 /*
 function gen (n) {
 let args0 = [];
@@ -424,7 +434,7 @@ return args0.join(" &\n\t").replace(/\t/g, "    ");
 }
 gen(20)
 */
-export type Intersection<Arr extends AssertFunc<object>[]> = (
+export type IntersectionType<Arr extends AssertFunc<object>[]> = (
     ObjectTypeAt<Arr, "0"> &
     ObjectTypeAt<Arr, "1"> &
     ObjectTypeAt<Arr, "2"> &
@@ -446,12 +456,49 @@ export type Intersection<Arr extends AssertFunc<object>[]> = (
     ObjectTypeAt<Arr, "18"> &
     ObjectTypeAt<Arr, "19">
 );
+/*
+function gen (n) {
+let args0 = [];
+for (let i=0; i<n; ++i) {
+    args0.push(`ObjectAcceptsAt<Arr, "${i}">`);
+}
+return args0.join(" &\n\t").replace(/\t/g, "    ");
+}
+gen(20)
+*/
+export type IntersectionAccepts<Arr extends AssertFunc<object>[]> = (
+    ObjectAcceptsAt<Arr, "0"> &
+    ObjectAcceptsAt<Arr, "1"> &
+    ObjectAcceptsAt<Arr, "2"> &
+    ObjectAcceptsAt<Arr, "3"> &
+    ObjectAcceptsAt<Arr, "4"> &
+    ObjectAcceptsAt<Arr, "5"> &
+    ObjectAcceptsAt<Arr, "6"> &
+    ObjectAcceptsAt<Arr, "7"> &
+    ObjectAcceptsAt<Arr, "8"> &
+    ObjectAcceptsAt<Arr, "9"> &
+    ObjectAcceptsAt<Arr, "10"> &
+    ObjectAcceptsAt<Arr, "11"> &
+    ObjectAcceptsAt<Arr, "12"> &
+    ObjectAcceptsAt<Arr, "13"> &
+    ObjectAcceptsAt<Arr, "14"> &
+    ObjectAcceptsAt<Arr, "15"> &
+    ObjectAcceptsAt<Arr, "16"> &
+    ObjectAcceptsAt<Arr, "17"> &
+    ObjectAcceptsAt<Arr, "18"> &
+    ObjectAcceptsAt<Arr, "19">
+);
 export function intersect<Arr extends AssertFunc<object>[]> (
     ...assertions : Arr
 ) : (
     AssertDelegate<{
-        [k in keyof Intersection<Arr>] : Intersection<Arr>[k]
-    }>
+        [k in keyof IntersectionType<Arr>] : IntersectionType<Arr>[k]
+    }> &
+    {
+        __accepts : (
+            IntersectionAccepts<Arr>
+        )
+    }
 );
 
 /*

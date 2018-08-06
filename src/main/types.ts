@@ -170,6 +170,21 @@ export type AcceptsOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     never
 );
 
+//Like AcceptsOf, but unsafe
+export type UnsafeAcceptsOf<F> = (
+    F extends Constructor<infer T> ?
+    T :
+    F extends AssertDelegateAccepts<infer T> ?
+    F["__accepts"] :
+    F extends AssertDelegate<infer T> ?
+    T :
+    F extends ChainedAssertDelegate<any, infer AcceptsT> ?
+    AcceptsT :
+    F extends Field<string, any> ?
+    F["assertDelegate"]["__accepts"] :
+    never
+);
+
 export type ToAssertDelegate<F extends AnyAssertFunc> = (
     AssertDelegate<TypeOf<F>> &
     {
