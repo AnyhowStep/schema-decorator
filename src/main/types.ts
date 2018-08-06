@@ -368,11 +368,11 @@ export type Chainable<
 > = (
     FromT extends AnyAssertFunc|ChainedAssertDelegate<any> ?
         (
-            TypeOf<FromT> extends AcceptsOf<ToF> ?
+            TypeOf<FromT> extends CanAcceptOf<ToF> ?
                 true :
                 false
         ) :
-        FromT extends AcceptsOf<ToF> ?
+        FromT extends CanAcceptOf<ToF> ?
             true :
             false
 );
