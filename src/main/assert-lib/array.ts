@@ -6,11 +6,14 @@ import {
     AcceptsOf
 } from "../types";
 
-export function array<F extends AnyAssertFunc> (assert : F) : (
+export type ArrayAssertDelegate<F extends AnyAssertFunc> = (
     AssertDelegate<TypeOf<F>[]> &
     {
         __accepts : AcceptsOf<F>[]
     }
+);
+export function array<F extends AnyAssertFunc> (assert : F) : (
+    ArrayAssertDelegate<F>
 ) {
     const assertDelegate = toAssertDelegateExact(assert);
     const result : AssertDelegate<TypeOf<F>[]> = (name : string, mixed : unknown) : TypeOf<F>[] => {
