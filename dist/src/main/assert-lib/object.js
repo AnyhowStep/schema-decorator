@@ -94,4 +94,20 @@ function dictionary(assert) {
     return result;
 }
 exports.dictionary = dictionary;
+function emptyObject() {
+    const result = (name, mixed) => {
+        if (!(mixed instanceof Object) ||
+            (mixed instanceof Date) ||
+            (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an empty object, received ${util_1.toTypeStr(mixed)}`);
+        }
+        const keys = Object.keys(mixed);
+        if (keys.length != 0) {
+            throw new Error(`Expected ${name} to be an empty object, found keys ${keys.join(", ")}`);
+        }
+        return mixed;
+    };
+    return result;
+}
+exports.emptyObject = emptyObject;
 //# sourceMappingURL=object.js.map

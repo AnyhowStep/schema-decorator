@@ -36,3 +36,7 @@ export declare function dictionary<F extends AnyAssertFunc>(assert: F): (AssertD
         [key: string]: CanAcceptOf<F>;
     };
 });
+export declare function emptyObject(): (AssertDelegate<{}> & {
+    __accepts: {};
+    __canAccept: {};
+});

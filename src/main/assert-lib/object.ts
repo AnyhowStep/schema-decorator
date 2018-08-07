@@ -206,3 +206,27 @@ export function dictionary<F extends AnyAssertFunc> (assert : F) : (
     };
     return result as any;
 }
+
+export function emptyObject () : (
+    AssertDelegate<{}> &
+    {
+        __accepts : {},
+        __canAccept : {}
+    }
+) {
+    const result : AssertDelegate<{}> = (name : string, mixed : unknown) => {
+        if (
+            !(mixed instanceof Object) ||
+            (mixed instanceof Date) ||
+            (mixed instanceof Array)
+        ) {
+            throw new Error(`Expected ${name} to be an empty object, received ${toTypeStr(mixed)}`);
+        }
+        const keys = Object.keys(mixed);
+        if (keys.length != 0) {
+            throw new Error(`Expected ${name} to be an empty object, found keys ${keys.join(", ")}`);
+        }
+        return mixed;
+    };
+    return result as any;
+}
