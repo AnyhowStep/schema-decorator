@@ -27,9 +27,9 @@ export declare type SchemaType<Arr extends AnyField[]> = ({
     [optionalName in OptionalTypeNames<Arr>]?: (TypeOf<FieldWithName<Arr, optionalName>>);
 });
 export declare type SchemaAccepts<Arr extends AnyField[]> = ({
-    [requiredName in RequiredAcceptsNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>>);
+    [requiredName in RequiredAcceptsNames<Arr>]: (AcceptsOf<FieldWithName<Arr, requiredName>>);
 } & {
-    [optionalName in OptionalAcceptsNames<Arr>]?: (TypeOf<FieldWithName<Arr, optionalName>>);
+    [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, optionalName>>);
 });
 export declare type SchemaCanAccept<Arr extends AnyField[]> = ({
     [requiredName in RequiredCanAcceptNames<Arr>]: (CanAcceptOf<FieldWithName<Arr, requiredName>>);

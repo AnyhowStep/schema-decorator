@@ -169,12 +169,12 @@ export type SchemaType<Arr extends AnyField[]> = (
 export type SchemaAccepts<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredAcceptsNames<Arr>] : (
-            TypeOf<FieldWithName<Arr, requiredName>>
+            AcceptsOf<FieldWithName<Arr, requiredName>>
         )
     } &
     {
         [optionalName in OptionalAcceptsNames<Arr>]? : (
-            TypeOf<FieldWithName<Arr, optionalName>>
+            AcceptsOf<FieldWithName<Arr, optionalName>>
         )
     }
 );
