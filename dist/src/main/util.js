@@ -131,22 +131,10 @@ function toTypeStr(mixed) {
     return "[Unknown Name]";
 }
 exports.toTypeStr = toTypeStr;
-function isObject(x) {
-    return x != null && (typeof x == "object" || typeof x == "function");
-}
 function allowsInstanceOf(ctor) {
     try {
-        if (!isObject(ctor)) {
-            return false;
-        }
-        var m = ctor[Symbol.hasInstance];
-        if (m != null) {
-            return (typeof m == "function");
-        }
-        if (typeof ctor != "function") {
-            return false;
-        }
-        return isObject(ctor.prototype);
+        ({} instanceof ctor);
+        return true;
     }
     catch (e) {
         // any of the property accesses threw

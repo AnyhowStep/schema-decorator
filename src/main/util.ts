@@ -157,22 +157,10 @@ export function toTypeStr (mixed : unknown) : string {
     return "[Unknown Name]";
 }
 
-function isObject(x : any) {
-    return x != null && (typeof x == "object" || typeof x == "function");
-}
 export function allowsInstanceOf (ctor : any) : boolean {
     try {
-        if (!isObject(ctor)) {
-            return false;
-        }
-        var m = ctor[Symbol.hasInstance];
-        if (m != null) {
-            return (typeof m == "function");
-        }
-        if (typeof ctor != "function") {
-            return false;
-        }
-        return isObject(ctor.prototype);
+        ({} instanceof ctor);
+        return true;
     } catch (e) {
         // any of the property accesses threw
         return false;
