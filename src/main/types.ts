@@ -76,6 +76,7 @@ export type ChainedAssertFunc<AcceptsT> = (
         )>
     )>
 );
+export type AnyChainedAssertFunc = ChainedAssertFunc<any>;
 
 export type TypeOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     F extends Constructor<infer T> ?
