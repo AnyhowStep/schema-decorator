@@ -6,9 +6,7 @@ import {
     CanAcceptOf
 } from "./types";
 
-export function strict<F extends AnyAssertFunc> (
-    f : F
-) : (
+export type StrictAssertDelegate<F extends AnyAssertFunc> = (
     AssertDelegate<TypeOf<F>> &
     {
         //Make the input type the same as the output type
@@ -16,19 +14,27 @@ export function strict<F extends AnyAssertFunc> (
         //Preserve what it could originally accept
         __canAccept : CanAcceptOf<F>,
     }
+)
+export function strict<F extends AnyAssertFunc> (
+    f : F
+) : (
+    StrictAssertDelegate<F>
 ) {
     return toAssertDelegateExact(f) as any;
 }
 
-export function relaxed<F extends AnyAssertFunc> (
-    f : F
-) : (
+export type RelaxedAssertDelegate<F extends AnyAssertFunc> = (
     AssertDelegate<TypeOf<F>> &
     {
         //Make it accept everything it can
         __accepts : CanAcceptOf<F>,
         __canAccept : CanAcceptOf<F>,
     }
+);
+export function relaxed<F extends AnyAssertFunc> (
+    f : F
+) : (
+    RelaxedAssertDelegate<F>
 ) {
     return toAssertDelegateExact(f) as any;
 }

@@ -7,7 +7,7 @@ import {
     notOptional,
     notNullable
 } from "./assert-lib/missing-value";
-import {strict, relaxed} from "./strict";
+import {strict, relaxed, StrictAssertDelegate, RelaxedAssertDelegate} from "./strict";
 import * as myUtil from "./util";
 
 /*
@@ -279,13 +279,13 @@ export class Field<NameT extends string, F extends AnyAssertFunc> {
             notNullable(this.assertDelegate)
         );
     }
-    public strict () {
+    public strict () : Field<NameT, StrictAssertDelegate<F>> {
         return new Field(
             this.name,
             strict(this.assertDelegate)
         );
     }
-    public relaxed () {
+    public relaxed () : Field<NameT, RelaxedAssertDelegate<F>> {
         return new Field(
             this.name,
             relaxed(this.assertDelegate)

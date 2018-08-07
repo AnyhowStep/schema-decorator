@@ -1,37 +1,37 @@
 import { AnyField, AssertDelegate, TypeOf, AcceptsOf, CanAcceptOf } from "./types";
 import { RawFieldCollection } from "./field";
-declare type OptionalTypeNames<Arr extends AnyField[]> = (Extract<{
+export declare type OptionalTypeNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends TypeOf<Arr[index]> ? Arr[index]["name"] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type RequiredTypeNames<Arr extends AnyField[]> = (Extract<{
+export declare type RequiredTypeNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends TypeOf<Arr[index]> ? never : Arr[index]["name"]) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type OptionalAcceptsNames<Arr extends AnyField[]> = (Extract<{
+export declare type OptionalAcceptsNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends AcceptsOf<Arr[index]> ? Arr[index]["name"] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type RequiredAcceptsNames<Arr extends AnyField[]> = (Extract<{
+export declare type RequiredAcceptsNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends AcceptsOf<Arr[index]> ? never : Arr[index]["name"]) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type OptionalCanAcceptNames<Arr extends AnyField[]> = (Extract<{
+export declare type OptionalCanAcceptNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends CanAcceptOf<Arr[index]> ? Arr[index]["name"] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type RequiredCanAcceptNames<Arr extends AnyField[]> = (Extract<{
+export declare type RequiredCanAcceptNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends CanAcceptOf<Arr[index]> ? never : Arr[index]["name"]) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
-declare type FieldWithName<Arr extends AnyField[], NameT extends string> = ({
+export declare type FieldWithName<Arr extends AnyField[], NameT extends string> = ({
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (Arr[index]["name"] extends NameT ? Arr[index] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>]);
-declare type SchemaType<Arr extends AnyField[]> = ({
+export declare type SchemaType<Arr extends AnyField[]> = ({
     [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>>);
 } & {
     [optionalName in OptionalTypeNames<Arr>]?: (TypeOf<FieldWithName<Arr, optionalName>>);
 });
-declare type SchemaAccepts<Arr extends AnyField[]> = ({
+export declare type SchemaAccepts<Arr extends AnyField[]> = ({
     [requiredName in RequiredAcceptsNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>>);
 } & {
     [optionalName in OptionalAcceptsNames<Arr>]?: (TypeOf<FieldWithName<Arr, optionalName>>);
 });
-declare type SchemaCanAccept<Arr extends AnyField[]> = ({
+export declare type SchemaCanAccept<Arr extends AnyField[]> = ({
     [requiredName in RequiredCanAcceptNames<Arr>]: (CanAcceptOf<FieldWithName<Arr, requiredName>>);
 } & {
     [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, optionalName>>);
@@ -113,4 +113,3 @@ export declare const toSchema4: <RawFieldCollectionT extends RawFieldCollection>
         [name in keyof ToSchemaCanAccept<RawFieldCollectionT>]: (CanAcceptOf<RawFieldCollectionT[name]>);
     });
 });
-export {};

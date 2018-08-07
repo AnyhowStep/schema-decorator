@@ -45,7 +45,7 @@ function genSchema (max) {
 genSchema(50)
 */
 
-type OptionalTypeNames<Arr extends AnyField[]> = (
+export type OptionalTypeNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -61,7 +61,7 @@ type OptionalTypeNames<Arr extends AnyField[]> = (
         string
     >
 );
-type RequiredTypeNames<Arr extends AnyField[]> = (
+export type RequiredTypeNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -77,7 +77,7 @@ type RequiredTypeNames<Arr extends AnyField[]> = (
         string
     >
 );
-type OptionalAcceptsNames<Arr extends AnyField[]> = (
+export type OptionalAcceptsNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -93,7 +93,7 @@ type OptionalAcceptsNames<Arr extends AnyField[]> = (
         string
     >
 );
-type RequiredAcceptsNames<Arr extends AnyField[]> = (
+export type RequiredAcceptsNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -109,7 +109,7 @@ type RequiredAcceptsNames<Arr extends AnyField[]> = (
         string
     >
 );
-type OptionalCanAcceptNames<Arr extends AnyField[]> = (
+export type OptionalCanAcceptNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -125,7 +125,7 @@ type OptionalCanAcceptNames<Arr extends AnyField[]> = (
         string
     >
 );
-type RequiredCanAcceptNames<Arr extends AnyField[]> = (
+export type RequiredCanAcceptNames<Arr extends AnyField[]> = (
     Extract<
         {
             [index in Exclude<keyof Arr, keyof any[]>] : (
@@ -141,7 +141,7 @@ type RequiredCanAcceptNames<Arr extends AnyField[]> = (
         string
     >
 );
-type FieldWithName<Arr extends AnyField[], NameT extends string> = (
+export type FieldWithName<Arr extends AnyField[], NameT extends string> = (
     {
         [index in Exclude<keyof Arr, keyof any[]>] : (
             Arr[index] extends AnyField ?
@@ -154,7 +154,7 @@ type FieldWithName<Arr extends AnyField[], NameT extends string> = (
         )
     }[Exclude<keyof Arr, keyof any[]>]
 );
-type SchemaType<Arr extends AnyField[]> = (
+export type SchemaType<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredTypeNames<Arr>] : (
             TypeOf<FieldWithName<Arr, requiredName>>
@@ -166,7 +166,7 @@ type SchemaType<Arr extends AnyField[]> = (
         )
     }
 );
-type SchemaAccepts<Arr extends AnyField[]> = (
+export type SchemaAccepts<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredAcceptsNames<Arr>] : (
             TypeOf<FieldWithName<Arr, requiredName>>
@@ -178,7 +178,7 @@ type SchemaAccepts<Arr extends AnyField[]> = (
         )
     }
 );
-type SchemaCanAccept<Arr extends AnyField[]> = (
+export type SchemaCanAccept<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredCanAcceptNames<Arr>] : (
             CanAcceptOf<FieldWithName<Arr, requiredName>>
