@@ -62,8 +62,11 @@ function deriveFrom(fromKey, toKey, canCast, castDelegate, assert) {
 }
 exports.deriveFrom = deriveFrom;
 function instanceOf(ctor) {
+    if (!util_1.allowsInstanceOf(ctor)) {
+        throw new Error(`instanceof check not allowed on ${ctor.name}`);
+    }
     const result = (name, mixed) => {
-        if (mixed instanceof ctor) {
+        if (util_1.isInstanceOf(mixed, ctor)) {
             return mixed;
         }
         else {

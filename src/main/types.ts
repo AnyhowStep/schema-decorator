@@ -8,6 +8,7 @@ import {
     notNullable
 } from "./assert-lib/missing-value";
 import {strict, relaxed} from "./strict";
+import * as myUtil from "./util";
 
 /*
     Everything should be converted into an AssertDelegate.
@@ -341,7 +342,10 @@ export function isCtor<T> (assertFunc : AssertFunc<T>) : assertFunc is Construct
     if (assertFunc instanceof Field) {
         return false;
     }
-    return assertFunc.length == 0;
+    return (
+        assertFunc.length == 0 &&
+        myUtil.allowsInstanceOf(assertFunc)
+    );
 }
 export function toAssertDelegate<F extends AnyAssertFunc> (assertFunc : F) : ToAssertDelegate<F> {
     if (assertFunc instanceof Field) {

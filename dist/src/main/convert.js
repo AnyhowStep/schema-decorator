@@ -28,7 +28,7 @@ function ignoreExtraVariables(ctor) {
 }
 exports.ignoreExtraVariables = ignoreExtraVariables;
 function toClass(name, raw, ctor) {
-    if (raw instanceof ctor) {
+    if (myUtil.isInstanceOf(raw, ctor)) {
         return raw;
     }
     if (!(raw instanceof Object)) {
@@ -73,7 +73,7 @@ exports.toClass = toClass;
 function anyToRaw(name, mixed, ignoreInstancesOf) {
     if (ignoreInstancesOf != undefined) {
         for (let ctor of ignoreInstancesOf) {
-            if (mixed instanceof ctor) {
+            if (myUtil.isInstanceOf(mixed, ctor)) {
                 return mixed;
             }
         }
@@ -113,7 +113,7 @@ exports.anyToRaw = anyToRaw;
 function toRaw(name, instance, ignoreInstancesOf) {
     if (ignoreInstancesOf != undefined) {
         for (let ctor of ignoreInstancesOf) {
-            if (instance instanceof ctor) {
+            if (myUtil.isInstanceOf(instance, ctor)) {
                 return instance;
             }
         }

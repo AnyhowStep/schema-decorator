@@ -8,7 +8,7 @@ import {
     CanAcceptOf
 } from "../types";
 import {CastDelegate, cast} from "./cast";
-import {toTypeStr} from "../util";
+import {toTypeStr, allowsInstanceOf, isInstanceOf} from "../util";
 
 Field;
 
@@ -160,8 +160,11 @@ export function instanceOf<T> (ctor : new (...args : any[]) => T) : (
         __canAccept : T,
     }
 ) {
+    if (!allowsInstanceOf(ctor)) {
+        throw new Error(`instanceof check not allowed on ${ctor.name}`);
+    }
     const result : AssertDelegate<T> = (name : string, mixed : unknown) : T => {
-        if (mixed instanceof ctor) {
+        if (isInstanceOf(mixed, ctor)) {
             return mixed;
         } else {
             throw new Error(`Expected ${name} to be an instance of ${ctor.name}; found ${toTypeStr(mixed)}`);

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const convert = require("./convert");
 const missing_value_1 = require("./assert-lib/missing-value");
 const strict_1 = require("./strict");
+const myUtil = require("./util");
 class Field {
     constructor(name, assert) {
         this.name = name;
@@ -67,7 +68,8 @@ function isCtor(assertFunc) {
     if (assertFunc instanceof Field) {
         return false;
     }
-    return assertFunc.length == 0;
+    return (assertFunc.length == 0 &&
+        myUtil.allowsInstanceOf(assertFunc));
 }
 exports.isCtor = isCtor;
 function toAssertDelegate(assertFunc) {

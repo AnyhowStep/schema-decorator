@@ -156,3 +156,35 @@ export function toTypeStr (mixed : unknown) : string {
     }
     return "[Unknown Name]";
 }
+
+function isObject(x : any) {
+    return x != null && (typeof x == "object" || typeof x == "function");
+}
+export function allowsInstanceOf (ctor : any) : boolean {
+    try {
+        if (!isObject(ctor)) {
+            return false;
+        }
+        var m = ctor[Symbol.hasInstance];
+        if (m != null) {
+            return (typeof m == "function");
+        }
+        if (typeof ctor != "function") {
+            return false;
+        }
+        return isObject(ctor.prototype);
+    } catch (e) {
+        // any of the property accesses threw
+        return false;
+    }
+}
+export function isInstanceOf<T> (raw : any, ctor : new (...args : any[]) => T) : raw is T {
+    if (!allowsInstanceOf(ctor)) {
+        throw new Error(`instanceof check not allowed on ${ctor.name}`);
+    }
+    try {
+        return (raw instanceof ctor)
+    } catch (_err) {
+        throw new Error(`${ctor.name} is not a constructor`);
+    }
+}

@@ -29,3 +29,5 @@ export declare function isExactInstanceOf<T>(mixed: any, ctor: {
     new (...args: any[]): T;
 }): mixed is T;
 export declare function toTypeStr(mixed: unknown): string;
+export declare function allowsInstanceOf(ctor: any): boolean;
+export declare function isInstanceOf<T>(raw: any, ctor: new (...args: any[]) => T): raw is T;

@@ -28,7 +28,7 @@ export function ignoreExtraVariables<CtorT extends {new(...args:any[]):{}}> (cto
 }
 
 export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
-    if (raw instanceof ctor) {
+    if (myUtil.isInstanceOf(raw, ctor)) {
         return raw;
     }
     if (!(raw instanceof Object)) {
@@ -76,7 +76,7 @@ export function toClass<T> (name : string, raw : any, ctor : {new():T}) : T {
 export function anyToRaw (name : string, mixed : any, ignoreInstancesOf? : {new(...args:any[]):any}[]) : any {
     if (ignoreInstancesOf != undefined) {
         for (let ctor of ignoreInstancesOf) {
-            if (mixed instanceof ctor) {
+            if (myUtil.isInstanceOf(mixed, ctor)) {
                 return mixed;
             }
         }
@@ -117,7 +117,7 @@ export type Raw<T> = { [k in keyof T] : T[k] };
 export function toRaw<T> (name : string, instance : T, ignoreInstancesOf? : {new(...args:any[]):any}[]) : Raw<T> {
     if (ignoreInstancesOf != undefined) {
         for (let ctor of ignoreInstancesOf) {
-            if (instance instanceof ctor) {
+            if (myUtil.isInstanceOf(instance, ctor)) {
                 return instance;
             }
         }

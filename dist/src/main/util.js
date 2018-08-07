@@ -131,4 +131,39 @@ function toTypeStr(mixed) {
     return "[Unknown Name]";
 }
 exports.toTypeStr = toTypeStr;
+function isObject(x) {
+    return x != null && (typeof x == "object" || typeof x == "function");
+}
+function allowsInstanceOf(ctor) {
+    try {
+        if (!isObject(ctor)) {
+            return false;
+        }
+        var m = ctor[Symbol.hasInstance];
+        if (m != null) {
+            return (typeof m == "function");
+        }
+        if (typeof ctor != "function") {
+            return false;
+        }
+        return isObject(ctor.prototype);
+    }
+    catch (e) {
+        // any of the property accesses threw
+        return false;
+    }
+}
+exports.allowsInstanceOf = allowsInstanceOf;
+function isInstanceOf(raw, ctor) {
+    if (!allowsInstanceOf(ctor)) {
+        throw new Error(`instanceof check not allowed on ${ctor.name}`);
+    }
+    try {
+        return (raw instanceof ctor);
+    }
+    catch (_err) {
+        throw new Error(`${ctor.name} is not a constructor`);
+    }
+}
+exports.isInstanceOf = isInstanceOf;
 //# sourceMappingURL=util.js.map
