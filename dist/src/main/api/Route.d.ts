@@ -1,5 +1,6 @@
 import { AnyAssertFunc, ChainedAssertFunc, Chainable, TypeOf } from "../types";
 import { Param, AnyParam } from "./Param";
+import * as a from "../assert-lib";
 export interface PathParam<ParamKeys extends string> {
     param: ParamKeys;
     regex?: RegExp;
@@ -58,6 +59,11 @@ export declare class Route<DataT extends RouteData> {
         [key in keyof DataT]: (key extends "responseF" ? R : DataT[key]);
     } & {
         responseF: R;
+    }>);
+    intersectQuery<Q extends AnyAssertFunc>(queryF: Q): ("queryF" extends keyof DataT ? Route<{
+        [key in keyof DataT]: (key extends "queryF" ? (DataT["queryF"] extends AnyAssertFunc ? a.IntersectAssertDelegate<[Q, Exclude<DataT["queryF"], undefined>]> : Q) : DataT[key]);
+    }> : Route<DataT & {
+        queryF: Q;
     }>);
     method(method: MethodLiteral): (Route<DataT>);
     getMethod(): "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT";

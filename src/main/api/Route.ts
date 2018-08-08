@@ -1,5 +1,6 @@
 import {AnyAssertFunc, ChainedAssertFunc, Chainable, TypeOf} from "../types";
 import {Param, AnyParam} from "./Param";
+import * as a from "../assert-lib";
 
 export interface PathParam<ParamKeys extends string> {
     param  : ParamKeys,
@@ -279,6 +280,62 @@ export class Route<DataT extends RouteData> {
             }
         );
     }
+
+    /*
+        Shortcut for,
+        declare const r : Route;
+        const r2 = r.query(sd.intersect(
+            r.data.queryF,
+            someValidator
+        ));
+        //Use r2
+
+        Instead,
+        declare const r : Route;
+        const r2 = r.intersectQuery(someValidator);
+    */
+    intersectQuery<Q extends AnyAssertFunc> (queryF : Q) : (
+        "queryF" extends keyof DataT ?
+            Route<
+                {
+                    [key in keyof DataT] : (
+                        key extends "queryF" ?
+                        (
+                            DataT["queryF"] extends AnyAssertFunc ?
+                                a.IntersectAssertDelegate<[Q, Exclude<DataT["queryF"], undefined>]> :
+                                Q
+                        ) :
+                        DataT[key]
+                    )
+                }
+            > :
+            Route<
+                DataT &
+                { queryF : Q }
+            >
+    ) {
+        if (this.data.queryF == undefined) {
+            return new Route(
+                this._method,
+                {
+                    ...(this.data as any),
+                    queryF : queryF,
+                }
+            ) as any;
+        } else {
+            return new Route(
+                this._method,
+                {
+                    ...(this.data as any),
+                    queryF : a.intersect(
+                        queryF,
+                        this.data.queryF
+                    ),
+                }
+            ) as any;
+        }
+    }
+
     public method (method : MethodLiteral) : (
         Route<DataT>
     ) {

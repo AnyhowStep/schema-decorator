@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const a = require("../assert-lib");
 class Path {
     constructor(arr = [], str = "") {
         this.arr = arr;
@@ -101,6 +102,27 @@ class Route {
     }
     response(responseF) {
         return new Route(this._method, Object.assign({}, this.data, { responseF: responseF }));
+    }
+    /*
+        Shortcut for,
+        declare const r : Route;
+        const r2 = r.query(sd.intersect(
+            r.data.queryF,
+            someValidator
+        ));
+        //Use r2
+
+        Instead,
+        declare const r : Route;
+        const r2 = r.intersectQuery(someValidator);
+    */
+    intersectQuery(queryF) {
+        if (this.data.queryF == undefined) {
+            return new Route(this._method, Object.assign({}, this.data, { queryF: queryF }));
+        }
+        else {
+            return new Route(this._method, Object.assign({}, this.data, { queryF: a.intersect(queryF, this.data.queryF) }));
+        }
     }
     method(method) {
         return new Route(method, this.data);
