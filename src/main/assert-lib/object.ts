@@ -43,7 +43,7 @@ export type RenameAssertDelegate<
     {
         optional : () => (
             AssertDelegate<{
-                [field in ToFieldNameT] : TypeOf<AssertFuncT>|undefined
+                [field in ToFieldNameT]? : TypeOf<AssertFuncT>|undefined
             }> &
             {
                 __accepts : (

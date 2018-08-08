@@ -5,6 +5,22 @@ import {toTypeStr} from "../util";
 
 //Please only pass enums here
 export enum Enum {}
+
+
+function getKeys<E extends typeof Enum> (e : E) {
+    return Object.keys(e)
+        .filter((k) => {
+            if (/^\d/.test(k)) {
+                return false;
+            }
+            const v = (e as any)[k];
+            return (
+                typeof v == "string" ||
+                typeof v == "number"
+            );
+        });
+}
+
 export function enumeration<E extends typeof Enum> (e : E) : (
     AssertDelegate<E[keyof E]> &
     {
@@ -126,6 +142,84 @@ export function toEnumerationKey<E extends typeof Enum> (e : E) : (
                 }
             }
             throw new Error(`Expected ${name} to be one of ${field.join("|")}; received ${toTypeStr(mixed)}`);
+        }
+    ) as any;
+}
+
+export function toOneEnumerationKey<E extends typeof Enum, K extends (keyof E)&string> (e : E, k : K) : (
+    AssertDelegate<K> &
+    {
+        __accepts : K,
+        __canAccept : (
+            K|
+            E[K]
+        )
+    }
+) {
+    const validKeys = getKeys(e);
+    if (validKeys.indexOf(k) < 0) {
+        throw new Error(`Unknown key ${k} for given enum; valid keys are ${validKeys.join(", ")}`);
+    }
+    const value = e[k];
+    return or(
+        literal(k),
+        //Not a key, so maybe a value
+        (name : string, mixed : unknown) => {
+            if (value === mixed) {
+                //This value belongs to this key
+                return k;
+            }
+            throw new Error(`Expected ${name} to be ${k}; received ${toTypeStr(mixed)}`);
+        }
+    ) as any;
+}
+
+export function toSubsetEnumerationKey<E extends typeof Enum, KArr extends ((keyof E)&string)[]> (e : E, ...kArr : KArr) : (
+    AssertDelegate<{
+        [k in Exclude<keyof KArr, keyof any[]>] : (
+            KArr[k]
+        )
+    }[Exclude<keyof KArr, keyof any[]>]> &
+    {
+        __accepts : {
+            [k in Exclude<keyof KArr, keyof any[]>] : (
+                KArr[k]
+            )
+        }[Exclude<keyof KArr, keyof any[]>],
+        __canAccept : (
+            {
+                [k in Exclude<keyof KArr, keyof any[]>] : (
+                    KArr[k]
+                )
+            }[Exclude<keyof KArr, keyof any[]>]|
+            E[Extract<
+                {
+                    [k in Exclude<keyof KArr, keyof any[]>] : (
+                        KArr[k]
+                    )
+                }[Exclude<keyof KArr, keyof any[]>],
+                keyof E
+            >]
+        )
+    }
+) {
+    const validKeys = getKeys(e);
+    for (let k of kArr)
+    if (validKeys.indexOf(k) < 0) {
+        throw new Error(`Unknown key ${k} for given enum; valid keys are ${validKeys.join(", ")}`);
+    }
+    return or(
+        literal(...kArr),
+        //Not a key, so maybe a value
+        (name : string, mixed : unknown) => {
+            for (let k of validKeys) {
+                const v = (e as any)[k];
+                if (v === mixed) {
+                    //This value belongs to this key
+                    return k;
+                }
+            }
+            throw new Error(`Expected ${name} to be one of ${validKeys.join("|")}; received ${toTypeStr(mixed)}`);
         }
     ) as any;
 }

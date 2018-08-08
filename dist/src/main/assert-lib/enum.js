@@ -7,6 +7,17 @@ const util_1 = require("../util");
 var Enum;
 (function (Enum) {
 })(Enum = exports.Enum || (exports.Enum = {}));
+function getKeys(e) {
+    return Object.keys(e)
+        .filter((k) => {
+        if (/^\d/.test(k)) {
+            return false;
+        }
+        const v = e[k];
+        return (typeof v == "string" ||
+            typeof v == "number");
+    });
+}
 function enumeration(e) {
     const keys = Object.keys(e)
         .filter((k) => {
@@ -87,4 +98,41 @@ function toEnumerationKey(e) {
     });
 }
 exports.toEnumerationKey = toEnumerationKey;
+function toOneEnumerationKey(e, k) {
+    const validKeys = getKeys(e);
+    if (validKeys.indexOf(k) < 0) {
+        throw new Error(`Unknown key ${k} for given enum; valid keys are ${validKeys.join(", ")}`);
+    }
+    const value = e[k];
+    return operator_1.or(basic_1.literal(k), 
+    //Not a key, so maybe a value
+    (name, mixed) => {
+        if (value === mixed) {
+            //This value belongs to this key
+            return k;
+        }
+        throw new Error(`Expected ${name} to be ${k}; received ${util_1.toTypeStr(mixed)}`);
+    });
+}
+exports.toOneEnumerationKey = toOneEnumerationKey;
+function toSubsetEnumerationKey(e, ...kArr) {
+    const validKeys = getKeys(e);
+    for (let k of kArr)
+        if (validKeys.indexOf(k) < 0) {
+            throw new Error(`Unknown key ${k} for given enum; valid keys are ${validKeys.join(", ")}`);
+        }
+    return operator_1.or(basic_1.literal(...kArr), 
+    //Not a key, so maybe a value
+    (name, mixed) => {
+        for (let k of validKeys) {
+            const v = e[k];
+            if (v === mixed) {
+                //This value belongs to this key
+                return k;
+            }
+        }
+        throw new Error(`Expected ${name} to be one of ${validKeys.join("|")}; received ${util_1.toTypeStr(mixed)}`);
+    });
+}
+exports.toSubsetEnumerationKey = toSubsetEnumerationKey;
 //# sourceMappingURL=enum.js.map

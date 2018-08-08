@@ -13,7 +13,7 @@ export declare type RenameAssertDelegate<FromFieldNameT extends string, ToFieldN
     });
 } & {
     optional: () => (AssertDelegate<{
-        [field in ToFieldNameT]: TypeOf<AssertFuncT> | undefined;
+        [field in ToFieldNameT]?: TypeOf<AssertFuncT> | undefined;
     }> & {
         __accepts: ({
             [to in ToFieldNameT]?: AcceptsOf<AssertFuncT> | undefined;
