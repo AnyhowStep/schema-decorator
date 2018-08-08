@@ -18,6 +18,7 @@ import {deepEqual} from "../deep-equal";
 import {deepMerge} from "../deep-merge";
 import {isLiteralOrDate} from "../is-literal-or-date";
 import {toTypeStr} from "../util";
+import {Merge} from "../Merge";
 
 /*
 function gen (n) {
@@ -693,21 +694,9 @@ export type IntersectCanAcceptImpl<Arr extends AssertFunc<object>[]> = (
     ObjectCanAcceptAt<Arr, "18"> &
     ObjectCanAcceptAt<Arr, "19">
 );
-export type IntersectType<Arr extends AssertFunc<object>[]> = (
-    {
-        [k in keyof IntersectTypeImpl<Arr>] : IntersectTypeImpl<Arr>[k]
-    }
-);
-export type IntersectAccepts<Arr extends AssertFunc<object>[]> = (
-    {
-        [k in keyof IntersectAcceptsImpl<Arr>] : IntersectAcceptsImpl<Arr>[k]
-    }
-);
-export type IntersectCanAccept<Arr extends AssertFunc<object>[]> = (
-    {
-        [k in keyof IntersectCanAcceptImpl<Arr>] : IntersectCanAcceptImpl<Arr>[k]
-    }
-);
+export type IntersectType<Arr extends AssertFunc<object>[]> = Merge<IntersectTypeImpl<Arr>>;
+export type IntersectAccepts<Arr extends AssertFunc<object>[]> = Merge<IntersectAcceptsImpl<Arr>>;
+export type IntersectCanAccept<Arr extends AssertFunc<object>[]> = Merge<IntersectCanAcceptImpl<Arr>>;
 export type IntersectAssertDelegate<Arr extends AssertFunc<object>[]> = (
     AssertDelegate<IntersectType<Arr>> &
     {

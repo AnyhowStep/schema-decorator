@@ -1,4 +1,5 @@
 import { AnyAssertFunc, ChainedAssertFunc, AssertDelegate, TypeOf, AcceptsOf, AssertFunc, Chainable, UnsafeTypeOf, UnsafeAcceptsOf, CanAcceptOf, UnsafeCanAcceptOf, AnyChainedAssertFunc, ChainedAssertDelegate } from "../types";
+import { Merge } from "../Merge";
 export declare function or<F0 extends AnyAssertFunc>(f0: F0): AssertDelegate<TypeOf<F0>> & {
     __accepts: AcceptsOf<F0>;
     __canAccept: CanAcceptOf<F0>;
@@ -248,15 +249,9 @@ export declare type ObjectCanAcceptAt<Arr extends AssertFunc<object>[], IndexT e
 export declare type IntersectTypeImpl<Arr extends AssertFunc<object>[]> = (ObjectTypeAt<Arr, "0"> & ObjectTypeAt<Arr, "1"> & ObjectTypeAt<Arr, "2"> & ObjectTypeAt<Arr, "3"> & ObjectTypeAt<Arr, "4"> & ObjectTypeAt<Arr, "5"> & ObjectTypeAt<Arr, "6"> & ObjectTypeAt<Arr, "7"> & ObjectTypeAt<Arr, "8"> & ObjectTypeAt<Arr, "9"> & ObjectTypeAt<Arr, "10"> & ObjectTypeAt<Arr, "11"> & ObjectTypeAt<Arr, "12"> & ObjectTypeAt<Arr, "13"> & ObjectTypeAt<Arr, "14"> & ObjectTypeAt<Arr, "15"> & ObjectTypeAt<Arr, "16"> & ObjectTypeAt<Arr, "17"> & ObjectTypeAt<Arr, "18"> & ObjectTypeAt<Arr, "19">);
 export declare type IntersectAcceptsImpl<Arr extends AssertFunc<object>[]> = (ObjectAcceptsAt<Arr, "0"> & ObjectAcceptsAt<Arr, "1"> & ObjectAcceptsAt<Arr, "2"> & ObjectAcceptsAt<Arr, "3"> & ObjectAcceptsAt<Arr, "4"> & ObjectAcceptsAt<Arr, "5"> & ObjectAcceptsAt<Arr, "6"> & ObjectAcceptsAt<Arr, "7"> & ObjectAcceptsAt<Arr, "8"> & ObjectAcceptsAt<Arr, "9"> & ObjectAcceptsAt<Arr, "10"> & ObjectAcceptsAt<Arr, "11"> & ObjectAcceptsAt<Arr, "12"> & ObjectAcceptsAt<Arr, "13"> & ObjectAcceptsAt<Arr, "14"> & ObjectAcceptsAt<Arr, "15"> & ObjectAcceptsAt<Arr, "16"> & ObjectAcceptsAt<Arr, "17"> & ObjectAcceptsAt<Arr, "18"> & ObjectAcceptsAt<Arr, "19">);
 export declare type IntersectCanAcceptImpl<Arr extends AssertFunc<object>[]> = (ObjectCanAcceptAt<Arr, "0"> & ObjectCanAcceptAt<Arr, "1"> & ObjectCanAcceptAt<Arr, "2"> & ObjectCanAcceptAt<Arr, "3"> & ObjectCanAcceptAt<Arr, "4"> & ObjectCanAcceptAt<Arr, "5"> & ObjectCanAcceptAt<Arr, "6"> & ObjectCanAcceptAt<Arr, "7"> & ObjectCanAcceptAt<Arr, "8"> & ObjectCanAcceptAt<Arr, "9"> & ObjectCanAcceptAt<Arr, "10"> & ObjectCanAcceptAt<Arr, "11"> & ObjectCanAcceptAt<Arr, "12"> & ObjectCanAcceptAt<Arr, "13"> & ObjectCanAcceptAt<Arr, "14"> & ObjectCanAcceptAt<Arr, "15"> & ObjectCanAcceptAt<Arr, "16"> & ObjectCanAcceptAt<Arr, "17"> & ObjectCanAcceptAt<Arr, "18"> & ObjectCanAcceptAt<Arr, "19">);
-export declare type IntersectType<Arr extends AssertFunc<object>[]> = ({
-    [k in keyof IntersectTypeImpl<Arr>]: IntersectTypeImpl<Arr>[k];
-});
-export declare type IntersectAccepts<Arr extends AssertFunc<object>[]> = ({
-    [k in keyof IntersectAcceptsImpl<Arr>]: IntersectAcceptsImpl<Arr>[k];
-});
-export declare type IntersectCanAccept<Arr extends AssertFunc<object>[]> = ({
-    [k in keyof IntersectCanAcceptImpl<Arr>]: IntersectCanAcceptImpl<Arr>[k];
-});
+export declare type IntersectType<Arr extends AssertFunc<object>[]> = Merge<IntersectTypeImpl<Arr>>;
+export declare type IntersectAccepts<Arr extends AssertFunc<object>[]> = Merge<IntersectAcceptsImpl<Arr>>;
+export declare type IntersectCanAccept<Arr extends AssertFunc<object>[]> = Merge<IntersectCanAcceptImpl<Arr>>;
 export declare type IntersectAssertDelegate<Arr extends AssertFunc<object>[]> = (AssertDelegate<IntersectType<Arr>> & {
     __accepts: IntersectAccepts<Arr>;
     __canAccept: IntersectCanAccept<Arr>;
