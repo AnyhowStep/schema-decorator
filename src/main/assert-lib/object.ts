@@ -13,7 +13,7 @@ import {toTypeStr, allowsInstanceOf, isInstanceOf} from "../util";
 Field;
 
 /*
-    Use with `and()`
+    Use with `and()` or `intersect()`
 
     const f = rename("x", "y", sd.stringToNaturalNumber())
 
@@ -35,8 +35,8 @@ export function rename<
             { [to in ToFieldNameT]     : AcceptsOf<AssertFuncT> }
         ),
         __canAccept : (
-            { [from in FromFieldNameT] : AcceptsOf<AssertFuncT> } |
-            { [to in ToFieldNameT]     : AcceptsOf<AssertFuncT> }
+            { [from in FromFieldNameT] : CanAcceptOf<AssertFuncT> } |
+            { [to in ToFieldNameT]     : CanAcceptOf<AssertFuncT> }
         )
     }
 ) {
@@ -68,7 +68,7 @@ export function rename<
 }
 
 /*
-    Use with `and()`
+    Use with `and()` or `intersect()`
 
     const f = deriveFrom(
         "x",
@@ -83,6 +83,7 @@ export function rename<
     f("obj", { y : 34})              //Error; expected `x` to be string; received undefined
     f("obj", { })                    //Error
 */
+//Use `derive()` instead
 export function deriveFrom<
     FromFieldNameT extends string,
     ToFieldNameT extends string,
@@ -147,6 +148,63 @@ export function deriveFrom<
         obj[toKey] = castD(
             `[${name}.${fromKey} > ${name}.${toKey}]`,
             obj[fromKey]
+        );
+        return obj;
+    };
+    return result as any;
+}
+
+/*
+    Use with `and()` or `intersect()`
+
+    //derive<>() can be used to rename fields
+    const f = derive("x", "y", sd.stringToNaturalNumber())
+
+    f("obj", { x : "34" })              //Gives us { y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { y : 34 }
+    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
+    f("obj", { })                       //Error
+
+    //derive<>() can be used while keeping the old field,
+    const f = intersect(
+        sd.toSchema({
+            x : sd.naturalNumberString()
+        }),
+        sd.derive("x", "y", sd.stringToNaturalNumber())
+    );
+
+    f("obj", { x : "34" })              //Gives us { x : "34", y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { x : "34", y : 34 }
+    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
+    f("obj", { })                       //Error
+*/
+export function derive<
+    FromFieldNameT extends string,
+    ToFieldNameT extends string,
+    AssertFuncT extends AnyAssertFunc
+> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+    AssertDelegate<{
+        [field in ToFieldNameT] : TypeOf<AssertFuncT>
+    }> &
+    {
+        __accepts : (
+            { [from in FromFieldNameT] : AcceptsOf<AssertFuncT> }
+        ),
+        __canAccept : (
+            { [from in FromFieldNameT] : CanAcceptOf<AssertFuncT> }
+        )
+    }
+) {
+    const d = toAssertDelegateExact(assert);
+    const result : AssertDelegate<{
+        [field in ToFieldNameT] : TypeOf<AssertFuncT>
+    }> = (name : string, mixed : any) : {
+        [field in ToFieldNameT] : TypeOf<AssertFuncT>
+    } => {
+        const obj : any = {};
+        obj[toKey] = d(
+            `[${name}.${fromKey} >> ${name}.${toKey}]`,
+            mixed[fromKey]
         );
         return obj;
     };

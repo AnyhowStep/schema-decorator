@@ -3,6 +3,7 @@ import "./basic-array";
 import "./basic";
 import "./built-in";
 import "./derive-from";
+import "./derive";
 import "./enumeration";
 import "./field-collection";
 import "./inheritance";

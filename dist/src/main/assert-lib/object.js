@@ -5,7 +5,7 @@ const cast_1 = require("./cast");
 const util_1 = require("../util");
 types_1.Field;
 /*
-    Use with `and()`
+    Use with `and()` or `intersect()`
 
     const f = rename("x", "y", sd.stringToNaturalNumber())
 
@@ -34,7 +34,7 @@ function rename(fromKey, toKey, assert) {
 }
 exports.rename = rename;
 /*
-    Use with `and()`
+    Use with `and()` or `intersect()`
 
     const f = deriveFrom(
         "x",
@@ -49,6 +49,7 @@ exports.rename = rename;
     f("obj", { y : 34})              //Error; expected `x` to be string; received undefined
     f("obj", { })                    //Error
 */
+//Use `derive()` instead
 function deriveFrom(fromKey, toKey, canCast, castDelegate, assert) {
     const canCastD = types_1.toAssertDelegateExact(canCast);
     const castD = cast_1.cast(canCast, castDelegate, assert);
@@ -61,6 +62,40 @@ function deriveFrom(fromKey, toKey, canCast, castDelegate, assert) {
     return result;
 }
 exports.deriveFrom = deriveFrom;
+/*
+    Use with `and()` or `intersect()`
+
+    //derive<>() can be used to rename fields
+    const f = derive("x", "y", sd.stringToNaturalNumber())
+
+    f("obj", { x : "34" })              //Gives us { y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { y : 34 }
+    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
+    f("obj", { })                       //Error
+
+    //derive<>() can be used while keeping the old field,
+    const f = intersect(
+        sd.toSchema({
+            x : sd.naturalNumberString()
+        }),
+        sd.derive("x", "y", sd.stringToNaturalNumber())
+    );
+
+    f("obj", { x : "34" })              //Gives us { x : "34", y : 34 }
+    f("obj", { x : "34", y : "99" })    //Gives us { x : "34", y : 34 }
+    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
+    f("obj", { })                       //Error
+*/
+function derive(fromKey, toKey, assert) {
+    const d = types_1.toAssertDelegateExact(assert);
+    const result = (name, mixed) => {
+        const obj = {};
+        obj[toKey] = d(`[${name}.${fromKey} >> ${name}.${toKey}]`, mixed[fromKey]);
+        return obj;
+    };
+    return result;
+}
+exports.derive = derive;
 function instanceOf(ctor) {
     if (!util_1.allowsInstanceOf(ctor)) {
         throw new Error(`instanceof check not allowed on ${ctor.name}`);

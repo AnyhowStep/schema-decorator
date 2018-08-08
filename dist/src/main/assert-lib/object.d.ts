@@ -7,9 +7,9 @@ export declare function rename<FromFieldNameT extends string, ToFieldNameT exten
         [to in ToFieldNameT]: AcceptsOf<AssertFuncT>;
     });
     __canAccept: ({
-        [from in FromFieldNameT]: AcceptsOf<AssertFuncT>;
+        [from in FromFieldNameT]: CanAcceptOf<AssertFuncT>;
     } | {
-        [to in ToFieldNameT]: AcceptsOf<AssertFuncT>;
+        [to in ToFieldNameT]: CanAcceptOf<AssertFuncT>;
     });
 });
 export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT extends string, FromF extends AnyAssertFunc, ToF extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, canCast: FromF, castDelegate: CastDelegate<TypeOf<FromF>, TypeOf<ToF>>, assert: ToF): (AssertDelegate<{
@@ -21,6 +21,16 @@ export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT e
     __canAccept: {
         [from in FromFieldNameT]: (CanAcceptOf<FromF> | CanAcceptOf<ToF>);
     };
+});
+export declare function derive<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (AssertDelegate<{
+    [field in ToFieldNameT]: TypeOf<AssertFuncT>;
+}> & {
+    __accepts: ({
+        [from in FromFieldNameT]: AcceptsOf<AssertFuncT>;
+    });
+    __canAccept: ({
+        [from in FromFieldNameT]: CanAcceptOf<AssertFuncT>;
+    });
 });
 export declare function instanceOf<T>(ctor: new (...args: any[]) => T): (AssertDelegate<T> & {
     __accepts: T;
