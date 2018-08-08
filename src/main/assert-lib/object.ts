@@ -9,6 +9,7 @@ import {
 } from "../types";
 import {CastDelegate, cast} from "./cast";
 import {toTypeStr, allowsInstanceOf, isInstanceOf} from "../util";
+import { optional } from "./missing-value";
 
 Field;
 
@@ -22,11 +23,11 @@ Field;
     f("obj", { x : "34", y : "99" })    //Gives us { y : 99 }
     f("obj", { })                       //Error
 */
-export function rename<
+export type RenameAssertDelegate<
     FromFieldNameT extends string,
     ToFieldNameT extends string,
     AssertFuncT extends AnyAssertFunc
-> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+> = (
     AssertDelegate<{
         [field in ToFieldNameT] : TypeOf<AssertFuncT>
     }> &
@@ -38,7 +39,30 @@ export function rename<
             { [from in FromFieldNameT] : CanAcceptOf<AssertFuncT> } |
             { [to in ToFieldNameT]     : CanAcceptOf<AssertFuncT> }
         )
+    } &
+    {
+        optional : () => (
+            AssertDelegate<{
+                [field in ToFieldNameT] : TypeOf<AssertFuncT>|undefined
+            }> &
+            {
+                __accepts : (
+                    { [to in ToFieldNameT]?     : AcceptsOf<AssertFuncT>|undefined }
+                ),
+                __canAccept : (
+                    { [from in FromFieldNameT]? : CanAcceptOf<AssertFuncT>|undefined } |
+                    { [to in ToFieldNameT]?     : CanAcceptOf<AssertFuncT>|undefined }
+                )
+            }
+        )
     }
+);
+export function rename<
+    FromFieldNameT extends string,
+    ToFieldNameT extends string,
+    AssertFuncT extends AnyAssertFunc
+> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+    RenameAssertDelegate<FromFieldNameT, ToFieldNameT, AssertFuncT>
 ) {
     const d = toAssertDelegateExact(assert);
     const result : AssertDelegate<{
@@ -63,6 +87,9 @@ export function rename<
             );
             return obj;
         }
+    };
+    (result as any).optional = () => {
+        return rename(fromKey, toKey, optional(d));
     };
     return result as any;
 }

@@ -3,17 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const cast_1 = require("./cast");
 const util_1 = require("../util");
+const missing_value_1 = require("./missing-value");
 types_1.Field;
-/*
-    Use with `and()` or `intersect()`
-
-    const f = rename("x", "y", sd.stringToNaturalNumber())
-
-    f("obj", { x : "34" })              //Gives us { y : 34 }
-    f("obj", { y : "34" })              //Gives us { y : 34 }
-    f("obj", { x : "34", y : "99" })    //Gives us { y : 99 }
-    f("obj", { })                       //Error
-*/
 function rename(fromKey, toKey, assert) {
     const d = types_1.toAssertDelegateExact(assert);
     const result = (name, mixed) => {
@@ -29,6 +20,9 @@ function rename(fromKey, toKey, assert) {
             obj[toKey] = d(`[${name}.${fromKey} -> ${name}.${toKey}]`, fromValue);
             return obj;
         }
+    };
+    result.optional = () => {
+        return rename(fromKey, toKey, missing_value_1.optional(d));
     };
     return result;
 }
