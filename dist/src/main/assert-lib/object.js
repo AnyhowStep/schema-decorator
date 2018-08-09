@@ -132,7 +132,9 @@ function emptyObject() {
         }
         const keys = Object.keys(mixed);
         if (keys.length != 0) {
-            throw new Error(`Expected ${name} to be an empty object, found keys ${keys.join(", ")}`);
+            //Didn't find an empty key; create and return an empty object
+            return {};
+            //throw new Error(`Expected ${name} to be an empty object, found keys ${keys.join(", ")}`);
         }
         return mixed;
     };
