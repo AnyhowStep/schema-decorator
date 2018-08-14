@@ -27,33 +27,33 @@ tape("intersect", (t) => {
         baz : number = 0;
     }
 
-    myUtil.testAssertDelegate(t, sd.intersect(Foo), {
+    myUtil.test(t, sd.intersect(Foo), {
         foo : 3,
         same : "hello",
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Bar), {
+    myUtil.test(t, sd.intersect(Bar), {
         bar : 5,
         same : "world",
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Baz), {
+    myUtil.test(t, sd.intersect(Baz), {
         baz : 7,
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Foo, Bar), {
+    myUtil.test(t, sd.intersect(Foo, Bar), {
         foo : 3,
         bar : 5,
         same : "world",
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Foo, Baz), {
+    myUtil.test(t, sd.intersect(Foo, Baz), {
         foo : 3,
         baz : 7,
         same : "hello",
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Bar, Baz), {
+    myUtil.test(t, sd.intersect(Bar, Baz), {
         bar : 5,
         baz : 7,
         same : "world",
     });
-    myUtil.testAssertDelegate(t, sd.intersect(Foo, Bar, Baz), {
+    myUtil.test(t, sd.intersect(Foo, Bar, Baz), {
         foo : 3,
         bar : 5,
         baz : 7,

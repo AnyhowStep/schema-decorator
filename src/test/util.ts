@@ -1,4 +1,4 @@
-import * as schema from "../main/index";
+import * as sd from "../main/index";
 import * as tape from "tape";
 
 function sortInternalKeys (x : Object) {
@@ -22,33 +22,18 @@ function sortInternalKeys (x : Object) {
     }
 }
 
-export function test<C> (t : tape.Test, ctor : {new():C}, raw : any, expected? : any) {
+export function test (t : tape.Test, f : sd.AnyAssertFunc, raw : any, expected? : any) {
     if (expected == null) {
         expected = raw;
     }
     const originalRawStr = JSON.stringify(raw);
 
-    const f : C = schema.toClass("raw", raw, ctor);
+    const value = sd.toAssertDelegateExact(f)("raw", raw);
 
     const currentRawStr = JSON.stringify(raw);
     t.equal(currentRawStr, originalRawStr, `raw: ${currentRawStr} == ${originalRawStr}`);
 
-    const actualStr = JSON.stringify(sortInternalKeys(schema.toRaw("instance", f)));
-    const expectedStr = JSON.stringify(sortInternalKeys(expected));
-    t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
-}
-export function testAssertDelegate<C> (t : tape.Test, d : schema.AssertDelegate<C>, raw : any, expected? : any) {
-    if (expected == null) {
-        expected = raw;
-    }
-    const originalRawStr = JSON.stringify(raw);
-
-    const f : C = d("raw", raw);
-
-    const currentRawStr = JSON.stringify(raw);
-    t.equal(currentRawStr, originalRawStr, `raw: ${currentRawStr} == ${originalRawStr}`);
-
-    const actualStr = JSON.stringify(sortInternalKeys(schema.anyToRaw("instance", f)));
+    const actualStr = JSON.stringify(sortInternalKeys(value));
     const expectedStr = JSON.stringify(sortInternalKeys(expected));
     t.equal(actualStr, expectedStr, `${actualStr} == ${expectedStr}`);
 }
@@ -61,24 +46,24 @@ export function testKeys (t : tape.Test, instance : any, expected : string[]) {
     const actualKeys = Object.keys(instance);
     t.deepEqual(actualKeys, expected, `${actualKeys.join(",")} == ${expected.join(",")}`);
 }
-export function fail<C> (t : tape.Test, assert : schema.AssertFunc<C>, raw : any) {
+export function fail<C> (t : tape.Test, assert : sd.AssertFunc<C>, raw : any) {
     try {
-        schema.toAssertDelegate(assert)("raw", raw);
+        sd.toAssertDelegate(assert)("raw", raw);
         t.fail();
     } catch (err) {
         t.pass(err.message);
     }
 }
-export function pass<C> (t : tape.Test, assert : schema.AssertFunc<C>, raw : any) {
+export function pass<C> (t : tape.Test, assert : sd.AssertFunc<C>, raw : any) {
     try {
         console.log(raw);
-        console.log(schema.toAssertDelegate(assert)("raw", raw));
+        console.log(sd.toAssertDelegate(assert)("raw", raw));
         t.pass();
     } catch (err) {
         t.fail(err.message);
     }
 }
-export function failAssertDelegate<C> (t : tape.Test, d : schema.AssertDelegate<C>, raw : any) {
+export function failAssertDelegate<C> (t : tape.Test, d : sd.AssertDelegate<C>, raw : any) {
     try {
         d("raw", raw);
         t.fail();
