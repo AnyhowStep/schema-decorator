@@ -36,7 +36,7 @@ We may also do the following,
 See `api.ts/basic-array.ts/basic.ts/built-in.ts/inheritance.ts/nested.ts` in `./src/test/`
 for more examples.
 
-## Assert Delegates
+## AssertDelegate<>
 
 An `AssertDelegate<>` (`types.ts`) is the most basic kind of assertion.
 
@@ -48,7 +48,8 @@ It is a function with the signature `(name : string, mixed : unknown) => T`.
 
 ```ts
 import * as sd from "schema-decorator";
-const x = sd.naturalNumber()("x", 34); //OK, 34
+//OK, 34
+const x = sd.naturalNumber()("x", 34);
 //OK during compile time, Error during run time
 const y = sd.naturalNumber()("y", 34.5);
 //OK during compile time, Error during run time
@@ -217,7 +218,7 @@ const z = sd.check(sd.relaxed(sd.stringToNaturalNumber()), "z", "hello, world!")
 
 ## `AssertFunc<>`, `toAssertDelegateExact<>()`
 
-`AssertFunc<>` a type that encompasses all types that can be used by
+`AssertFunc<>` is a type that encompasses all types that can be used by
 `schema-decorator` to assert `unknown` values.
 
 These are the valid kinds of `AssertFunc<>`,
@@ -287,7 +288,7 @@ instantiated in one file and re-used across all layers.
 
 ## `schema<>()`
 
-`schema<>()` is used to create object assertions
+`schema<>()` is used to create object assertions out of `Field<>` instances,
 
 ```ts
 const resource = sd.fields({
