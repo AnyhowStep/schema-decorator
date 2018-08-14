@@ -46,7 +46,7 @@ export function testKeys (t : tape.Test, instance : any, expected : string[]) {
     const actualKeys = Object.keys(instance);
     t.deepEqual(actualKeys, expected, `${actualKeys.join(",")} == ${expected.join(",")}`);
 }
-export function fail<C> (t : tape.Test, assert : sd.AssertFunc<C>, raw : any) {
+export function fail (t : tape.Test, assert : sd.AnyAssertFunc, raw : any) {
     try {
         sd.toAssertDelegate(assert)("raw", raw);
         t.fail();
@@ -54,20 +54,12 @@ export function fail<C> (t : tape.Test, assert : sd.AssertFunc<C>, raw : any) {
         t.pass(err.message);
     }
 }
-export function pass<C> (t : tape.Test, assert : sd.AssertFunc<C>, raw : any) {
+export function pass (t : tape.Test, assert : sd.AnyAssertFunc, raw : any) {
     try {
         console.log(raw);
         console.log(sd.toAssertDelegate(assert)("raw", raw));
         t.pass();
     } catch (err) {
         t.fail(err.message);
-    }
-}
-export function failAssertDelegate<C> (t : tape.Test, d : sd.AssertDelegate<C>, raw : any) {
-    try {
-        d("raw", raw);
-        t.fail();
-    } catch (err) {
-        t.pass(err.message);
     }
 }

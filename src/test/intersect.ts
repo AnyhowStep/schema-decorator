@@ -59,20 +59,20 @@ tape("intersect", (t) => {
         baz : 7,
         same : "world",
     });
-    myUtil.failAssertDelegate(t, sd.intersect(Foo, Bar), {
+    myUtil.fail(t, sd.intersect(Foo, Bar), {
         foo : 3,
         bar : 5,
         same : "hello",
     });
-    myUtil.failAssertDelegate(t, sd.intersect(Foo, Baz), {
+    myUtil.fail(t, sd.intersect(Foo, Baz), {
         foo : 3,
         same : "hello",
     });
-    myUtil.failAssertDelegate(t, sd.intersect(Bar, Baz), {
+    myUtil.fail(t, sd.intersect(Bar, Baz), {
         baz : 7,
         same : "world",
     });
-    myUtil.failAssertDelegate(t, sd.intersect(Foo, Bar, Baz), {
+    myUtil.fail(t, sd.intersect(Foo, Bar, Baz), {
         foo : 3,
         bar : 5,
         baz : "7",
