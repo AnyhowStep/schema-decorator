@@ -1,14 +1,16 @@
-import * as sd from "../main/index";
+import * as sd from "../../main/index";
 import * as tape from "tape";
 import * as myUtil from "./util";
 
-tape("basic-schema", (t) => {
-    const x = sd.field("x", sd.naturalNumber());
-    const y = sd.field("y", sd.string());
+tape("basic-field-collection", (t) => {
+    const Fields = sd.fields({
+        x : sd.naturalNumber(),
+        y : sd.string()
+    });
 
     const Foo = sd.schema(
-        x,
-        y
+        Fields.x,
+        Fields.y
     );
 
     myUtil.pass(t, Foo, {
@@ -57,19 +59,21 @@ tape("basic-schema", (t) => {
     myUtil.fail(t, Foo, new Date());
     t.end();
 });
-tape("inheritance-schema", (t) => {
-    const x = sd.field("x", sd.naturalNumber());
-    const y = sd.field("y", sd.string());
-    const z = sd.field("z", sd.boolean());
+tape("inheritance-field-collection", (t) => {
+    const Fields = sd.fields({
+        x : sd.naturalNumber(),
+        y : sd.string(),
+        z : sd.boolean(),
+    });
 
     const Foo = sd.schema(
-        x,
-        y
+        Fields.x,
+        Fields.y
     );
     const Derived = sd.intersect(
         Foo,
         sd.schema(
-            z
+            Fields.z
         )
     );
 
@@ -91,19 +95,21 @@ tape("inheritance-schema", (t) => {
     });
     t.end();
 });
-tape("or-schema", (t) => {
-    const x = sd.field("x", sd.naturalNumber());
-    const y = sd.field("y", sd.string());
-    const z = sd.field("z", sd.boolean());
-    const d = sd.field("d", sd.date());
+tape("or-field-collection", (t) => {
+    const Fields = sd.fields({
+        x : sd.naturalNumber(),
+        y : sd.string(),
+        z : sd.boolean(),
+        d : sd.date(),
+    })
 
     const Foo = sd.schema(
-        x,
-        y
+        Fields.x,
+        Fields.y
     );
     const Bar = sd.schema(
-        z,
-        d
+        Fields.z,
+        Fields.d
     );
     const FooOrBar = sd.or(Foo, Bar);
 
@@ -131,13 +137,15 @@ tape("or-schema", (t) => {
     });
     t.end();
 });
-tape("optional-field-schema", (t) => {
-    const x = sd.field("x", sd.naturalNumber());
-    const y = sd.field("y", sd.string());
+tape("optional-field-collection", (t) => {
+    const Fields = sd.fields({
+        x : sd.naturalNumber(),
+        y : sd.string(),
+    });
 
     const Foo = sd.schema(
-        x,
-        y.optional()
+        Fields.x,
+        Fields.y.optional()
     );
 
     myUtil.pass(t, Foo, {

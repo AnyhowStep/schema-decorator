@@ -1,4 +1,4 @@
-import * as schema from "../main/index";
+import * as schema from "../../main/index";
 
 function isString (name : string, mixed : any) : string {
     if (typeof mixed == "string") {

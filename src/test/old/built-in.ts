@@ -1,4 +1,4 @@
-import * as schema from "../main/index";
+import * as schema from "../../main/index";
 //import * as validation from "@anyhowstep/data-validation";
 import * as tape from "tape";
 import * as myUtil from "./util";

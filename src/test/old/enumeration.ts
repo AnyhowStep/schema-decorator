@@ -1,4 +1,4 @@
-import * as sd from "../main/index";
+import * as sd from "../../main/index";
 import * as tape from "tape";
 
 tape(__filename, (t) => {

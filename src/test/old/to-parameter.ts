@@ -1,4 +1,4 @@
-import * as sd from "../main/index";
+import * as sd from "../../main/index";
 import * as tape from "tape";
 
 tape(__filename, (t) => {
@@ -35,7 +35,7 @@ tape(__filename, (t) => {
         }
     );
     t.deepEquals(
-        func({
+        (func as any)({
             //This is a string but should be converted to a natural number
             field0 : "3",
             field1 : new Date(0)
@@ -46,7 +46,7 @@ tape(__filename, (t) => {
         }
     );
     t.deepEquals(
-        func({
+        (func as any)({
             field0 : 3,
             //This should be converted to a `Date`
             //with zero ms since Jan 1 1970 midnight
@@ -68,7 +68,7 @@ tape(__filename, (t) => {
         t.pass(err.message);
     }
     try {
-        func({
+        (func as any)({
             //This is not a natural number and will
             //give us run-time errors
             field0 : "3.2",
