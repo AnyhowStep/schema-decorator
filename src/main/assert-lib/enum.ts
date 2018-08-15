@@ -21,12 +21,15 @@ function getKeys<E extends typeof Enum> (e : E) {
         });
 }
 
-export function enumeration<E extends typeof Enum> (e : E) : (
+export type EnumerationAssertDelegate<E extends typeof Enum> = (
     AssertDelegate<E[keyof E]> &
     {
         __accepts : E[keyof E],
         __canAccept : E[keyof E],
     }
+);
+export function enumeration<E extends typeof Enum> (e : E) : (
+    EnumerationAssertDelegate<E>
 ) {
     const keys = Object.keys(e)
         .filter((k) => {
@@ -43,12 +46,15 @@ export function enumeration<E extends typeof Enum> (e : E) : (
     return literal(...values) as any;
 }
 
-export function enumerationKey<E extends typeof Enum> (e : E) : (
+export type EnumerationKeyAssertDelegate<E extends typeof Enum> = (
     AssertDelegate<Extract<keyof E, string>> &
     {
         __accepts : Extract<keyof E, string>,
         __canAccept : Extract<keyof E, string>,
     }
+);
+export function enumerationKey<E extends typeof Enum> (e : E) : (
+    EnumerationKeyAssertDelegate<E>
 ) {
     const keys = Object.keys(e)
         .filter((k) => {
@@ -64,8 +70,7 @@ export function enumerationKey<E extends typeof Enum> (e : E) : (
     return literal(...keys) as any;
 }
 
-//Will attempt to cast between key <-> value
-export function toEnumeration<E extends typeof Enum> (e : E) : (
+export type ToEnumerationAssertDelegate<E extends typeof Enum> = (
     AssertDelegate<E[keyof E]> &
     {
         __accepts : E[keyof E],
@@ -74,6 +79,10 @@ export function toEnumeration<E extends typeof Enum> (e : E) : (
             E[keyof E]
         )
     }
+);
+//Will attempt to cast between key <-> value
+export function toEnumeration<E extends typeof Enum> (e : E) : (
+    ToEnumerationAssertDelegate<E>
 ) {
     const keys = Object.keys(e)
         .filter((k) => {
@@ -105,7 +114,7 @@ export function toEnumeration<E extends typeof Enum> (e : E) : (
     ) as any;
 }
 
-export function toEnumerationKey<E extends typeof Enum> (e : E) : (
+export type ToEnumerationKeyAssertDelegate<E extends typeof Enum> = (
     AssertDelegate<Extract<keyof E, string>> &
     {
         __accepts : Extract<keyof E, string>,
@@ -114,6 +123,9 @@ export function toEnumerationKey<E extends typeof Enum> (e : E) : (
             E[keyof E]
         )
     }
+);
+export function toEnumerationKey<E extends typeof Enum> (e : E) : (
+    ToEnumerationKeyAssertDelegate<E>
 ) {
     const keys = Object.keys(e)
         .filter((k) => {
@@ -146,7 +158,7 @@ export function toEnumerationKey<E extends typeof Enum> (e : E) : (
     ) as any;
 }
 
-export function toOneEnumerationKey<E extends typeof Enum, K extends (keyof E)&string> (e : E, k : K) : (
+export type ToOneEnumerationKeyAssertDelegate<E extends typeof Enum, K extends (keyof E)&string> = (
     AssertDelegate<K> &
     {
         __accepts : K,
@@ -155,6 +167,9 @@ export function toOneEnumerationKey<E extends typeof Enum, K extends (keyof E)&s
             E[K]
         )
     }
+);
+export function toOneEnumerationKey<E extends typeof Enum, K extends (keyof E)&string> (e : E, k : K) : (
+    ToOneEnumerationKeyAssertDelegate<E, K>
 ) {
     const validKeys = getKeys(e);
     if (validKeys.indexOf(k) < 0) {
@@ -174,7 +189,7 @@ export function toOneEnumerationKey<E extends typeof Enum, K extends (keyof E)&s
     ) as any;
 }
 
-export function toSubsetEnumerationKey<E extends typeof Enum, KArr extends ((keyof E)&string)[]> (e : E, ...kArr : KArr) : (
+export type ToSubsetEnumerationKey<E extends typeof Enum, KArr extends ((keyof E)&string)[]> = (
     AssertDelegate<{
         [k in Exclude<keyof KArr, keyof any[]>] : (
             KArr[k]
@@ -202,6 +217,9 @@ export function toSubsetEnumerationKey<E extends typeof Enum, KArr extends ((key
             >]
         )
     }
+);
+export function toSubsetEnumerationKey<E extends typeof Enum, KArr extends ((keyof E)&string)[]> (e : E, ...kArr : KArr) : (
+    ToSubsetEnumerationKey<E, KArr>
 ) {
     const validKeys = getKeys(e);
     for (let k of kArr)

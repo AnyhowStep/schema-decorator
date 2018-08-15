@@ -205,11 +205,11 @@ export function deriveFrom<
     f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
     f("obj", { })                       //Error
 */
-export function derive<
+export type DeriveAssertDelegate<
     FromFieldNameT extends string,
     ToFieldNameT extends string,
     AssertFuncT extends AnyAssertFunc
-> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+> = (
     AssertDelegate<{
         [field in ToFieldNameT] : TypeOf<AssertFuncT>
     }> &
@@ -221,6 +221,17 @@ export function derive<
             { [from in FromFieldNameT] : CanAcceptOf<AssertFuncT> }
         )
     }
+);
+export function derive<
+    FromFieldNameT extends string,
+    ToFieldNameT extends string,
+    AssertFuncT extends AnyAssertFunc
+> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+    DeriveAssertDelegate<
+        FromFieldNameT,
+        ToFieldNameT,
+        AssertFuncT
+    >
 ) {
     const d = toAssertDelegateExact(assert);
     const result : AssertDelegate<{

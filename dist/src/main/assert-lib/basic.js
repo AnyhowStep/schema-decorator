@@ -49,6 +49,7 @@ function boolean() {
     };
 }
 exports.boolean = boolean;
+//Unsafe because it allows NaN and +/-Infinity
 function unsafeNumber() {
     return (name, mixed) => {
         if (typeof mixed != "number") {

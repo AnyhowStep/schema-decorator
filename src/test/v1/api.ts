@@ -18,9 +18,10 @@ class Title {
     title : string = "-";
 }
 //https://github.com/typicode/jsonplaceholder/issues/60
+//https://github.com/typicode/jsonplaceholder/issues/74
 class Response {
-    @schema.assert(schema.maybe(validation.Number.assertNaturalNumber))
-    userId? : null|number;
+    @schema.assert(schema.maybe(schema.naturalNumber()))
+    userId? : null|number|string;
     @schema.assert(schema.maybe(validation.Number.assertNaturalNumber))
     id? : null|number;
     @schema.assert(schema.maybe(validation.String.assertNonEmpty))

@@ -64,6 +64,7 @@ export function boolean () : AssertDelegate<boolean> {
         return mixed;
     };
 }
+//Unsafe because it allows NaN and +/-Infinity
 export function unsafeNumber () : AssertDelegate<number> {
     return (name : string, mixed : unknown) : number => {
         if (typeof mixed != "number") {

@@ -1,12 +1,13 @@
 {
   "name": "schema-decorator",
-  "version": "2.21.1",
+  "version": "2.22.0",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
   "scripts": {
     "test": "ts-node",
     "test-all": "ts-node ./src/test/test-all.ts",
+    "test-all-v2": "ts-node ./src/test/v2/test-all.ts",
     "build": "(rm -r ./dist || true) && tsc -d --diagnostics"
   },
   "author": "anyhowstep",

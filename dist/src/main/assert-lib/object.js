@@ -56,30 +56,6 @@ function deriveFrom(fromKey, toKey, canCast, castDelegate, assert) {
     return result;
 }
 exports.deriveFrom = deriveFrom;
-/*
-    Use with `and()` or `intersect()`
-
-    //derive<>() can be used to rename fields
-    const f = derive("x", "y", sd.stringToNaturalNumber())
-
-    f("obj", { x : "34" })              //Gives us { y : 34 }
-    f("obj", { x : "34", y : "99" })    //Gives us { y : 34 }
-    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
-    f("obj", { })                       //Error
-
-    //derive<>() can be used while keeping the old field,
-    const f = intersect(
-        sd.toSchema({
-            x : sd.naturalNumberString()
-        }),
-        sd.derive("x", "y", sd.stringToNaturalNumber())
-    );
-
-    f("obj", { x : "34" })              //Gives us { x : "34", y : 34 }
-    f("obj", { x : "34", y : "99" })    //Gives us { x : "34", y : 34 }
-    f("obj", { y : "34" })              //Error; expected `x` to be string; received undefined
-    f("obj", { })                       //Error
-*/
 function derive(fromKey, toKey, assert) {
     const d = types_1.toAssertDelegateExact(assert);
     const result = (name, mixed) => {

@@ -36,7 +36,7 @@ export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT e
         [from in FromFieldNameT]: (CanAcceptOf<FromF> | CanAcceptOf<ToF>);
     };
 });
-export declare function derive<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (AssertDelegate<{
+export declare type DeriveAssertDelegate<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc> = (AssertDelegate<{
     [field in ToFieldNameT]: TypeOf<AssertFuncT>;
 }> & {
     __accepts: ({
@@ -46,6 +46,7 @@ export declare function derive<FromFieldNameT extends string, ToFieldNameT exten
         [from in FromFieldNameT]: CanAcceptOf<AssertFuncT>;
     });
 });
+export declare function derive<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (DeriveAssertDelegate<FromFieldNameT, ToFieldNameT, AssertFuncT>);
 export declare function instanceOf<T>(ctor: new (...args: any[]) => T): (AssertDelegate<T> & {
     __accepts: T;
     __canAccept: T;
