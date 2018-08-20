@@ -7,6 +7,14 @@ export declare function dateToUnixTimestamp(): import("../types").AssertDelegate
     __accepts: Date;
     __canAccept: string | number | Date;
 };
+export declare function unixTimestampToDateTimestamp(): import("../types").AssertDelegate<number> & {
+    __accepts: number;
+    __canAccept: number;
+};
+export declare function unixTimestampToDate(): import("../types").AssertDelegate<Date> & {
+    __accepts: number;
+    __canAccept: number;
+};
 export declare function dateTimeWithoutMillisecond(): import("../types").AssertDelegate<Date> & {
     __accepts: Date;
     __canAccept: string | number | Date;

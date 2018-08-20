@@ -58,14 +58,20 @@ export function unixTimestampToDateTimestamp () {
     );
 }
 
-export function dateTimeWithoutMillisecond () {
+export function unixTimestampToDate () {
     return chain(
-        dateToUnixTimestamp(),
         unixTimestampToDateTimestamp(),
         (_name : string, dateTimestamp : number) : Date => {
             const d = new Date(dateTimestamp);
             return d;
         }
+    );
+}
+
+export function dateTimeWithoutMillisecond () {
+    return chain(
+        dateToUnixTimestamp(),
+        unixTimestampToDate()
     );
 }
 //Behaves like MySQL DATETIME, alias for dateTimeWithoutMillisecond()

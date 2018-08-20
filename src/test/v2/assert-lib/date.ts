@@ -96,6 +96,31 @@ tape(__filename + "-unix-timestamp-to-date-timestamp", (t) => {
     t.end();
 });
 
+tape(__filename + "-unix-timestamp-to-date", (t) => {
+    const now = new Date();
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date(0));
+    myUtil.fail(t, sd.unixTimestampToDate(), now);
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date(100));
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date("2018-01-01"));
+
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date(NaN));
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date(Infinity));
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date(-Infinity));
+    myUtil.fail(t, sd.unixTimestampToDate(), NaN);
+    myUtil.fail(t, sd.unixTimestampToDate(), Infinity);
+    myUtil.fail(t, sd.unixTimestampToDate(), -Infinity);
+    myUtil.fail(t, sd.unixTimestampToDate(), new Date("qwerty"));
+    myUtil.fail(t, sd.unixTimestampToDate(), true);
+    myUtil.fail(t, sd.unixTimestampToDate(), false);
+    myUtil.test(t, sd.unixTimestampToDate(), 0, new Date(0));
+    myUtil.test(t, sd.unixTimestampToDate(), 1, new Date(1000));
+    myUtil.test(t, sd.unixTimestampToDate(), 100, new Date(100000));
+    myUtil.test(t, sd.unixTimestampToDate(), 999, new Date(999000));
+    myUtil.fail(t, sd.unixTimestampToDate(), "2018-01-01");
+
+    t.end();
+});
+
 tape(__filename + "-date-time-without-millisecond", (t) => {
     const now = new Date();
     myUtil.test(t, sd.dateTimeWithoutMillisecond(), new Date(0), new Date(0));

@@ -13,7 +13,7 @@ function validDate() {
             throw new Error(`Expected ${name} to be a Date; received ${util_1.toTypeStr(mixed)}`);
         }
         const timestamp = mixed.getTime();
-        number_1.finiteNumber()(`${name}'s UNIX timestamp`, timestamp);
+        number_1.finiteNumber()(`${name}'s Unix timestamp`, timestamp);
         return mixed;
     };
 }
@@ -32,14 +32,24 @@ function dateToUnixTimestamp() {
     });
 }
 exports.dateToUnixTimestamp = dateToUnixTimestamp;
-function dateTimeWithoutMillisecond() {
-    return operator_1.chain(date(), dateToUnixTimestamp(), (_name, unixTimestamp) => {
-        //A UNIX timestamp only has the number of seconds since Unix Epoch,
-        //but new Date() expects it to be the number of milliseconds since Unix Epoch.
-        //Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
-        const d = new Date(unixTimestamp * 1000);
+//A Unix timestamp only has the number of seconds since Unix Epoch,
+//but new Date() expects it to be the number of milliseconds since Unix Epoch.
+//Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
+function unixTimestampToDateTimestamp() {
+    return operator_1.chain(number_2.integer(), (_name, unixTimestamp) => {
+        return unixTimestamp * 1000;
+    });
+}
+exports.unixTimestampToDateTimestamp = unixTimestampToDateTimestamp;
+function unixTimestampToDate() {
+    return operator_1.chain(unixTimestampToDateTimestamp(), (_name, dateTimestamp) => {
+        const d = new Date(dateTimestamp);
         return d;
     });
+}
+exports.unixTimestampToDate = unixTimestampToDate;
+function dateTimeWithoutMillisecond() {
+    return operator_1.chain(dateToUnixTimestamp(), unixTimestampToDate());
 }
 exports.dateTimeWithoutMillisecond = dateTimeWithoutMillisecond;
 //Behaves like MySQL DATETIME, alias for dateTimeWithoutMillisecond()
