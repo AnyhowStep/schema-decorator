@@ -1,7 +1,7 @@
 import {Field, AnyField, AssertDelegate, TypeOf, AcceptsOf, CanAcceptOf} from "./types";
 import {RawFieldCollection, fields} from "./field";
 import { toTypeStr } from "./util";
-/*import {Merge} from "./Merge";*/
+import {Merge} from "./Merge";
 
 /*
 This is necessary for the type inference to work correctly with deeper schema nesting, unfortunately...
@@ -193,28 +193,10 @@ export type SchemaCanAccept<Arr extends AnyField[]> = (
 );
 
 export function schema<Arr extends AnyField[]> (...fields : Arr) : (
-    AssertDelegate<
-        {
-            [name in keyof SchemaType<Arr>] : (
-                SchemaType<Arr>[name]
-            )
-        }
-    > &
+    AssertDelegate<Merge<SchemaType<Arr>>> &
     {
-        __accepts : (
-            {
-                [name in keyof SchemaAccepts<Arr>] : (
-                    SchemaAccepts<Arr>[name]
-                )
-            }
-        ),
-        __canAccept : (
-            {
-                [name in keyof SchemaCanAccept<Arr>] : (
-                    SchemaCanAccept<Arr>[name]
-                )
-            }
-        )
+        __accepts : Merge<SchemaAccepts<Arr>>,
+        __canAccept : Merge<SchemaCanAccept<Arr>>,
     }
 ) {
     const d = (name : string, mixed : any) : any => {

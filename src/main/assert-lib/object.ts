@@ -289,7 +289,8 @@ export function dictionary<F extends AnyAssertFunc> (assert : F) : (
         if (
             !(mixed instanceof Object) ||
             (mixed instanceof Date) ||
-            (mixed instanceof Array)
+            (mixed instanceof Array) ||
+            (mixed instanceof Function)
         ) {
             throw new Error(`Expected ${name} to be an dictionary object, received ${toTypeStr(mixed)}`);
         }
@@ -314,7 +315,8 @@ export function emptyObject () : (
         if (
             !(mixed instanceof Object) ||
             (mixed instanceof Date) ||
-            (mixed instanceof Array)
+            (mixed instanceof Array) ||
+            (mixed instanceof Function)
         ) {
             throw new Error(`Expected ${name} to be an empty object, received ${toTypeStr(mixed)}`);
         }

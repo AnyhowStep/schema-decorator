@@ -397,3 +397,135 @@ tape(__filename + "-to-enumeration-4", (t) => {
 
     t.end();
 });
+
+tape(__filename + "-to-enumeration-key", (t) => {
+    enum E {
+        A,
+        B,
+        C
+    }
+    myUtil.test(t, sd.toEnumerationKey(E), E.A, "A");
+    myUtil.test(t, sd.toEnumerationKey(E), E.B, "B");
+    myUtil.test(t, sd.toEnumerationKey(E), E.C, "C");
+    myUtil.test(t, sd.toEnumerationKey(E), 0, "A");
+    myUtil.test(t, sd.toEnumerationKey(E), 1, "B");
+    myUtil.test(t, sd.toEnumerationKey(E), 2, "C");
+
+    myUtil.fail(t, sd.toEnumerationKey(E), 3);
+    myUtil.fail(t, sd.toEnumerationKey(E), -1);
+    myUtil.fail(t, sd.toEnumerationKey(E), "0");
+    myUtil.fail(t, sd.toEnumerationKey(E), "1");
+    myUtil.fail(t, sd.toEnumerationKey(E), "2");
+    myUtil.fail(t, sd.toEnumerationKey(E), "3");
+    myUtil.test(t, sd.toEnumerationKey(E), "A", "A");
+    myUtil.test(t, sd.toEnumerationKey(E), "B", "B");
+    myUtil.test(t, sd.toEnumerationKey(E), "C", "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), "D");
+    myUtil.fail(t, sd.toEnumerationKey(E), true);
+    myUtil.fail(t, sd.toEnumerationKey(E), false);
+    myUtil.fail(t, sd.toEnumerationKey(E), []);
+
+    t.end();
+});
+
+tape(__filename + "-to-enumeration-key-2", (t) => {
+    enum E {
+        A = "Airplane",
+        B = "Bicycle",
+        C = "Car"
+    }
+    myUtil.test(t, sd.toEnumerationKey(E), E.A, "A");
+    myUtil.test(t, sd.toEnumerationKey(E), E.B, "B");
+    myUtil.test(t, sd.toEnumerationKey(E), E.C, "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), 0);
+    myUtil.fail(t, sd.toEnumerationKey(E), 1);
+    myUtil.fail(t, sd.toEnumerationKey(E), 2);
+
+    myUtil.test(t, sd.toEnumerationKey(E), "Airplane", "A");
+    myUtil.test(t, sd.toEnumerationKey(E), "Bicycle", "B");
+    myUtil.test(t, sd.toEnumerationKey(E), "Car", "C");
+
+    myUtil.fail(t, sd.toEnumerationKey(E), 3);
+    myUtil.fail(t, sd.toEnumerationKey(E), -1);
+    myUtil.fail(t, sd.toEnumerationKey(E), "0");
+    myUtil.fail(t, sd.toEnumerationKey(E), "1");
+    myUtil.fail(t, sd.toEnumerationKey(E), "2");
+    myUtil.fail(t, sd.toEnumerationKey(E), "3");
+    myUtil.test(t, sd.toEnumerationKey(E), "A", "A");
+    myUtil.test(t, sd.toEnumerationKey(E), "B", "B");
+    myUtil.test(t, sd.toEnumerationKey(E), "C", "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), "D");
+    myUtil.fail(t, sd.toEnumerationKey(E), true);
+    myUtil.fail(t, sd.toEnumerationKey(E), false);
+    myUtil.fail(t, sd.toEnumerationKey(E), []);
+
+    t.end();
+});
+
+tape(__filename + "-to-enumeration-key-3", (t) => {
+    enum E {
+        A = "A",
+        B = "B",
+        C = "C"
+    }
+    myUtil.test(t, sd.toEnumerationKey(E), E.A, "A");
+    myUtil.test(t, sd.toEnumerationKey(E), E.B, "B");
+    myUtil.test(t, sd.toEnumerationKey(E), E.C, "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), 0);
+    myUtil.fail(t, sd.toEnumerationKey(E), 1);
+    myUtil.fail(t, sd.toEnumerationKey(E), 2);
+
+    myUtil.fail(t, sd.toEnumerationKey(E), "Airplane");
+    myUtil.fail(t, sd.toEnumerationKey(E), "Bicycle");
+    myUtil.fail(t, sd.toEnumerationKey(E), "Car");
+
+    myUtil.fail(t, sd.toEnumerationKey(E), 3);
+    myUtil.fail(t, sd.toEnumerationKey(E), -1);
+    myUtil.fail(t, sd.toEnumerationKey(E), "0");
+    myUtil.fail(t, sd.toEnumerationKey(E), "1");
+    myUtil.fail(t, sd.toEnumerationKey(E), "2");
+    myUtil.fail(t, sd.toEnumerationKey(E), "3");
+    myUtil.test(t, sd.toEnumerationKey(E), "A", "A");
+    myUtil.test(t, sd.toEnumerationKey(E), "B", "B");
+    myUtil.test(t, sd.toEnumerationKey(E), "C", "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), "D");
+    myUtil.fail(t, sd.toEnumerationKey(E), true);
+    myUtil.fail(t, sd.toEnumerationKey(E), false);
+    myUtil.fail(t, sd.toEnumerationKey(E), []);
+
+    t.end();
+});
+
+tape(__filename + "-to-enumeration-key-4", (t) => {
+    enum E {
+        A = "C",
+        B = "A",
+        C = "B"
+    }
+    myUtil.test(t, sd.toEnumerationKey(E), E.A, "C");
+    myUtil.test(t, sd.toEnumerationKey(E), E.B, "A");
+    myUtil.test(t, sd.toEnumerationKey(E), E.C, "B");
+    myUtil.fail(t, sd.toEnumerationKey(E), 0);
+    myUtil.fail(t, sd.toEnumerationKey(E), 1);
+    myUtil.fail(t, sd.toEnumerationKey(E), 2);
+
+    myUtil.fail(t, sd.toEnumerationKey(E), "Airplane");
+    myUtil.fail(t, sd.toEnumerationKey(E), "Bicycle");
+    myUtil.fail(t, sd.toEnumerationKey(E), "Car");
+
+    myUtil.fail(t, sd.toEnumerationKey(E), 3);
+    myUtil.fail(t, sd.toEnumerationKey(E), -1);
+    myUtil.fail(t, sd.toEnumerationKey(E), "0");
+    myUtil.fail(t, sd.toEnumerationKey(E), "1");
+    myUtil.fail(t, sd.toEnumerationKey(E), "2");
+    myUtil.fail(t, sd.toEnumerationKey(E), "3");
+    myUtil.test(t, sd.toEnumerationKey(E), "A", "A");
+    myUtil.test(t, sd.toEnumerationKey(E), "B", "B");
+    myUtil.test(t, sd.toEnumerationKey(E), "C", "C");
+    myUtil.fail(t, sd.toEnumerationKey(E), "D");
+    myUtil.fail(t, sd.toEnumerationKey(E), true);
+    myUtil.fail(t, sd.toEnumerationKey(E), false);
+    myUtil.fail(t, sd.toEnumerationKey(E), []);
+
+    t.end();
+});

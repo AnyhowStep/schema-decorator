@@ -20,7 +20,10 @@ class Title {
 //https://github.com/typicode/jsonplaceholder/issues/60
 //https://github.com/typicode/jsonplaceholder/issues/74
 class Response {
-    @schema.assert(schema.maybe(schema.naturalNumber()))
+    @schema.assert(schema.maybe(schema.or(
+        schema.naturalNumber(),
+        schema.naturalNumberString()
+    )))
     userId? : null|number|string;
     @schema.assert(schema.maybe(validation.Number.assertNaturalNumber))
     id? : null|number;

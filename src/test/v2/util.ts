@@ -22,10 +22,7 @@ function sortInternalKeys (x : Object) {
     }
 }
 
-export function test (t : tape.Test, f : sd.AnyAssertFunc, raw : any, expected? : any) {
-    if (expected == null) {
-        expected = raw;
-    }
+export function test (t : tape.Test, f : sd.AnyAssertFunc|sd.AnyChainedAssertFunc, raw : any, expected : any) {
     const originalRawStr = JSON.stringify(raw);
 
     const value = sd.toAssertDelegateExact(f)("raw", raw);
@@ -53,7 +50,7 @@ export function testKeys (t : tape.Test, instance : any, expected : string[]) {
     const actualKeys = Object.keys(instance);
     t.deepEqual(actualKeys, expected, `${actualKeys.join(",")} == ${expected.join(",")}`);
 }
-export function fail (t : tape.Test, assert : sd.AnyAssertFunc, raw : any) {
+export function fail (t : tape.Test, assert : sd.AnyAssertFunc|sd.AnyChainedAssertFunc, raw : any) {
     try {
         const value = sd.toAssertDelegate(assert)("raw", raw);
         t.fail(`Should not succeed; received ${raw}, asserted ${value}`);

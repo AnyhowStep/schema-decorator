@@ -11,7 +11,7 @@ export type FieldCollection<RawFieldCollectionT extends RawFieldCollection> = {
 export function field<NameT extends string, F extends AnyAssertFunc> (
     name : NameT,
     assert : F
-) {
+) : Field<NameT, F> {
     return new Field(name, assert);
 }
 export function fields<RawFieldCollectionT extends RawFieldCollection> (raw : RawFieldCollectionT) : FieldCollection<RawFieldCollectionT> {
