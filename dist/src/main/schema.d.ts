@@ -1,5 +1,6 @@
 import { AnyField, AssertDelegate, TypeOf, AcceptsOf, CanAcceptOf } from "./types";
 import { RawFieldCollection } from "./field";
+import { Merge } from "./Merge";
 export declare type OptionalTypeNames<Arr extends AnyField[]> = (Extract<{
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (undefined extends TypeOf<Arr[index]> ? Arr[index]["name"] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>], string>);
@@ -36,15 +37,9 @@ export declare type SchemaCanAccept<Arr extends AnyField[]> = ({
 } & {
     [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, optionalName>>);
 });
-export declare function schema<Arr extends AnyField[]>(...fields: Arr): (AssertDelegate<{
-    [name in keyof SchemaType<Arr>]: (SchemaType<Arr>[name]);
-}> & {
-    __accepts: ({
-        [name in keyof SchemaAccepts<Arr>]: (SchemaAccepts<Arr>[name]);
-    });
-    __canAccept: ({
-        [name in keyof SchemaCanAccept<Arr>]: (SchemaCanAccept<Arr>[name]);
-    });
+export declare function schema<Arr extends AnyField[]>(...fields: Arr): (AssertDelegate<Merge<SchemaType<Arr>>> & {
+    __accepts: Merge<SchemaAccepts<Arr>>;
+    __canAccept: Merge<SchemaCanAccept<Arr>>;
 });
 export declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
     [name in {

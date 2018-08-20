@@ -2,7 +2,7 @@ import {finiteNumber} from "./number";
 import {chain, or} from "./operator";
 import {cast} from "./cast";
 import {string} from "./basic";
-import {number} from "./number";
+import {number, integer} from "./number";
 import {toTypeStr} from "../util";
 
 //Only checks if Date
@@ -12,7 +12,7 @@ export function validDate () {
             throw new Error(`Expected ${name} to be a Date; received ${toTypeStr(mixed)}`);
         }
         const timestamp = mixed.getTime();
-        finiteNumber()(`${name}'s UNIX timestamp`, timestamp);
+        finiteNumber()(`${name}'s Unix timestamp`, timestamp);
         return mixed;
     };
 }
@@ -34,16 +34,37 @@ export function date () {
     );
 }
 
-export function dateTimeWithoutMillisecond () {
+//Given a valid date,
+//this will give you the number of *seconds* since the Unix Epoch,
+//January 1st, 1970 at UTC.
+export function dateToUnixTimestamp () {
     return chain(
         date(),
-        (_name : string, mixed : Date) : Date => {
-            //To remove the millisecond part,
-            //+ Divide by 1000 to get the time in seconds
-            //+ Convert to an integer
-            //+ Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
-            const withoutMs = new Date(Math.floor(mixed.getTime() / 1000) * 1000);
-            return withoutMs;
+        (_name : string, d : Date) : number => {
+            return Math.floor(d.getTime() / 1000);
+        }
+    );
+}
+
+//A Unix timestamp only has the number of seconds since Unix Epoch,
+//but new Date() expects it to be the number of milliseconds since Unix Epoch.
+//Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
+export function unixTimestampToDateTimestamp () {
+    return chain(
+        integer(),
+        (_name : string, unixTimestamp : number) : number => {
+            return unixTimestamp * 1000;
+        }
+    );
+}
+
+export function dateTimeWithoutMillisecond () {
+    return chain(
+        dateToUnixTimestamp(),
+        unixTimestampToDateTimestamp(),
+        (_name : string, dateTimestamp : number) : Date => {
+            const d = new Date(dateTimestamp);
+            return d;
         }
     );
 }

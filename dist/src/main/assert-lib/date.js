@@ -23,14 +23,22 @@ function date() {
     return operator_1.or(cast_1.cast(basic_1.string(), (from) => new Date(from), validDate()), cast_1.cast(number_2.number(), (from) => new Date(from), validDate()), validDate());
 }
 exports.date = date;
+//Given a valid date,
+//this will give you the number of *seconds* since the Unix Epoch,
+//January 1st, 1970 at UTC.
+function dateToUnixTimestamp() {
+    return operator_1.chain(date(), (_name, d) => {
+        return Math.floor(d.getTime() / 1000);
+    });
+}
+exports.dateToUnixTimestamp = dateToUnixTimestamp;
 function dateTimeWithoutMillisecond() {
-    return operator_1.chain(date(), (_name, mixed) => {
-        //To remove the millisecond part,
-        //+ Divide by 1000 to get the time in seconds
-        //+ Convert to an integer
-        //+ Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
-        const withoutMs = new Date(Math.floor(mixed.getTime() / 1000) * 1000);
-        return withoutMs;
+    return operator_1.chain(date(), dateToUnixTimestamp(), (_name, unixTimestamp) => {
+        //A UNIX timestamp only has the number of seconds since Unix Epoch,
+        //but new Date() expects it to be the number of milliseconds since Unix Epoch.
+        //Multiply by 1000 to convert back to milliseconds (but the millesecond part will be zeroes)
+        const d = new Date(unixTimestamp * 1000);
+        return d;
     });
 }
 exports.dateTimeWithoutMillisecond = dateTimeWithoutMillisecond;

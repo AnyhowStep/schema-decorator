@@ -37,8 +37,15 @@ function jsonObjectToString() {
 exports.jsonObjectToString = jsonObjectToString;
 function jsonStringToObject() {
     return (name, str) => {
+        if (typeof str != "string") {
+            throw new Error(`Expected ${name} to be of type string; received ${util_1.toTypeStr(str)}`);
+        }
         try {
-            return JSON.parse(str);
+            const result = JSON.parse(str);
+            if (!(result instanceof Object) || (result instanceof Date) || (result instanceof Array) || (result instanceof Function)) {
+                throw new Error(`${name} to represent a valid JSON object; expected an object; received ${util_1.toTypeStr(result)}`);
+            }
+            return result;
         }
         catch (err) {
             throw new Error(`${name} is not a valid JSON string; ${err.message}`);

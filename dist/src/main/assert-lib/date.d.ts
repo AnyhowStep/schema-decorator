@@ -3,6 +3,10 @@ export declare function date(): import("../types").AssertDelegate<Date> & {
     __accepts: Date;
     __canAccept: string | number | Date;
 };
+export declare function dateToUnixTimestamp(): import("../types").AssertDelegate<number> & {
+    __accepts: Date;
+    __canAccept: string | number | Date;
+};
 export declare function dateTimeWithoutMillisecond(): import("../types").AssertDelegate<Date> & {
     __accepts: Date;
     __canAccept: string | number | Date;

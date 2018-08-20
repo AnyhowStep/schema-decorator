@@ -86,7 +86,8 @@ function dictionary(assert) {
     const result = (name, mixed) => {
         if (!(mixed instanceof Object) ||
             (mixed instanceof Date) ||
-            (mixed instanceof Array)) {
+            (mixed instanceof Array) ||
+            (mixed instanceof Function)) {
             throw new Error(`Expected ${name} to be an dictionary object, received ${util_1.toTypeStr(mixed)}`);
         }
         const keys = Object.keys(mixed);
@@ -103,7 +104,8 @@ function emptyObject() {
     const result = (name, mixed) => {
         if (!(mixed instanceof Object) ||
             (mixed instanceof Date) ||
-            (mixed instanceof Array)) {
+            (mixed instanceof Array) ||
+            (mixed instanceof Function)) {
             throw new Error(`Expected ${name} to be an empty object, received ${util_1.toTypeStr(mixed)}`);
         }
         const keys = Object.keys(mixed);

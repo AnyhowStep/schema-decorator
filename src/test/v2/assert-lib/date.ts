@@ -48,6 +48,54 @@ tape(__filename + "-date", (t) => {
     t.end();
 });
 
+tape(__filename + "-date-to-unix-timestamp", (t) => {
+    const now = new Date();
+    myUtil.test(t, sd.dateToUnixTimestamp(), new Date(0), 0);
+    myUtil.test(t, sd.dateToUnixTimestamp(), now, Math.floor(now.getTime()/1000));
+    myUtil.test(t, sd.dateToUnixTimestamp(), new Date(100), 0);
+    myUtil.test(t, sd.dateToUnixTimestamp(), new Date("2018-01-01"), Math.floor(new Date("2018-01-01").getTime()/1000));
+
+    myUtil.fail(t, sd.dateToUnixTimestamp(), new Date(NaN));
+    myUtil.fail(t, sd.dateToUnixTimestamp(), new Date(Infinity));
+    myUtil.fail(t, sd.dateToUnixTimestamp(), new Date(-Infinity));
+    myUtil.fail(t, sd.dateToUnixTimestamp(), NaN);
+    myUtil.fail(t, sd.dateToUnixTimestamp(), Infinity);
+    myUtil.fail(t, sd.dateToUnixTimestamp(), -Infinity);
+    myUtil.fail(t, sd.dateToUnixTimestamp(), new Date("qwerty"));
+    myUtil.fail(t, sd.dateToUnixTimestamp(), true);
+    myUtil.fail(t, sd.dateToUnixTimestamp(), false);
+    myUtil.test(t, sd.dateToUnixTimestamp(), 0, 0);
+    myUtil.test(t, sd.dateToUnixTimestamp(), 100, 0);
+    myUtil.test(t, sd.dateToUnixTimestamp(), "2018-01-01", Math.floor(new Date("2018-01-01").getTime()/1000));
+
+    t.end();
+});
+
+tape(__filename + "-unix-timestamp-to-date-timestamp", (t) => {
+    const now = new Date();
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date(0));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), now);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date(100));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date("2018-01-01"));
+
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date(NaN));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date(Infinity));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date(-Infinity));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), NaN);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), Infinity);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), -Infinity);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), new Date("qwerty"));
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), true);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), false);
+    myUtil.test(t, sd.unixTimestampToDateTimestamp(), 0, 0);
+    myUtil.test(t, sd.unixTimestampToDateTimestamp(), 1, 1000);
+    myUtil.test(t, sd.unixTimestampToDateTimestamp(), 100, 100000);
+    myUtil.test(t, sd.unixTimestampToDateTimestamp(), 999, 999000);
+    myUtil.fail(t, sd.unixTimestampToDateTimestamp(), "2018-01-01");
+
+    t.end();
+});
+
 tape(__filename + "-date-time-without-millisecond", (t) => {
     const now = new Date();
     myUtil.test(t, sd.dateTimeWithoutMillisecond(), new Date(0), new Date(0));
