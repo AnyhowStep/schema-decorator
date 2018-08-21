@@ -40,13 +40,13 @@ class Request {
         return new Request(Object.assign({}, this.data, { header: Object.assign({}, header, d("header", header)) }), this.extraData);
     }
     setOnTransformBody(onTransformBody) {
-        return new Request(Object.assign({}, this.data, { onTransformBody: onTransformBody }), this.extraData);
+        return new Request(this.data, Object.assign({}, this.extraData, { onTransformBody: onTransformBody }));
     }
     setOnInjectHeader(onInjectHeader) {
-        return new Request(Object.assign({}, this.data, { onInjectHeader: onInjectHeader }), this.extraData);
+        return new Request(this.data, Object.assign({}, this.extraData, { onInjectHeader: onInjectHeader }));
     }
     setOnTransformResponse(onTransformResponse) {
-        return new Request(Object.assign({}, this.data, { onTransformResponse: onTransformResponse }), this.extraData);
+        return new Request(this.data, Object.assign({}, this.extraData, { onTransformResponse: onTransformResponse }));
     }
     send() {
         return __awaiter(this, void 0, void 0, function* () {

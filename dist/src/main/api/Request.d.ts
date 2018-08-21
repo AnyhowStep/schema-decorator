@@ -61,14 +61,8 @@ export declare class Request<DataT extends RequestData> {
     } ? ("header" extends keyof DataT ? never : Request<DataT>) : never), header: AcceptsOf<Exclude<DataT["route"]["data"]["headerF"], undefined>>): (Request<DataT & {
         header: TypeOf<Exclude<DataT["route"]["data"]["headerF"], undefined>>;
     }>);
-    setOnTransformBody(onTransformBody: TransformBodyDelegate | undefined): (Request<DataT & {
-        onTransformBody?: TransformBodyDelegate | undefined;
-    }>);
-    setOnInjectHeader(onInjectHeader: InjectHeaderDelegate | undefined): (Request<DataT & {
-        onInjectHeader?: InjectHeaderDelegate | undefined;
-    }>);
-    setOnTransformResponse(onTransformResponse: TransformResponseDelegate | undefined): (Request<DataT & {
-        onTransformResponse?: TransformResponseDelegate | undefined;
-    }>);
+    setOnTransformBody(onTransformBody: TransformBodyDelegate | undefined): (Request<DataT>);
+    setOnInjectHeader(onInjectHeader: InjectHeaderDelegate | undefined): (Request<DataT>);
+    setOnTransformResponse(onTransformResponse: TransformResponseDelegate | undefined): (Request<DataT>);
     send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<axios.AxiosResponse<"responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown>>);
 }

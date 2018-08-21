@@ -217,51 +217,36 @@ export class Request<DataT extends RequestData> {
         );
     }
     public setOnTransformBody (onTransformBody : TransformBodyDelegate|undefined) : (
-        Request<
-            DataT &
-            {
-                onTransformBody? : TransformBodyDelegate|undefined
-            }
-        >
+        Request<DataT>
     ) {
         return new Request(
+            this.data,
             {
-                ...(this.data as any),
+                ...(this.extraData as any),
                 onTransformBody : onTransformBody,
             },
-            this.extraData
         );
     }
     public setOnInjectHeader (onInjectHeader : InjectHeaderDelegate|undefined) : (
-        Request<
-            DataT &
-            {
-                onInjectHeader? : InjectHeaderDelegate|undefined
-            }
-        >
+        Request<DataT>
     ) {
         return new Request(
+            this.data,
             {
-                ...(this.data as any),
+                ...(this.extraData as any),
                 onInjectHeader : onInjectHeader,
-            },
-            this.extraData
+            }
         );
     }
     public setOnTransformResponse (onTransformResponse : TransformResponseDelegate|undefined) : (
-        Request<
-            DataT &
-            {
-                onTransformResponse? : TransformResponseDelegate|undefined
-            }
-        >
+        Request<DataT>
     ) {
         return new Request(
+            this.data,
             {
-                ...(this.data as any),
+                ...(this.extraData as any),
                 onTransformResponse : onTransformResponse,
-            },
-            this.extraData
+            }
         );
     }
     public async send (
