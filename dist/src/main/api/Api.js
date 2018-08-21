@@ -15,7 +15,7 @@ class Api {
     request(route) {
         return Request_1.Request.Create(this, route)
             .setOnTransformBody(this.config.onTransformBody)
-            .setOnTransformBody(this.config.onTransformBody)
+            .setOnInjectHeader(this.config.onInjectHeader)
             .setOnTransformResponse(this.config.onTransformResponse);
     }
 }
