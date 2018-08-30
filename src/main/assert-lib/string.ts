@@ -104,3 +104,18 @@ export function email () : AssertDelegate<string> {
         }
     );
 }
+
+//Allows empty string
+//Allows uppercase A-F
+//Allows lowercase A-F
+export function hexadecimalString () {
+    return chain(
+        string(),
+        (name : string, mixed : string) : string => {
+            if (/^[a-fA-F0-9]*$/.test(mixed)) {
+                return mixed;
+            }
+            throw new Error(`${name} must be a hexadecimal string`);
+        }
+    );
+}

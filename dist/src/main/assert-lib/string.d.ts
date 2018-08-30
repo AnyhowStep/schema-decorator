@@ -35,3 +35,7 @@ export declare function match(regex: RegExp): AssertDelegate<string> & {
     __canAccept: string;
 };
 export declare function email(): AssertDelegate<string>;
+export declare function hexadecimalString(): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};

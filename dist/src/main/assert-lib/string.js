@@ -75,4 +75,16 @@ function email() {
     });
 }
 exports.email = email;
+//Allows empty string
+//Allows uppercase A-F
+//Allows lowercase A-F
+function hexadecimalString() {
+    return operator_1.chain(basic_1.string(), (name, mixed) => {
+        if (/^[a-fA-F0-9]*$/.test(mixed)) {
+            return mixed;
+        }
+        throw new Error(`${name} must be a hexadecimal string`);
+    });
+}
+exports.hexadecimalString = hexadecimalString;
 //# sourceMappingURL=string.js.map

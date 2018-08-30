@@ -5,6 +5,7 @@ export * from "./boolean";
 export * from "./cast";
 export * from "./date";
 export * from "./enum";
+export * from "./ip-address";
 export * from "./json";
 export * from "./missing-value";
 export * from "./number";

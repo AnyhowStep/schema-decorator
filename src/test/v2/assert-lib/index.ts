@@ -5,6 +5,7 @@ import "./boolean";
 import "./cast";
 import "./date";
 import "./enum";
+import "./ip-address";
 import "./json";
 import "./missing-value";
 import "./number";

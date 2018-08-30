@@ -10,6 +10,7 @@ __export(require("./boolean"));
 __export(require("./cast"));
 __export(require("./date"));
 __export(require("./enum"));
+__export(require("./ip-address"));
 __export(require("./json"));
 __export(require("./missing-value"));
 __export(require("./number"));
