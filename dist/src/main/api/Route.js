@@ -72,6 +72,9 @@ class Path {
     hasParam() {
         return this.arr.some(i => (typeof i != "string"));
     }
+    getParams() {
+        return this.arr.filter((i) => (typeof i != "string"));
+    }
 }
 exports.Path = Path;
 ;

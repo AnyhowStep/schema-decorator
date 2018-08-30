@@ -15,6 +15,7 @@ export declare class Path<ParamKeys extends string> {
     getRouterPath(): string;
     getCallingPath(p: AnyParam<ParamKeys>): string;
     hasParam(): boolean;
+    getParams(): PathParam<ParamKeys>[];
 }
 export declare type MethodLiteral = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT" | "Contextual";
 export interface RouteData {
