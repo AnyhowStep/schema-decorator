@@ -83,10 +83,11 @@ export class Request<DataT extends RequestData> {
         >
     ) {
         const d = toAssertDelegateExact(this.data.route.data.paramF);
+        d("param", param);
         return new Request(
             {
                 ...(this.data as any),
-                param : d("param", param),
+                param : param,
             },
             this.extraData
         );
@@ -123,10 +124,11 @@ export class Request<DataT extends RequestData> {
         >
     ) {
         const d = toAssertDelegateExact(this.data.route.data.queryF);
+        d("query", query);
         return new Request(
             {
                 ...(this.data as any),
-                query : d("query", query),
+                query : query,
             },
             this.extraData
         );
@@ -163,10 +165,11 @@ export class Request<DataT extends RequestData> {
         >
     ) {
         const d = toAssertDelegateExact(this.data.route.data.bodyF);
+        d("body", body);
         return new Request(
             {
                 ...(this.data as any),
-                body : d("body", body),
+                body : body,
             },
             this.extraData
         );
@@ -205,13 +208,11 @@ export class Request<DataT extends RequestData> {
         >
     ) {
         const d = toAssertDelegateExact(this.data.route.data.headerF);
+        d("header", header);
         return new Request(
             {
                 ...(this.data as any),
-                header : {
-                    ...(header as any),
-                    ...d("header", header),
-                },
+                header : header,
             },
             this.extraData
         );

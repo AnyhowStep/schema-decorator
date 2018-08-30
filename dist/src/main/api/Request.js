@@ -23,21 +23,25 @@ class Request {
     }
     setParam(param) {
         const d = types_1.toAssertDelegateExact(this.data.route.data.paramF);
-        return new Request(Object.assign({}, this.data, { param: d("param", param) }), this.extraData);
+        d("param", param);
+        return new Request(Object.assign({}, this.data, { param: param }), this.extraData);
     }
     setQuery(query) {
         const d = types_1.toAssertDelegateExact(this.data.route.data.queryF);
-        return new Request(Object.assign({}, this.data, { query: d("query", query) }), this.extraData);
+        d("query", query);
+        return new Request(Object.assign({}, this.data, { query: query }), this.extraData);
     }
     setBody(body) {
         const d = types_1.toAssertDelegateExact(this.data.route.data.bodyF);
-        return new Request(Object.assign({}, this.data, { body: d("body", body) }), this.extraData);
+        d("body", body);
+        return new Request(Object.assign({}, this.data, { body: body }), this.extraData);
     }
     //Special, does not eliminate extra header keys,
     //But does not check their values, either
     setHeader(header) {
         const d = types_1.toAssertDelegateExact(this.data.route.data.headerF);
-        return new Request(Object.assign({}, this.data, { header: Object.assign({}, header, d("header", header)) }), this.extraData);
+        d("header", header);
+        return new Request(Object.assign({}, this.data, { header: header }), this.extraData);
     }
     setOnTransformBody(onTransformBody) {
         return new Request(this.data, Object.assign({}, this.extraData, { onTransformBody: onTransformBody }));
