@@ -87,6 +87,9 @@ export class Path<ParamKeys extends string> {
         }
         return result.replace(/\/{2,}/g, "/");
     }
+    public hasParam () {
+        return this.arr.some(i => (typeof i != "string"));
+    }
 }
 
 export type MethodLiteral = "GET"|"POST"|"PUT"|"DELETE"|"PATCH"|"HEAD"|"OPTIONS"|"CONNECT"|"Contextual";

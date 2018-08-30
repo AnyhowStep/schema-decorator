@@ -69,6 +69,9 @@ class Path {
         }
         return result.replace(/\/{2,}/g, "/");
     }
+    hasParam() {
+        return this.arr.some(i => (typeof i != "string"));
+    }
 }
 exports.Path = Path;
 ;
