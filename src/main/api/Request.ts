@@ -11,7 +11,7 @@ import {
 
 export type TransformBodyDelegate = (rawBody : any|undefined) => any;
 export type InjectHeaderDelegate  = (route : Route<RouteData>) => any;
-export type TransformResponseDelegate = (rawResponse : any) => any;
+export type TransformResponseDelegate = (rawResponseData : any, rawResponse : axios.AxiosResponse<any>) => any;
 
 export interface RequestData {
     readonly route : Route<RouteData>;
@@ -374,7 +374,7 @@ export class Request<DataT extends RequestData> {
         } else {
             const rawResponse = (extraData.onTransformResponse == undefined) ?
                 result.data :
-                await extraData.onTransformResponse(result.data);
+                await extraData.onTransformResponse(result.data, result);
             const response = toAssertDelegateExact(routeData.responseF)(
                 `${debugName} : response`,
                 rawResponse

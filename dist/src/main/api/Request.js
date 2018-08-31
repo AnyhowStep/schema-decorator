@@ -95,7 +95,7 @@ class Request {
             else {
                 const rawResponse = (extraData.onTransformResponse == undefined) ?
                     result.data :
-                    yield extraData.onTransformResponse(result.data);
+                    yield extraData.onTransformResponse(result.data, result);
                 const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
                 result.data = response;
                 return result;

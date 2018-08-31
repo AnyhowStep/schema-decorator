@@ -4,7 +4,7 @@ import { Api } from "./Api";
 import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc } from "../types";
 export declare type TransformBodyDelegate = (rawBody: any | undefined) => any;
 export declare type InjectHeaderDelegate = (route: Route<RouteData>) => any;
-export declare type TransformResponseDelegate = (rawResponse: any) => any;
+export declare type TransformResponseDelegate = (rawResponseData: any, rawResponse: axios.AxiosResponse<any>) => any;
 export interface RequestData {
     readonly route: Route<RouteData>;
     readonly param?: any;
