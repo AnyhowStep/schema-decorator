@@ -372,15 +372,22 @@ export class Request<DataT extends RequestData> {
         if (routeData.responseF == undefined) {
             return result;
         } else {
-            const rawResponse = (extraData.onTransformResponse == undefined) ?
-                result.data :
-                await extraData.onTransformResponse(result.data, result);
-            const response = toAssertDelegateExact(routeData.responseF)(
-                `${debugName} : response`,
-                rawResponse
-            );
-            result.data = response;
-            return result;
+            try {
+                const rawResponse = (extraData.onTransformResponse == undefined) ?
+                    result.data :
+                    await extraData.onTransformResponse(result.data, result);
+                const response = toAssertDelegateExact(routeData.responseF)(
+                    `${debugName} : response`,
+                    rawResponse
+                );
+                result.data = response;
+                return result;
+            } catch (err) {
+                if (err != undefined) {
+                    err.response = result;
+                }
+                throw err;
+            }
         }
     }
 }

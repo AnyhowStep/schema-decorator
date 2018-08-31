@@ -93,12 +93,20 @@ class Request {
                 return result;
             }
             else {
-                const rawResponse = (extraData.onTransformResponse == undefined) ?
-                    result.data :
-                    yield extraData.onTransformResponse(result.data, result);
-                const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
-                result.data = response;
-                return result;
+                try {
+                    const rawResponse = (extraData.onTransformResponse == undefined) ?
+                        result.data :
+                        yield extraData.onTransformResponse(result.data, result);
+                    const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
+                    result.data = response;
+                    return result;
+                }
+                catch (err) {
+                    if (err != undefined) {
+                        err.response = result;
+                    }
+                    throw err;
+                }
             }
         });
     }
