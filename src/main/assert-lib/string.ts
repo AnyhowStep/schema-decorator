@@ -96,6 +96,23 @@ export function match (regex : RegExp, errorMessageDelegate? : (name : string) =
     );
 }
 
+export function nonMatch (regex : RegExp, errorMessageDelegate? : (name : string) => string) {
+    return chain(
+        string(),
+        (name : string, mixed : string) : string => {
+            if (regex.test(mixed)) {
+                if (errorMessageDelegate == undefined) {
+                    throw new Error(`${name} MUST NOT match ${regex.source}`);
+                } else {
+                    throw new Error(errorMessageDelegate(name));
+                }
+            } else {
+                return mixed;
+            }
+        }
+    );
+}
+
 export function email () : AssertDelegate<string> {
     return match(
         /^.+@.+$/,
@@ -125,4 +142,22 @@ export function mediumText () {
 }
 export function longText () {
     return varChar(4_294_967_295); //2^32-1
+}
+
+export function toUpperCase () {
+    return chain(
+        string(),
+        (_name : string, str : string) : string => {
+            return str.toUpperCase();
+        }
+    )
+}
+
+export function toLowerCase () {
+    return chain(
+        string(),
+        (_name : string, str : string) : string => {
+            return str.toLowerCase();
+        }
+    )
 }

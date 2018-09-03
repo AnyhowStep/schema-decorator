@@ -69,6 +69,22 @@ function match(regex, errorMessageDelegate) {
     });
 }
 exports.match = match;
+function nonMatch(regex, errorMessageDelegate) {
+    return operator_1.chain(basic_1.string(), (name, mixed) => {
+        if (regex.test(mixed)) {
+            if (errorMessageDelegate == undefined) {
+                throw new Error(`${name} MUST NOT match ${regex.source}`);
+            }
+            else {
+                throw new Error(errorMessageDelegate(name));
+            }
+        }
+        else {
+            return mixed;
+        }
+    });
+}
+exports.nonMatch = nonMatch;
 function email() {
     return match(/^.+@.+$/, name => `${name} must be an email address`);
 }
@@ -97,4 +113,16 @@ function longText() {
     return varChar(4294967295); //2^32-1
 }
 exports.longText = longText;
+function toUpperCase() {
+    return operator_1.chain(basic_1.string(), (_name, str) => {
+        return str.toUpperCase();
+    });
+}
+exports.toUpperCase = toUpperCase;
+function toLowerCase() {
+    return operator_1.chain(basic_1.string(), (_name, str) => {
+        return str.toLowerCase();
+    });
+}
+exports.toLowerCase = toLowerCase;
 //# sourceMappingURL=string.js.map

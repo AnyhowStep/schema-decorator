@@ -34,6 +34,10 @@ export declare function match(regex: RegExp, errorMessageDelegate?: (name: strin
     __accepts: string;
     __canAccept: string;
 };
+export declare function nonMatch(regex: RegExp, errorMessageDelegate?: (name: string) => string): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};
 export declare function email(): AssertDelegate<string>;
 export declare function hexadecimalString(): AssertDelegate<string> & {
     __accepts: string;
@@ -43,3 +47,11 @@ export declare function tinyText(): AssertDelegate<string>;
 export declare function text(): AssertDelegate<string>;
 export declare function mediumText(): AssertDelegate<string>;
 export declare function longText(): AssertDelegate<string>;
+export declare function toUpperCase(): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};
+export declare function toLowerCase(): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};
