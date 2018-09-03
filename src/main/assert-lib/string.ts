@@ -79,29 +79,27 @@ export function char (length : number) {
     return stringLength(length, length);
 }
 
-export function match (regex : RegExp) {
+export function match (regex : RegExp, errorMessageDelegate? : (name : string) => string) {
     return chain(
         string(),
         (name : string, mixed : string) : string => {
             if (regex.test(mixed)) {
                 return mixed;
             } else {
-                throw new Error(`${name} does not match ${regex.source}`);
+                if (errorMessageDelegate == undefined) {
+                    throw new Error(`${name} does not match ${regex.source}`);
+                } else {
+                    throw new Error(errorMessageDelegate(name));
+                }
             }
         }
     );
 }
 
 export function email () : AssertDelegate<string> {
-    return chain(
-        string(),
-        (name : string, mixed : string) : string => {
-            if (/^.+@.+$/.test(mixed)) {
-                return mixed;
-            } else {
-                throw new Error(`${name} must be an email address`);
-            }
-        }
+    return match(
+        /^.+@.+$/,
+        name => `${name} must be an email address`
     );
 }
 
@@ -109,14 +107,9 @@ export function email () : AssertDelegate<string> {
 //Allows uppercase A-F
 //Allows lowercase A-F
 export function hexadecimalString () {
-    return chain(
-        string(),
-        (name : string, mixed : string) : string => {
-            if (/^[a-fA-F0-9]*$/.test(mixed)) {
-                return mixed;
-            }
-            throw new Error(`${name} must be a hexadecimal string`);
-        }
+    return match(
+        /^[a-fA-F0-9]*$/,
+        name => `${name} must be a hexadecimal string`
     );
 }
 

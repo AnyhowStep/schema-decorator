@@ -53,38 +53,31 @@ function char(length) {
     return stringLength(length, length);
 }
 exports.char = char;
-function match(regex) {
+function match(regex, errorMessageDelegate) {
     return operator_1.chain(basic_1.string(), (name, mixed) => {
         if (regex.test(mixed)) {
             return mixed;
         }
         else {
-            throw new Error(`${name} does not match ${regex.source}`);
+            if (errorMessageDelegate == undefined) {
+                throw new Error(`${name} does not match ${regex.source}`);
+            }
+            else {
+                throw new Error(errorMessageDelegate(name));
+            }
         }
     });
 }
 exports.match = match;
 function email() {
-    return operator_1.chain(basic_1.string(), (name, mixed) => {
-        if (/^.+@.+$/.test(mixed)) {
-            return mixed;
-        }
-        else {
-            throw new Error(`${name} must be an email address`);
-        }
-    });
+    return match(/^.+@.+$/, name => `${name} must be an email address`);
 }
 exports.email = email;
 //Allows empty string
 //Allows uppercase A-F
 //Allows lowercase A-F
 function hexadecimalString() {
-    return operator_1.chain(basic_1.string(), (name, mixed) => {
-        if (/^[a-fA-F0-9]*$/.test(mixed)) {
-            return mixed;
-        }
-        throw new Error(`${name} must be a hexadecimal string`);
-    });
+    return match(/^[a-fA-F0-9]*$/, name => `${name} must be a hexadecimal string`);
 }
 exports.hexadecimalString = hexadecimalString;
 //https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
