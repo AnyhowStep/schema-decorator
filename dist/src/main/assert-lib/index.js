@@ -7,6 +7,7 @@ __export(require("./array-like"));
 __export(require("./array"));
 __export(require("./basic"));
 __export(require("./boolean"));
+__export(require("./buffer"));
 __export(require("./cast"));
 __export(require("./date"));
 __export(require("./enum"));
