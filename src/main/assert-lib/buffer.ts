@@ -38,28 +38,28 @@ export function minByteLength (min : number) : (
     return result as any;
 }
 
-export function tinyBlob () {
+export function tinyBlob () : AssertDelegate<Buffer> {
     return and(
         buffer(),
         maxByteLength(255) //2^8-1
     );
 }
 
-export function blob () {
+export function blob () : AssertDelegate<Buffer> {
     return and(
         buffer(),
         maxByteLength(65_535) //2^16-1
     );
 }
 
-export function mediumBlob () {
+export function mediumBlob () : AssertDelegate<Buffer> {
     return and(
         buffer(),
         maxByteLength(16_777_215) //2^24-1
     );
 }
 
-export function longBlob () {
+export function longBlob () : AssertDelegate<Buffer> {
     return and(
         buffer(),
         maxByteLength(4_294_967_295) //2^32-1

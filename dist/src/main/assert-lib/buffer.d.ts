@@ -18,43 +18,7 @@ export declare function minByteLength(min: number): (AssertDelegate<{
         byteLength: number;
     };
 });
-export declare function tinyBlob(): AssertDelegate<Buffer & {
-    byteLength: number;
-}> & {
-    __accepts: Buffer & {
-        byteLength: number;
-    };
-    __canAccept: Buffer & {
-        byteLength: number;
-    };
-};
-export declare function blob(): AssertDelegate<Buffer & {
-    byteLength: number;
-}> & {
-    __accepts: Buffer & {
-        byteLength: number;
-    };
-    __canAccept: Buffer & {
-        byteLength: number;
-    };
-};
-export declare function mediumBlob(): AssertDelegate<Buffer & {
-    byteLength: number;
-}> & {
-    __accepts: Buffer & {
-        byteLength: number;
-    };
-    __canAccept: Buffer & {
-        byteLength: number;
-    };
-};
-export declare function longBlob(): AssertDelegate<Buffer & {
-    byteLength: number;
-}> & {
-    __accepts: Buffer & {
-        byteLength: number;
-    };
-    __canAccept: Buffer & {
-        byteLength: number;
-    };
-};
+export declare function tinyBlob(): AssertDelegate<Buffer>;
+export declare function blob(): AssertDelegate<Buffer>;
+export declare function mediumBlob(): AssertDelegate<Buffer>;
+export declare function longBlob(): AssertDelegate<Buffer>;
