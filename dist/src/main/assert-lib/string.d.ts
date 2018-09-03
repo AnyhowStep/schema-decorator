@@ -39,3 +39,7 @@ export declare function hexadecimalString(): AssertDelegate<string> & {
     __accepts: string;
     __canAccept: string;
 };
+export declare function tinyText(): AssertDelegate<string>;
+export declare function text(): AssertDelegate<string>;
+export declare function mediumText(): AssertDelegate<string>;
+export declare function longText(): AssertDelegate<string>;

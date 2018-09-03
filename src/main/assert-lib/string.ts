@@ -119,3 +119,17 @@ export function hexadecimalString () {
         }
     );
 }
+
+//https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
+export function tinyText () {
+    return varChar(255); //2^8-1
+}
+export function text () {
+    return varChar(65_535); //2^16-1
+}
+export function mediumText () {
+    return varChar(16_777_215); //2^24-1
+}
+export function longText () {
+    return varChar(4_294_967_295); //2^32-1
+}

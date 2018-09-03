@@ -87,4 +87,21 @@ function hexadecimalString() {
     });
 }
 exports.hexadecimalString = hexadecimalString;
+//https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
+function tinyText() {
+    return varChar(255); //2^8-1
+}
+exports.tinyText = tinyText;
+function text() {
+    return varChar(65535); //2^16-1
+}
+exports.text = text;
+function mediumText() {
+    return varChar(16777215); //2^24-1
+}
+exports.mediumText = mediumText;
+function longText() {
+    return varChar(4294967295); //2^32-1
+}
+exports.longText = longText;
 //# sourceMappingURL=string.js.map
