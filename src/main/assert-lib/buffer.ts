@@ -1,6 +1,6 @@
 import {AssertDelegate} from "../types";
 import {instanceOf} from "./object";
-import {and} from "./operator";
+import {and, chain} from "./operator";
 import {naturalNumber} from "./number";
 
 export function buffer () {
@@ -38,30 +38,43 @@ export function minByteLength (min : number) : (
     return result as any;
 }
 
-export function tinyBlob () : AssertDelegate<Buffer> {
+export function byteLength (max : number) : AssertDelegate<{ byteLength : number }>;
+export function byteLength (min : number, max : number) : AssertDelegate<{ byteLength : number }>;
+export function byteLength (arg0 : number, arg1? : number) : AssertDelegate<{ byteLength : number }>;
+export function byteLength (arg0 : number, arg1? : number) : AssertDelegate<{ byteLength : number }> {
+    if (arg1 == undefined) {
+        return maxByteLength(arg0);
+    } else {
+        return chain(
+            minByteLength(arg0),
+            maxByteLength(arg1)
+        );
+    }
+}
+
+export function bufferLength (max : number) : AssertDelegate<Buffer>;
+export function bufferLength (min : number, max : number) : AssertDelegate<Buffer>;
+export function bufferLength (arg0 : number, arg1? : number) : AssertDelegate<Buffer>;
+export function bufferLength (arg0 : number, arg1? : number) : AssertDelegate<Buffer> {
     return and(
         buffer(),
-        maxByteLength(255) //2^8-1
+        byteLength(arg0, arg1)
     );
+}
+
+
+export function tinyBlob () : AssertDelegate<Buffer> {
+    return bufferLength(255); //2^8-1
 }
 
 export function blob () : AssertDelegate<Buffer> {
-    return and(
-        buffer(),
-        maxByteLength(65_535) //2^16-1
-    );
+    return bufferLength(65_535) //2^16-1
 }
 
 export function mediumBlob () : AssertDelegate<Buffer> {
-    return and(
-        buffer(),
-        maxByteLength(16_777_215) //2^24-1
-    );
+    return bufferLength(16_777_215) //2^24-1
 }
 
 export function longBlob () : AssertDelegate<Buffer> {
-    return and(
-        buffer(),
-        maxByteLength(4_294_967_295) //2^32-1
-    );
+    return bufferLength(4_294_967_295) //2^32-1
 }

@@ -29,24 +29,33 @@ function minByteLength(min) {
     return result;
 }
 exports.minByteLength = minByteLength;
+function byteLength(arg0, arg1) {
+    if (arg1 == undefined) {
+        return maxByteLength(arg0);
+    }
+    else {
+        return operator_1.chain(minByteLength(arg0), maxByteLength(arg1));
+    }
+}
+exports.byteLength = byteLength;
+function bufferLength(arg0, arg1) {
+    return operator_1.and(buffer(), byteLength(arg0, arg1));
+}
+exports.bufferLength = bufferLength;
 function tinyBlob() {
-    return operator_1.and(buffer(), maxByteLength(255) //2^8-1
-    );
+    return bufferLength(255); //2^8-1
 }
 exports.tinyBlob = tinyBlob;
 function blob() {
-    return operator_1.and(buffer(), maxByteLength(65535) //2^16-1
-    );
+    return bufferLength(65535); //2^16-1
 }
 exports.blob = blob;
 function mediumBlob() {
-    return operator_1.and(buffer(), maxByteLength(16777215) //2^24-1
-    );
+    return bufferLength(16777215); //2^24-1
 }
 exports.mediumBlob = mediumBlob;
 function longBlob() {
-    return operator_1.and(buffer(), maxByteLength(4294967295) //2^32-1
-    );
+    return bufferLength(4294967295); //2^32-1
 }
 exports.longBlob = longBlob;
 //# sourceMappingURL=buffer.js.map
