@@ -125,4 +125,28 @@ function toLowerCase() {
     });
 }
 exports.toLowerCase = toLowerCase;
+function subStringBlacklist(blacklist, configuration = {}) {
+    const caseInsensitive = (configuration.caseInsensitive === true);
+    if (caseInsensitive) {
+        blacklist = blacklist.map(subString => subString.toLowerCase());
+    }
+    return operator_1.chain(basic_1.string(), (name, str) => {
+        if (caseInsensitive) {
+            str = str.toLowerCase();
+        }
+        const found = [];
+        for (let subString of blacklist) {
+            if (str.indexOf(subString) >= 0) {
+                found.push(subString);
+            }
+        }
+        if (found.length == 0) {
+            return str;
+        }
+        else {
+            throw new Error(`${name} cannot contain the following: ${blacklist.join(", ")}; found ${found.join(", ")}`);
+        }
+    });
+}
+exports.subStringBlacklist = subStringBlacklist;
 //# sourceMappingURL=string.js.map

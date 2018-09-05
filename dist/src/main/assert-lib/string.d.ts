@@ -55,3 +55,9 @@ export declare function toLowerCase(): AssertDelegate<string> & {
     __accepts: string;
     __canAccept: string;
 };
+export declare function subStringBlacklist(blacklist: string[], configuration?: {
+    caseInsensitive?: boolean;
+}): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};

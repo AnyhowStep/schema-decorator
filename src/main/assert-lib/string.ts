@@ -161,3 +161,37 @@ export function toLowerCase () {
         }
     )
 }
+
+export function subStringBlacklist (blacklist : string[], configuration : {
+    //Defaults to false
+    caseInsensitive? : boolean
+} = {}) {
+    const caseInsensitive = (configuration.caseInsensitive === true);
+
+    if (caseInsensitive) {
+        blacklist = blacklist.map(
+            subString => subString.toLowerCase()
+        );
+    }
+    return chain(
+        string(),
+        (name : string, str : string) : string => {
+            if (caseInsensitive) {
+                str = str.toLowerCase();
+            }
+
+            const found : string[] = [];
+            for (let subString of blacklist) {
+                if (str.indexOf(subString) >= 0) {
+                    found.push(subString);
+                }
+            }
+
+            if (found.length == 0) {
+                return str;
+            } else {
+                throw new Error(`${name} cannot contain the following: ${blacklist.join(", ")}; found ${found.join(", ")}`);
+            }
+        }
+    );
+}
