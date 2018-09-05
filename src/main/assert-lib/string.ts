@@ -162,6 +162,38 @@ export function toLowerCase () {
     )
 }
 
+//The `char` must be a single character or an error is thrown
+export function padLeft (minLength : number, char : string) {
+    if (char.length != 1) {
+        throw new Error(`"char" must be one character; received ${char}`);
+    }
+    return chain(
+        string(),
+        (_name : string, str : string) : string => {
+            if (str.length >= minLength) {
+                return str;
+            }
+            return char.repeat(minLength - str.length) + str;
+        }
+    );
+}
+
+//The `char` must be a single character or an error is thrown
+export function padRight (minLength : number, char : string) {
+    if (char.length != 1) {
+        throw new Error(`"char" must be one character; received ${char}`);
+    }
+    return chain(
+        string(),
+        (_name : string, str : string) : string => {
+            if (str.length >= minLength) {
+                return str;
+            }
+            return str + char.repeat(minLength - str.length);
+        }
+    );
+}
+
 export function subStringBlacklist (blacklist : string[], configuration : {
     //Defaults to false
     caseInsensitive? : boolean

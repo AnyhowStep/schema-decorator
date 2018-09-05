@@ -99,4 +99,10 @@ function neq(x) {
     });
 }
 exports.neq = neq;
+function numberToString() {
+    return operator_1.chain(finiteNumber(), (_name, num) => {
+        return num.toString();
+    });
+}
+exports.numberToString = numberToString;
 //# sourceMappingURL=number.js.map

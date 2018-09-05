@@ -38,3 +38,7 @@ export declare function neq(x: number): import("../types").AssertDelegate<number
     __accepts: number;
     __canAccept: number;
 };
+export declare function numberToString(): import("../types").AssertDelegate<string> & {
+    __accepts: number;
+    __canAccept: number;
+};

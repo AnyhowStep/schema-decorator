@@ -111,3 +111,12 @@ export function neq (x : number) {
         }
     );
 }
+
+export function numberToString () {
+    return chain(
+        finiteNumber(),
+        (_name : string, num : number) : string => {
+            return num.toString();
+        }
+    );
+}

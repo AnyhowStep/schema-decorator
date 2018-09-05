@@ -125,6 +125,32 @@ function toLowerCase() {
     });
 }
 exports.toLowerCase = toLowerCase;
+//The `char` must be a single character or an error is thrown
+function padLeft(minLength, char) {
+    if (char.length != 1) {
+        throw new Error(`"char" must be one character; received ${char}`);
+    }
+    return operator_1.chain(basic_1.string(), (_name, str) => {
+        if (str.length >= minLength) {
+            return str;
+        }
+        return char.repeat(minLength - str.length) + str;
+    });
+}
+exports.padLeft = padLeft;
+//The `char` must be a single character or an error is thrown
+function padRight(minLength, char) {
+    if (char.length != 1) {
+        throw new Error(`"char" must be one character; received ${char}`);
+    }
+    return operator_1.chain(basic_1.string(), (_name, str) => {
+        if (str.length >= minLength) {
+            return str;
+        }
+        return str + char.repeat(minLength - str.length);
+    });
+}
+exports.padRight = padRight;
 function subStringBlacklist(blacklist, configuration = {}) {
     const caseInsensitive = (configuration.caseInsensitive === true);
     if (caseInsensitive) {
