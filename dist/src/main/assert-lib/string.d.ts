@@ -69,3 +69,7 @@ export declare function subStringBlacklist(blacklist: string[], configuration?: 
     __accepts: string;
     __canAccept: string;
 };
+export declare function dateString(): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};

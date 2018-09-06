@@ -4,6 +4,7 @@ import {string} from "./basic";
 import {finiteNumber, integer, naturalNumber} from "./number";
 import {cast} from "./cast";
 import {length} from "./array-like";
+import { validDate } from "./date";
 
 export function finiteNumberString () {
     return chain(
@@ -224,6 +225,16 @@ export function subStringBlacklist (blacklist : string[], configuration : {
             } else {
                 throw new Error(`${name} cannot contain the following: ${blacklist.join(", ")}; found ${found.join(", ")}`);
             }
+        }
+    );
+}
+
+export function dateString () {
+    return chain(
+        string(),
+        (name : string, str : string) => {
+            validDate()(name, new Date(str));
+            return str;
         }
     );
 }

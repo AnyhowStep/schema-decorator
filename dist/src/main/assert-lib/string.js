@@ -5,6 +5,7 @@ const basic_1 = require("./basic");
 const number_1 = require("./number");
 const cast_1 = require("./cast");
 const array_like_1 = require("./array-like");
+const date_1 = require("./date");
 function finiteNumberString() {
     return operator_1.chain(basic_1.string(), (name, str) => {
         const toCheck = parseFloat(str);
@@ -175,4 +176,11 @@ function subStringBlacklist(blacklist, configuration = {}) {
     });
 }
 exports.subStringBlacklist = subStringBlacklist;
+function dateString() {
+    return operator_1.chain(basic_1.string(), (name, str) => {
+        date_1.validDate()(name, new Date(str));
+        return str;
+    });
+}
+exports.dateString = dateString;
 //# sourceMappingURL=string.js.map
