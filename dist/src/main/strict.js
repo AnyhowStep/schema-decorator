@@ -9,4 +9,8 @@ function relaxed(f) {
     return types_1.toAssertDelegateExact(f);
 }
 exports.relaxed = relaxed;
+function eraseCanAccept(f) {
+    return types_1.toAssertDelegateExact(f);
+}
+exports.eraseCanAccept = eraseCanAccept;
 //# sourceMappingURL=strict.js.map

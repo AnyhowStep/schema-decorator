@@ -3,7 +3,8 @@ import {
     AssertDelegate,
     TypeOf,
     toAssertDelegateExact,
-    CanAcceptOf
+    CanAcceptOf,
+    AcceptsOf
 } from "./types";
 
 export type StrictAssertDelegate<F extends AnyAssertFunc> = (
@@ -35,6 +36,20 @@ export function relaxed<F extends AnyAssertFunc> (
     f : F
 ) : (
     RelaxedAssertDelegate<F>
+) {
+    return toAssertDelegateExact(f) as any;
+}
+
+export type EraseCanAcceptAssertDelegate<F extends AnyAssertFunc> = (
+    AssertDelegate<TypeOf<F>> &
+    {
+        __accepts : AcceptsOf<F>,
+    }
+)
+export function eraseCanAccept<F extends AnyAssertFunc> (
+    f : F
+) : (
+    EraseCanAcceptAssertDelegate<F>
 ) {
     return toAssertDelegateExact(f) as any;
 }
