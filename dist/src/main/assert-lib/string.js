@@ -183,4 +183,10 @@ function dateString() {
     });
 }
 exports.dateString = dateString;
+function toTrimmed() {
+    return operator_1.chain(basic_1.string(), (_name, str) => {
+        return str.trim();
+    });
+}
+exports.toTrimmed = toTrimmed;
 //# sourceMappingURL=string.js.map

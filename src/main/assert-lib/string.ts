@@ -238,3 +238,12 @@ export function dateString () {
         }
     );
 }
+
+export function toTrimmed () {
+    return chain(
+        string(),
+        (_name : string, str : string) => {
+            return str.trim();
+        }
+    );
+}

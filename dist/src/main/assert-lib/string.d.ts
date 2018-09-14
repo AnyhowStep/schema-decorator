@@ -73,3 +73,7 @@ export declare function dateString(): AssertDelegate<string> & {
     __accepts: string;
     __canAccept: string;
 };
+export declare function toTrimmed(): AssertDelegate<string> & {
+    __accepts: string;
+    __canAccept: string;
+};
