@@ -86,6 +86,24 @@ function undef() {
     };
 }
 exports.undef = undef;
+function undefToNil() {
+    return (name, mixed) => {
+        if (mixed == undefined) {
+            return null;
+        }
+        throw new Error(`Expected ${name} to be null|undefined, received ${util_1.toTypeStr(mixed)}`);
+    };
+}
+exports.undefToNil = undefToNil;
+function nilToUndef() {
+    return (name, mixed) => {
+        if (mixed == undefined) {
+            return undefined;
+        }
+        throw new Error(`Expected ${name} to be null|undefined, received ${util_1.toTypeStr(mixed)}`);
+    };
+}
+exports.nilToUndef = nilToUndef;
 //Try not to use this, if you really need to, `unknown` might be better
 function any() {
     return (_name, mixed) => {

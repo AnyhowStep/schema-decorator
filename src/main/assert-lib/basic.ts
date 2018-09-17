@@ -100,6 +100,23 @@ export function undef () : AssertDelegate<undefined> {
     };
 }
 
+export function undefToNil () : AssertDelegate<null> {
+    return (name : string, mixed : unknown) => {
+        if (mixed == undefined) {
+            return null;
+        }
+        throw new Error(`Expected ${name} to be null|undefined, received ${toTypeStr(mixed)}`);
+    };
+}
+export function nilToUndef () : AssertDelegate<undefined> {
+    return (name : string, mixed : unknown) => {
+        if (mixed == undefined) {
+            return undefined;
+        }
+        throw new Error(`Expected ${name} to be null|undefined, received ${toTypeStr(mixed)}`);
+    };
+}
+
 //Try not to use this, if you really need to, `unknown` might be better
 export function any () : AssertDelegate<any> {
     return (_name : string, mixed : unknown) : any => {

@@ -8,5 +8,7 @@ export declare function unsafeNumber(): AssertDelegate<number>;
 export declare function string(): AssertDelegate<string>;
 export declare function nil(): AssertDelegate<null>;
 export declare function undef(): AssertDelegate<undefined>;
+export declare function undefToNil(): AssertDelegate<null>;
+export declare function nilToUndef(): AssertDelegate<undefined>;
 export declare function any(): AssertDelegate<any>;
 export declare function unknown(): AssertDelegate<unknown>;
