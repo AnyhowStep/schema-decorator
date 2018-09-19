@@ -12,6 +12,7 @@ export * from "./deep-merge";
 export * from "./field";
 export * from "./is-literal-or-date";
 export * from "./LazyNested";
+export * from "./Merge";
 export * from "./restrict";
 export * from "./schema";
 export * from "./strict";
