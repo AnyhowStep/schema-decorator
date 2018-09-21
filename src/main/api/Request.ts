@@ -13,6 +13,87 @@ export type TransformBodyDelegate = (rawBody : any|undefined) => any;
 export type InjectHeaderDelegate  = (route : Route<RouteData>) => any;
 export type TransformResponseDelegate = (rawResponseData : any, rawResponse : axios.AxiosResponse<any>) => any;
 
+//304
+export interface OnUnmodifiedArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnUnmodifiedDelegate<ResultT> = (args : OnUnmodifiedArgs) => ResultT;
+
+//400
+export interface OnSyntacticErrorArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnSyntacticErrorDelegate<ResultT> = (args : OnSyntacticErrorArgs) => ResultT;
+
+//401
+export interface OnUnauthorizedArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnUnauthorizedDelegate<ResultT> = (args : OnUnauthorizedArgs) => ResultT;
+
+//403
+export interface OnForbiddenArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnForbiddenDelegate<ResultT> = (args : OnForbiddenArgs) => ResultT;
+
+//404
+export interface OnNotFoundArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnNotFoundDelegate<ResultT> = (args : OnNotFoundArgs) => ResultT;
+
+//422 - The format is correct (e.g. JSON) but the data makes no sense
+//For example, depositing a negative amount into a bank account
+export interface OnSemanticErrorArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnSemanticErrorDelegate<ResultT> = (args : OnSemanticErrorArgs) => ResultT;
+
+export type OnSyntacticOrSemanticErrorArgs = (
+    OnSyntacticErrorArgs &
+    OnSemanticErrorArgs
+);
+export type OnSyntacticOrSemanticErrorDelegate<ResultT> = (
+    (args : OnSyntacticOrSemanticErrorArgs) => ResultT
+);
+
+//429 - Too many requests have been made in a period of time
+//Wait a while before trying again.
+//Maybe see the "Retry-After" header for how long to wait;
+//the header may or may not be set, though.
+export interface OnTooManyRequestsArgs extends Error {
+    config : axios.AxiosRequestConfig;
+    code? : string;
+    request : unknown;
+    response : axios.AxiosResponse<unknown>;
+}
+export type OnTooManyRequestsDelegate<ResultT> = (args : OnTooManyRequestsArgs) => ResultT;
+
+export type UnwrappedPromiseReturnType<F extends (...args : any[]) => any> = (
+    ReturnType<F> extends Promise<infer WrappedT> ?
+    WrappedT :
+    ReturnType<F>
+);
+
 export interface RequestData {
     readonly route : Route<RouteData>;
 
@@ -20,6 +101,14 @@ export interface RequestData {
     readonly query?  : any;
     readonly body?   : any;
     readonly header? : any;
+
+    readonly onUnmodified? : OnUnmodifiedDelegate<any>;
+    readonly onSyntacticError? : OnSyntacticErrorDelegate<any>;
+    readonly onUnauthorized? : OnUnauthorizedDelegate<any>;
+    readonly onForbidden? : OnForbiddenDelegate<any>;
+    readonly onNotFound? : OnNotFoundDelegate<any>;
+    readonly onSemanticError? : OnSemanticErrorDelegate<any>;
+    readonly onTooManyRequests? : OnTooManyRequestsDelegate<any>;
 }
 export interface RequestExtraData {
     readonly api : Api;
@@ -250,6 +339,141 @@ export class Request<DataT extends RequestData> {
             }
         );
     }
+    public setOnUnmodified<D extends OnUnmodifiedDelegate<any>> (onUnmodified : D) : (
+        Request<
+            DataT &
+            {
+                readonly onUnmodified : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onUnmodified : onUnmodified,
+            },
+            this.extraData,
+        );
+    }
+    public setOnSyntacticError<D extends OnSyntacticErrorDelegate<any>> (onSyntacticError : D) : (
+        Request<
+            DataT &
+            {
+                readonly onSyntacticError : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onSyntacticError : onSyntacticError,
+            },
+            this.extraData,
+        );
+    }
+    public setOnUnauthorized<D extends OnUnauthorizedDelegate<any>> (onUnauthorized : D) : (
+        Request<
+            DataT &
+            {
+                readonly onUnauthorized : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onUnauthorized : onUnauthorized,
+            },
+            this.extraData,
+        );
+    }
+    public setOnForbidden<D extends OnForbiddenDelegate<any>> (onForbidden : D) : (
+        Request<
+            DataT &
+            {
+                readonly onForbidden : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onForbidden : onForbidden,
+            },
+            this.extraData,
+        );
+    }
+    public setOnNotFound<D extends OnNotFoundDelegate<any>> (onNotFound : D) : (
+        Request<
+            DataT &
+            {
+                readonly onNotFound : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onNotFound : onNotFound,
+            },
+            this.extraData,
+        );
+    }
+    public setOnSemanticError<D extends OnSemanticErrorDelegate<any>> (onSemanticError : D) : (
+        Request<
+            DataT &
+            {
+                readonly onSemanticError : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onSemanticError : onSemanticError,
+            },
+            this.extraData,
+        );
+    }
+    public setOnTooManyRequests<D extends OnTooManyRequestsDelegate<any>> (onTooManyRequests : D) : (
+        Request<
+            DataT &
+            {
+                readonly onTooManyRequests : D
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onTooManyRequests : onTooManyRequests,
+            },
+            this.extraData,
+        );
+    }
+
+    //Convenience
+    public setOnSyntacticOrSemanticError<
+        D extends OnSyntacticOrSemanticErrorDelegate<any>
+    > (onSyntacticOrSemanticErrorDelegate : D) : (
+        Request<
+            DataT &
+            {
+                readonly onSyntacticError : D,
+                readonly onSemanticError : D,
+            }
+        >
+    ) {
+        return new Request(
+            {
+                ...(this.data as any),
+                onSyntacticError : onSyntacticOrSemanticErrorDelegate,
+                onSemanticError : onSyntacticOrSemanticErrorDelegate,
+            },
+            this.extraData,
+        );
+    }
+
     public async send (
         this : (
             (
@@ -295,14 +519,71 @@ export class Request<DataT extends RequestData> {
         )
     ) : (
         Promise<axios.AxiosResponse<
-            "responseF" extends keyof DataT["route"]["data"] ?
-                TypeOf<Exclude<
-                    DataT["route"]["data"]["responseF"],
-                    undefined
-                >> :
-                unknown
+            (
+                "responseF" extends keyof DataT["route"]["data"] ?
+                    TypeOf<Exclude<
+                        DataT["route"]["data"]["responseF"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onUnmodified" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onUnmodified"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onSyntacticError" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onSyntacticError"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onUnauthorized" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onUnauthorized"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onForbidden" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onForbidden"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onNotFound" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onNotFound"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onSemanticError" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onSemanticError"],
+                        undefined
+                    >> :
+                    never
+            ) |
+            (
+                "onTooManyRequests" extends keyof DataT ?
+                    UnwrappedPromiseReturnType<Exclude<
+                        DataT["onTooManyRequests"],
+                        undefined
+                    >> :
+                    never
+            )
         >>
-
     ) {
         const data = this.data;
         const routeData = data.route.data;
@@ -367,27 +648,79 @@ export class Request<DataT extends RequestData> {
             data : transformedBody,
             headers : header,
         };
-        const result = await this.extraData.api.instance.request(config);
-
-        if (routeData.responseF == undefined) {
-            return result;
-        } else {
-            try {
-                const rawResponse = (extraData.onTransformResponse == undefined) ?
-                    result.data :
-                    await extraData.onTransformResponse(result.data, result);
-                const response = toAssertDelegateExact(routeData.responseF)(
-                    `${debugName} : response`,
-                    rawResponse
-                );
-                result.data = response;
-                return result;
-            } catch (err) {
-                if (err != undefined) {
-                    err.response = result;
+        return this.extraData.api.instance.request(config)
+            .then(async (result) => {
+                if (routeData.responseF == undefined) {
+                    return result;
+                } else {
+                    try {
+                        const rawResponse = (extraData.onTransformResponse == undefined) ?
+                            result.data :
+                            await extraData.onTransformResponse(result.data, result);
+                        const response = toAssertDelegateExact(routeData.responseF)(
+                            `${debugName} : response`,
+                            rawResponse
+                        );
+                        result.data = response;
+                        return result;
+                    } catch (err) {
+                        if (err != undefined) {
+                            err.response = result;
+                        }
+                        throw err;
+                    }
                 }
+            })
+            .catch((err) => {
+                if (err.config != undefined && err.response != undefined) {
+                    const response : axios.AxiosResponse<unknown> = err.response;
+                    switch (response.status) {
+                        case 304: {
+                            if (this.data.onUnmodified != undefined) {
+                                return this.data.onUnmodified(err);
+                            }
+                            break;
+                        }
+                        case 400: {
+                            if (this.data.onSyntacticError != undefined) {
+                                return this.data.onSyntacticError(err);
+                            }
+                            break;
+                        }
+                        case 401: {
+                            if (this.data.onUnauthorized != undefined) {
+                                return this.data.onUnauthorized(err);
+                            }
+                            break;
+                        }
+                        case 403: {
+                            if (this.data.onForbidden != undefined) {
+                                return this.data.onForbidden(err);
+                            }
+                            break;
+                        }
+                        case 404: {
+                            if (this.data.onNotFound != undefined) {
+                                return this.data.onNotFound(err);
+                            }
+                            break;
+                        }
+                        case 422: {
+                            if (this.data.onSemanticError != undefined) {
+                                return this.data.onSemanticError(err);
+                            }
+                            break;
+                        }
+                        case 429: {
+                            if (this.data.onTooManyRequests != undefined) {
+                                return this.data.onTooManyRequests(err);
+                            }
+                            break;
+                        }
+                    }
+                }
+
                 throw err;
-            }
-        }
+            });
     }
 }

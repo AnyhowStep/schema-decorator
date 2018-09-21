@@ -5,12 +5,71 @@ import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc } from "../types";
 export declare type TransformBodyDelegate = (rawBody: any | undefined) => any;
 export declare type InjectHeaderDelegate = (route: Route<RouteData>) => any;
 export declare type TransformResponseDelegate = (rawResponseData: any, rawResponse: axios.AxiosResponse<any>) => any;
+export interface OnUnmodifiedArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnUnmodifiedDelegate<ResultT> = (args: OnUnmodifiedArgs) => ResultT;
+export interface OnSyntacticErrorArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnSyntacticErrorDelegate<ResultT> = (args: OnSyntacticErrorArgs) => ResultT;
+export interface OnUnauthorizedArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnUnauthorizedDelegate<ResultT> = (args: OnUnauthorizedArgs) => ResultT;
+export interface OnForbiddenArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnForbiddenDelegate<ResultT> = (args: OnForbiddenArgs) => ResultT;
+export interface OnNotFoundArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnNotFoundDelegate<ResultT> = (args: OnNotFoundArgs) => ResultT;
+export interface OnSemanticErrorArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnSemanticErrorDelegate<ResultT> = (args: OnSemanticErrorArgs) => ResultT;
+export declare type OnSyntacticOrSemanticErrorArgs = (OnSyntacticErrorArgs & OnSemanticErrorArgs);
+export declare type OnSyntacticOrSemanticErrorDelegate<ResultT> = ((args: OnSyntacticOrSemanticErrorArgs) => ResultT);
+export interface OnTooManyRequestsArgs extends Error {
+    config: axios.AxiosRequestConfig;
+    code?: string;
+    request: unknown;
+    response: axios.AxiosResponse<unknown>;
+}
+export declare type OnTooManyRequestsDelegate<ResultT> = (args: OnTooManyRequestsArgs) => ResultT;
+export declare type UnwrappedPromiseReturnType<F extends (...args: any[]) => any> = (ReturnType<F> extends Promise<infer WrappedT> ? WrappedT : ReturnType<F>);
 export interface RequestData {
     readonly route: Route<RouteData>;
     readonly param?: any;
     readonly query?: any;
     readonly body?: any;
     readonly header?: any;
+    readonly onUnmodified?: OnUnmodifiedDelegate<any>;
+    readonly onSyntacticError?: OnSyntacticErrorDelegate<any>;
+    readonly onUnauthorized?: OnUnauthorizedDelegate<any>;
+    readonly onForbidden?: OnForbiddenDelegate<any>;
+    readonly onNotFound?: OnNotFoundDelegate<any>;
+    readonly onSemanticError?: OnSemanticErrorDelegate<any>;
+    readonly onTooManyRequests?: OnTooManyRequestsDelegate<any>;
 }
 export interface RequestExtraData {
     readonly api: Api;
@@ -64,5 +123,30 @@ export declare class Request<DataT extends RequestData> {
     setOnTransformBody(onTransformBody: TransformBodyDelegate | undefined): (Request<DataT>);
     setOnInjectHeader(onInjectHeader: InjectHeaderDelegate | undefined): (Request<DataT>);
     setOnTransformResponse(onTransformResponse: TransformResponseDelegate | undefined): (Request<DataT>);
-    send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<axios.AxiosResponse<"responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown>>);
+    setOnUnmodified<D extends OnUnmodifiedDelegate<any>>(onUnmodified: D): (Request<DataT & {
+        readonly onUnmodified: D;
+    }>);
+    setOnSyntacticError<D extends OnSyntacticErrorDelegate<any>>(onSyntacticError: D): (Request<DataT & {
+        readonly onSyntacticError: D;
+    }>);
+    setOnUnauthorized<D extends OnUnauthorizedDelegate<any>>(onUnauthorized: D): (Request<DataT & {
+        readonly onUnauthorized: D;
+    }>);
+    setOnForbidden<D extends OnForbiddenDelegate<any>>(onForbidden: D): (Request<DataT & {
+        readonly onForbidden: D;
+    }>);
+    setOnNotFound<D extends OnNotFoundDelegate<any>>(onNotFound: D): (Request<DataT & {
+        readonly onNotFound: D;
+    }>);
+    setOnSemanticError<D extends OnSemanticErrorDelegate<any>>(onSemanticError: D): (Request<DataT & {
+        readonly onSemanticError: D;
+    }>);
+    setOnTooManyRequests<D extends OnTooManyRequestsDelegate<any>>(onTooManyRequests: D): (Request<DataT & {
+        readonly onTooManyRequests: D;
+    }>);
+    setOnSyntacticOrSemanticError<D extends OnSyntacticOrSemanticErrorDelegate<any>>(onSyntacticOrSemanticErrorDelegate: D): (Request<DataT & {
+        readonly onSyntacticError: D;
+        readonly onSemanticError: D;
+    }>);
+    send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<axios.AxiosResponse<("responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : never) | ("onUnmodified" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onUnmodified"], undefined>> : never) | ("onSyntacticError" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onSyntacticError"], undefined>> : never) | ("onUnauthorized" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onUnauthorized"], undefined>> : never) | ("onForbidden" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onForbidden"], undefined>> : never) | ("onNotFound" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onNotFound"], undefined>> : never) | ("onSemanticError" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onSemanticError"], undefined>> : never) | ("onTooManyRequests" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onTooManyRequests"], undefined>> : never)>>);
 }

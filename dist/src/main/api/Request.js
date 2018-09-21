@@ -52,6 +52,31 @@ class Request {
     setOnTransformResponse(onTransformResponse) {
         return new Request(this.data, Object.assign({}, this.extraData, { onTransformResponse: onTransformResponse }));
     }
+    setOnUnmodified(onUnmodified) {
+        return new Request(Object.assign({}, this.data, { onUnmodified: onUnmodified }), this.extraData);
+    }
+    setOnSyntacticError(onSyntacticError) {
+        return new Request(Object.assign({}, this.data, { onSyntacticError: onSyntacticError }), this.extraData);
+    }
+    setOnUnauthorized(onUnauthorized) {
+        return new Request(Object.assign({}, this.data, { onUnauthorized: onUnauthorized }), this.extraData);
+    }
+    setOnForbidden(onForbidden) {
+        return new Request(Object.assign({}, this.data, { onForbidden: onForbidden }), this.extraData);
+    }
+    setOnNotFound(onNotFound) {
+        return new Request(Object.assign({}, this.data, { onNotFound: onNotFound }), this.extraData);
+    }
+    setOnSemanticError(onSemanticError) {
+        return new Request(Object.assign({}, this.data, { onSemanticError: onSemanticError }), this.extraData);
+    }
+    setOnTooManyRequests(onTooManyRequests) {
+        return new Request(Object.assign({}, this.data, { onTooManyRequests: onTooManyRequests }), this.extraData);
+    }
+    //Convenience
+    setOnSyntacticOrSemanticError(onSyntacticOrSemanticErrorDelegate) {
+        return new Request(Object.assign({}, this.data, { onSyntacticError: onSyntacticOrSemanticErrorDelegate, onSemanticError: onSyntacticOrSemanticErrorDelegate }), this.extraData);
+    }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
             const data = this.data;
@@ -88,26 +113,78 @@ class Request {
                 data: transformedBody,
                 headers: header,
             };
-            const result = yield this.extraData.api.instance.request(config);
-            if (routeData.responseF == undefined) {
-                return result;
-            }
-            else {
-                try {
-                    const rawResponse = (extraData.onTransformResponse == undefined) ?
-                        result.data :
-                        yield extraData.onTransformResponse(result.data, result);
-                    const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
-                    result.data = response;
+            return this.extraData.api.instance.request(config)
+                .then((result) => __awaiter(this, void 0, void 0, function* () {
+                if (routeData.responseF == undefined) {
                     return result;
                 }
-                catch (err) {
-                    if (err != undefined) {
-                        err.response = result;
+                else {
+                    try {
+                        const rawResponse = (extraData.onTransformResponse == undefined) ?
+                            result.data :
+                            yield extraData.onTransformResponse(result.data, result);
+                        const response = types_1.toAssertDelegateExact(routeData.responseF)(`${debugName} : response`, rawResponse);
+                        result.data = response;
+                        return result;
                     }
-                    throw err;
+                    catch (err) {
+                        if (err != undefined) {
+                            err.response = result;
+                        }
+                        throw err;
+                    }
                 }
-            }
+            }))
+                .catch((err) => {
+                if (err.config != undefined && err.response != undefined) {
+                    const response = err.response;
+                    switch (response.status) {
+                        case 304: {
+                            if (this.data.onUnmodified != undefined) {
+                                return this.data.onUnmodified(err);
+                            }
+                            break;
+                        }
+                        case 400: {
+                            if (this.data.onSyntacticError != undefined) {
+                                return this.data.onSyntacticError(err);
+                            }
+                            break;
+                        }
+                        case 401: {
+                            if (this.data.onUnauthorized != undefined) {
+                                return this.data.onUnauthorized(err);
+                            }
+                            break;
+                        }
+                        case 403: {
+                            if (this.data.onForbidden != undefined) {
+                                return this.data.onForbidden(err);
+                            }
+                            break;
+                        }
+                        case 404: {
+                            if (this.data.onNotFound != undefined) {
+                                return this.data.onNotFound(err);
+                            }
+                            break;
+                        }
+                        case 422: {
+                            if (this.data.onSemanticError != undefined) {
+                                return this.data.onSemanticError(err);
+                            }
+                            break;
+                        }
+                        case 429: {
+                            if (this.data.onTooManyRequests != undefined) {
+                                return this.data.onTooManyRequests(err);
+                            }
+                            break;
+                        }
+                    }
+                }
+                throw err;
+            });
         });
     }
 }
