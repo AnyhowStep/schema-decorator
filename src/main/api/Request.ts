@@ -94,6 +94,48 @@ export type UnwrappedPromiseReturnType<F extends (...args : any[]) => any> = (
     ReturnType<F>
 );
 
+export enum ResponseType {
+    Normal, //If no response delegates were called
+    Unmodified,
+    SyntacticError,
+    Unauthorized,
+    Forbidden,
+    NotFound,
+    SemanticError,
+    TooManyRequests,
+}
+export interface Response<TypeT extends ResponseType, DataT> extends axios.AxiosResponse<DataT> {
+    type : TypeT;
+}
+
+export type OnStatusHandlerNameToResponseType = {
+    onUnmodified      : ResponseType.Unmodified,
+    onSyntacticError  : ResponseType.SyntacticError,
+    onUnauthorized    : ResponseType.Unauthorized,
+    onForbidden       : ResponseType.Forbidden,
+    onNotFound        : ResponseType.NotFound,
+    onSemanticError   : ResponseType.SemanticError,
+    onTooManyRequests : ResponseType.TooManyRequests,
+};
+
+export type OnStatusHandlerResponse<
+    DataT extends RequestData
+> = (
+    {
+        [k in keyof OnStatusHandlerNameToResponseType] : (
+            k extends keyof DataT ?
+            Response<
+                OnStatusHandlerNameToResponseType[k],
+                UnwrappedPromiseReturnType<Exclude<
+                    DataT[k],
+                    undefined
+                >>
+            > :
+            never
+        )
+    }[keyof OnStatusHandlerNameToResponseType]
+);
+
 export interface RequestData {
     readonly route : Route<RouteData>;
 
@@ -518,72 +560,18 @@ export class Request<DataT extends RequestData> {
                 never
         )
     ) : (
-        Promise<axios.AxiosResponse<
-            (
+        Promise<
+            Response<
+                ResponseType.Normal,
                 "responseF" extends keyof DataT["route"]["data"] ?
                     TypeOf<Exclude<
                         DataT["route"]["data"]["responseF"],
                         undefined
                     >> :
-                    never
-            ) |
-            (
-                "onUnmodified" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onUnmodified"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onSyntacticError" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onSyntacticError"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onUnauthorized" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onUnauthorized"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onForbidden" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onForbidden"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onNotFound" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onNotFound"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onSemanticError" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onSemanticError"],
-                        undefined
-                    >> :
-                    never
-            ) |
-            (
-                "onTooManyRequests" extends keyof DataT ?
-                    UnwrappedPromiseReturnType<Exclude<
-                        DataT["onTooManyRequests"],
-                        undefined
-                    >> :
-                    never
-            )
-        >>
+                    unknown
+            > |
+            OnStatusHandlerResponse<DataT>
+        >
     ) {
         const data = this.data;
         const routeData = data.route.data;
@@ -650,8 +638,9 @@ export class Request<DataT extends RequestData> {
         };
         return this.extraData.api.instance.request(config)
             .then(async (result) => {
+                (result as any).type = ResponseType.Normal;
                 if (routeData.responseF == undefined) {
-                    return result;
+                    return result as any;
                 } else {
                     try {
                         const rawResponse = (extraData.onTransformResponse == undefined) ?
@@ -671,49 +660,64 @@ export class Request<DataT extends RequestData> {
                     }
                 }
             })
-            .catch((err) => {
+            .catch(async (err) => {
                 if (err.config != undefined && err.response != undefined) {
-                    const response : axios.AxiosResponse<unknown> = err.response;
+                    const response : axios.AxiosResponse<any> = err.response;
+
                     switch (response.status) {
                         case 304: {
                             if (this.data.onUnmodified != undefined) {
-                                return this.data.onUnmodified(err);
+                                (response as any).type = ResponseType.Unmodified;
+                                response.data = await this.data.onUnmodified(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 400: {
                             if (this.data.onSyntacticError != undefined) {
-                                return this.data.onSyntacticError(err);
+                                (response as any).type = ResponseType.SyntacticError;
+                                response.data = await this.data.onSyntacticError(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 401: {
                             if (this.data.onUnauthorized != undefined) {
-                                return this.data.onUnauthorized(err);
+                                (response as any).type = ResponseType.Unauthorized;
+                                response.data = await this.data.onUnauthorized(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 403: {
                             if (this.data.onForbidden != undefined) {
-                                return this.data.onForbidden(err);
+                                (response as any).type = ResponseType.Forbidden;
+                                response.data = await this.data.onForbidden(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 404: {
                             if (this.data.onNotFound != undefined) {
-                                return this.data.onNotFound(err);
+                                (response as any).type = ResponseType.NotFound;
+                                response.data = await this.data.onNotFound(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 422: {
                             if (this.data.onSemanticError != undefined) {
-                                return this.data.onSemanticError(err);
+                                (response as any).type = ResponseType.SemanticError;
+                                response.data = await this.data.onSemanticError(err);
+                                return response as any;
                             }
                             break;
                         }
                         case 429: {
                             if (this.data.onTooManyRequests != undefined) {
-                                return this.data.onTooManyRequests(err);
+                                (response as any).type = ResponseType.TooManyRequests;
+                                response.data = await this.data.onTooManyRequests(err);
+                                return response as any;
                             }
                             break;
                         }

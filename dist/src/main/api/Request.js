@@ -9,6 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
+var ResponseType;
+(function (ResponseType) {
+    ResponseType[ResponseType["Normal"] = 0] = "Normal";
+    ResponseType[ResponseType["Unmodified"] = 1] = "Unmodified";
+    ResponseType[ResponseType["SyntacticError"] = 2] = "SyntacticError";
+    ResponseType[ResponseType["Unauthorized"] = 3] = "Unauthorized";
+    ResponseType[ResponseType["Forbidden"] = 4] = "Forbidden";
+    ResponseType[ResponseType["NotFound"] = 5] = "NotFound";
+    ResponseType[ResponseType["SemanticError"] = 6] = "SemanticError";
+    ResponseType[ResponseType["TooManyRequests"] = 7] = "TooManyRequests";
+})(ResponseType = exports.ResponseType || (exports.ResponseType = {}));
 class Request {
     constructor(data, extraData) {
         this.data = data;
@@ -115,6 +126,7 @@ class Request {
             };
             return this.extraData.api.instance.request(config)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
+                result.type = ResponseType.Normal;
                 if (routeData.responseF == undefined) {
                     return result;
                 }
@@ -135,56 +147,70 @@ class Request {
                     }
                 }
             }))
-                .catch((err) => {
+                .catch((err) => __awaiter(this, void 0, void 0, function* () {
                 if (err.config != undefined && err.response != undefined) {
                     const response = err.response;
                     switch (response.status) {
                         case 304: {
                             if (this.data.onUnmodified != undefined) {
-                                return this.data.onUnmodified(err);
+                                response.type = ResponseType.Unmodified;
+                                response.data = yield this.data.onUnmodified(err);
+                                return response;
                             }
                             break;
                         }
                         case 400: {
                             if (this.data.onSyntacticError != undefined) {
-                                return this.data.onSyntacticError(err);
+                                response.type = ResponseType.SyntacticError;
+                                response.data = yield this.data.onSyntacticError(err);
+                                return response;
                             }
                             break;
                         }
                         case 401: {
                             if (this.data.onUnauthorized != undefined) {
-                                return this.data.onUnauthorized(err);
+                                response.type = ResponseType.Unauthorized;
+                                response.data = yield this.data.onUnauthorized(err);
+                                return response;
                             }
                             break;
                         }
                         case 403: {
                             if (this.data.onForbidden != undefined) {
-                                return this.data.onForbidden(err);
+                                response.type = ResponseType.Forbidden;
+                                response.data = yield this.data.onForbidden(err);
+                                return response;
                             }
                             break;
                         }
                         case 404: {
                             if (this.data.onNotFound != undefined) {
-                                return this.data.onNotFound(err);
+                                response.type = ResponseType.NotFound;
+                                response.data = yield this.data.onNotFound(err);
+                                return response;
                             }
                             break;
                         }
                         case 422: {
                             if (this.data.onSemanticError != undefined) {
-                                return this.data.onSemanticError(err);
+                                response.type = ResponseType.SemanticError;
+                                response.data = yield this.data.onSemanticError(err);
+                                return response;
                             }
                             break;
                         }
                         case 429: {
                             if (this.data.onTooManyRequests != undefined) {
-                                return this.data.onTooManyRequests(err);
+                                response.type = ResponseType.TooManyRequests;
+                                response.data = yield this.data.onTooManyRequests(err);
+                                return response;
                             }
                             break;
                         }
                     }
                 }
                 throw err;
-            });
+            }));
         });
     }
 }

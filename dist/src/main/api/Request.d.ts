@@ -57,6 +57,31 @@ export interface OnTooManyRequestsArgs extends Error {
 }
 export declare type OnTooManyRequestsDelegate<ResultT> = (args: OnTooManyRequestsArgs) => ResultT;
 export declare type UnwrappedPromiseReturnType<F extends (...args: any[]) => any> = (ReturnType<F> extends Promise<infer WrappedT> ? WrappedT : ReturnType<F>);
+export declare enum ResponseType {
+    Normal = 0,
+    Unmodified = 1,
+    SyntacticError = 2,
+    Unauthorized = 3,
+    Forbidden = 4,
+    NotFound = 5,
+    SemanticError = 6,
+    TooManyRequests = 7
+}
+export interface Response<TypeT extends ResponseType, DataT> extends axios.AxiosResponse<DataT> {
+    type: TypeT;
+}
+export declare type OnStatusHandlerNameToResponseType = {
+    onUnmodified: ResponseType.Unmodified;
+    onSyntacticError: ResponseType.SyntacticError;
+    onUnauthorized: ResponseType.Unauthorized;
+    onForbidden: ResponseType.Forbidden;
+    onNotFound: ResponseType.NotFound;
+    onSemanticError: ResponseType.SemanticError;
+    onTooManyRequests: ResponseType.TooManyRequests;
+};
+export declare type OnStatusHandlerResponse<DataT extends RequestData> = ({
+    [k in keyof OnStatusHandlerNameToResponseType]: (k extends keyof DataT ? Response<OnStatusHandlerNameToResponseType[k], UnwrappedPromiseReturnType<Exclude<DataT[k], undefined>>> : never);
+}[keyof OnStatusHandlerNameToResponseType]);
 export interface RequestData {
     readonly route: Route<RouteData>;
     readonly param?: any;
@@ -148,5 +173,5 @@ export declare class Request<DataT extends RequestData> {
         readonly onSyntacticError: D;
         readonly onSemanticError: D;
     }>);
-    send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<axios.AxiosResponse<("responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : never) | ("onUnmodified" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onUnmodified"], undefined>> : never) | ("onSyntacticError" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onSyntacticError"], undefined>> : never) | ("onUnauthorized" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onUnauthorized"], undefined>> : never) | ("onForbidden" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onForbidden"], undefined>> : never) | ("onNotFound" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onNotFound"], undefined>> : never) | ("onSemanticError" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onSemanticError"], undefined>> : never) | ("onTooManyRequests" extends keyof DataT ? UnwrappedPromiseReturnType<Exclude<DataT["onTooManyRequests"], undefined>> : never)>>);
+    send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<Response<ResponseType.Normal, "responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<DataT>>);
 }
