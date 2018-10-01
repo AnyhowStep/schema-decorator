@@ -38,11 +38,16 @@ export function cast<
             //If this works, we are already the desired data type
             return assertDelegate(name, mixed);
         } catch (err) {
-            //Failed. We need to cast.
-            const from = canCastDelegate(name, mixed);
-            const to = castDelegate(from);
-            //One final check
-            return assertDelegate(name, to);
+            try {
+                //Failed. We need to cast.
+                const from = canCastDelegate(name, mixed);
+                const to = castDelegate(from);
+                //One final check
+                return assertDelegate(name, to);
+            } catch (err2) {
+                //Ugh, disgusting; nested try catch
+                throw new Error(`(${err.message}) or (${err2.message})`);
+            }
         }
     }) as any;
 }
@@ -66,8 +71,13 @@ export function castFirst<
             //Check that the result is the desired type
             return assertDelegate(name, to);
         } catch (err) {
-            //We failed to cast, check if the original value is the desired type
-            return assertDelegate(name, mixed);
+            try {
+                //We failed to cast, check if the original value is the desired type
+                return assertDelegate(name, mixed);
+            } catch (err2) {
+                //Ugh, disgusting; nested try catch
+                throw new Error(`(${err.message}) or (${err2.message})`);
+            }
         }
     }) as any;
 }
