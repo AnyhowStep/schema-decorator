@@ -1,10 +1,10 @@
 import {AssertDelegate} from "../types";
 import {chain, and} from "./operator";
-import {string} from "./basic";
+import {string, literal} from "./basic";
 import {finiteNumber, integer, naturalNumber} from "./number";
 import {cast} from "./cast";
 import {length} from "./array-like";
-import { validDate } from "./date";
+import {validDate} from "./date";
 
 export function finiteNumberString () {
     return chain(
@@ -244,6 +244,15 @@ export function toTrimmed () {
         string(),
         (_name : string, str : string) => {
             return str.trim();
+        }
+    );
+}
+
+export function emptyStringToUndef () {
+    return chain(
+        literal(""),
+        (_name : string, _str : "") => {
+            return undefined;
         }
     );
 }

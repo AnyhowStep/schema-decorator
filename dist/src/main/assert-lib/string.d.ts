@@ -77,3 +77,7 @@ export declare function toTrimmed(): AssertDelegate<string> & {
     __accepts: string;
     __canAccept: string;
 };
+export declare function emptyStringToUndef(): AssertDelegate<undefined> & {
+    __accepts: "";
+    __canAccept: "";
+};

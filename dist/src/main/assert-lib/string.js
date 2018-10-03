@@ -189,4 +189,10 @@ function toTrimmed() {
     });
 }
 exports.toTrimmed = toTrimmed;
+function emptyStringToUndef() {
+    return operator_1.chain(basic_1.literal(""), (_name, _str) => {
+        return undefined;
+    });
+}
+exports.emptyStringToUndef = emptyStringToUndef;
 //# sourceMappingURL=string.js.map
