@@ -57,7 +57,7 @@ export type RenameAssertDelegate<
         )
     }
 );
-export function rename<
+function renameTo<
     FromFieldNameT extends string,
     ToFieldNameT extends string,
     AssertFuncT extends AnyAssertFunc
@@ -93,7 +93,39 @@ export function rename<
     };
     return result as any;
 }
+function renameToField<
+    FromFieldNameT extends string,
+    ToFieldT extends Field<string, any>
+> (fromKey : FromFieldNameT, toField : ToFieldT) : (
+    RenameAssertDelegate<FromFieldNameT, ToFieldT["name"], TypeOf<ToFieldT>>
+) {
+    return renameTo(fromKey, toField.name, toField.assertDelegate) as any;
+}
 
+export function rename<
+    FromFieldNameT extends string,
+    ToFieldNameT extends string,
+    AssertFuncT extends AnyAssertFunc
+> (fromKey : FromFieldNameT, toKey : ToFieldNameT, assert : AssertFuncT) : (
+    RenameAssertDelegate<FromFieldNameT, ToFieldNameT, AssertFuncT>
+);
+export function rename<
+    FromFieldNameT extends string,
+    ToFieldT extends Field<string, any>
+> (fromKey : FromFieldNameT, toField : ToFieldT) : (
+    RenameAssertDelegate<FromFieldNameT, ToFieldT["name"], TypeOf<ToFieldT>>
+);
+export function rename (
+    fromKey : string,
+    arg0 : any,
+    arg1? : any
+) {
+    if (arg1 == undefined) {
+        return renameToField(fromKey, arg0);
+    } else {
+        return renameTo(fromKey, arg0, arg1);
+    }
+}
 /*
     Use with `and()` or `intersect()`
 

@@ -5,7 +5,7 @@ const cast_1 = require("./cast");
 const util_1 = require("../util");
 const missing_value_1 = require("./missing-value");
 types_1.Field;
-function rename(fromKey, toKey, assert) {
+function renameTo(fromKey, toKey, assert) {
     const d = types_1.toAssertDelegateExact(assert);
     const result = (name, mixed) => {
         if (mixed.hasOwnProperty(toKey)) {
@@ -25,6 +25,17 @@ function rename(fromKey, toKey, assert) {
         return rename(fromKey, toKey, missing_value_1.optional(d));
     };
     return result;
+}
+function renameToField(fromKey, toField) {
+    return renameTo(fromKey, toField.name, toField.assertDelegate);
+}
+function rename(fromKey, arg0, arg1) {
+    if (arg1 == undefined) {
+        return renameToField(fromKey, arg0);
+    }
+    else {
+        return renameTo(fromKey, arg0, arg1);
+    }
 }
 exports.rename = rename;
 /*

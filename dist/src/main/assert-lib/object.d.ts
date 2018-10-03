@@ -1,4 +1,4 @@
-import { AnyAssertFunc, TypeOf, AssertDelegate, AcceptsOf, CanAcceptOf } from "../types";
+import { AnyAssertFunc, TypeOf, Field, AssertDelegate, AcceptsOf, CanAcceptOf } from "../types";
 import { CastDelegate } from "./cast";
 export declare type RenameAssertDelegate<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc> = (AssertDelegate<{
     [field in ToFieldNameT]: TypeOf<AssertFuncT>;
@@ -26,6 +26,7 @@ export declare type RenameAssertDelegate<FromFieldNameT extends string, ToFieldN
     });
 });
 export declare function rename<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (RenameAssertDelegate<FromFieldNameT, ToFieldNameT, AssertFuncT>);
+export declare function rename<FromFieldNameT extends string, ToFieldT extends Field<string, any>>(fromKey: FromFieldNameT, toField: ToFieldT): (RenameAssertDelegate<FromFieldNameT, ToFieldT["name"], TypeOf<ToFieldT>>);
 export declare function deriveFrom<FromFieldNameT extends string, ToFieldNameT extends string, FromF extends AnyAssertFunc, ToF extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, canCast: FromF, castDelegate: CastDelegate<TypeOf<FromF>, TypeOf<ToF>>, assert: ToF): (AssertDelegate<{
     [field in FromFieldNameT | ToFieldNameT]: (field extends FromFieldNameT ? TypeOf<FromF> : field extends ToFieldNameT ? TypeOf<ToF> : never);
 }> & {
