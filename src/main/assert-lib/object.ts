@@ -9,7 +9,7 @@ import {
 } from "../types";
 import {CastDelegate, cast} from "./cast";
 import {toTypeStr, allowsInstanceOf, isInstanceOf} from "../util";
-import { optional } from "./missing-value";
+import {optional, notOptional} from "./missing-value";
 
 Field;
 
@@ -55,6 +55,22 @@ export type RenameAssertDelegate<
                 )
             }
         )
+    } &
+    {
+        notOptional : () => (
+            AssertDelegate<{
+                [field in ToFieldNameT]? : Exclude<TypeOf<AssertFuncT>, undefined>
+            }> &
+            {
+                __accepts : (
+                    { [to in ToFieldNameT]?     : Exclude<AcceptsOf<AssertFuncT>, undefined> }
+                ),
+                __canAccept : (
+                    { [from in FromFieldNameT]? : Exclude<CanAcceptOf<AssertFuncT>, undefined> } |
+                    { [to in ToFieldNameT]?     : Exclude<CanAcceptOf<AssertFuncT>, undefined> }
+                )
+            }
+        )
     }
 );
 function renameTo<
@@ -90,6 +106,9 @@ function renameTo<
     };
     (result as any).optional = () => {
         return rename(fromKey, toKey, optional(d));
+    };
+    (result as any).notOptional = () => {
+        return rename(fromKey, toKey, notOptional(d));
     };
     return result as any;
 }

@@ -24,6 +24,19 @@ export declare type RenameAssertDelegate<FromFieldNameT extends string, ToFieldN
             [to in ToFieldNameT]?: CanAcceptOf<AssertFuncT> | undefined;
         });
     });
+} & {
+    notOptional: () => (AssertDelegate<{
+        [field in ToFieldNameT]?: Exclude<TypeOf<AssertFuncT>, undefined>;
+    }> & {
+        __accepts: ({
+            [to in ToFieldNameT]?: Exclude<AcceptsOf<AssertFuncT>, undefined>;
+        });
+        __canAccept: ({
+            [from in FromFieldNameT]?: Exclude<CanAcceptOf<AssertFuncT>, undefined>;
+        } | {
+            [to in ToFieldNameT]?: Exclude<CanAcceptOf<AssertFuncT>, undefined>;
+        });
+    });
 });
 export declare function rename<FromFieldNameT extends string, ToFieldNameT extends string, AssertFuncT extends AnyAssertFunc>(fromKey: FromFieldNameT, toKey: ToFieldNameT, assert: AssertFuncT): (RenameAssertDelegate<FromFieldNameT, ToFieldNameT, AssertFuncT>);
 export declare function rename<FromFieldNameT extends string, ToFieldT extends Field<string, any>>(fromKey: FromFieldNameT, toField: ToFieldT): (RenameAssertDelegate<FromFieldNameT, ToFieldT["name"], TypeOf<ToFieldT>>);

@@ -135,4 +135,4 @@ export declare function nestedExact<T>(ctor: Constructor<T>): (AssertDelegate<T>
 export declare function isCtor<T>(assertFunc: AssertFunc<T>): assertFunc is Constructor<T>;
 export declare function toAssertDelegate<F extends AnyAssertFunc>(assertFunc: F): ToAssertDelegate<F>;
 export declare function toAssertDelegateExact<F extends AnyAssertFunc>(assertFunc: F): ToAssertDelegate<F>;
-export declare type Chainable<FromT extends any, ToF extends AnyAssertFunc | ChainedAssertDelegate<any>> = (FromT extends AnyAssertFunc | ChainedAssertDelegate<any> ? (TypeOf<FromT> extends CanAcceptOf<ToF> ? true : false) : FromT extends CanAcceptOf<ToF> ? true : false);
+export declare type Chainable<FromT extends any, ToF extends AnyAssertFunc | ChainedAssertDelegate<any>> = (FromT extends AnyAssertFunc | ChainedAssertDelegate<any> ? (TypeOf<FromT> extends CanAcceptOf<ToF> ? true : (CanAcceptOf<ToF> extends TypeOf<FromT> ? true : false)) : FromT extends CanAcceptOf<ToF> ? true : (CanAcceptOf<ToF> extends FromT ? true : false));

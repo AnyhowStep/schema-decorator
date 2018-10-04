@@ -24,6 +24,9 @@ function renameTo(fromKey, toKey, assert) {
     result.optional = () => {
         return rename(fromKey, toKey, missing_value_1.optional(d));
     };
+    result.notOptional = () => {
+        return rename(fromKey, toKey, missing_value_1.notOptional(d));
+    };
     return result;
 }
 function renameToField(fromKey, toField) {
