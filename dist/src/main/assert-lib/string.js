@@ -201,4 +201,18 @@ function emptyStringToNull() {
     });
 }
 exports.emptyStringToNull = emptyStringToNull;
+//An empty string, or a string of only whitespace
+function whitespaceStringToUndef() {
+    return operator_1.chain(match(/^\s*$/, name => `Expected ${name} to be a blank string`), (_name, _str) => {
+        return undefined;
+    });
+}
+exports.whitespaceStringToUndef = whitespaceStringToUndef;
+//An empty string, or a string of only whitespace
+function whitespaceStringToNull() {
+    return operator_1.chain(match(/^\s*$/, name => `Expected ${name} to be a blank string`), (_name, _str) => {
+        return null;
+    });
+}
+exports.whitespaceStringToNull = whitespaceStringToNull;
 //# sourceMappingURL=string.js.map

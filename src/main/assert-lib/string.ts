@@ -264,3 +264,21 @@ export function emptyStringToNull () {
         }
     );
 }
+//An empty string, or a string of only whitespace
+export function whitespaceStringToUndef () {
+    return chain(
+        match(/^\s*$/, name => `Expected ${name} to be a blank string`),
+        (_name : string, _str : string) => {
+            return undefined;
+        }
+    )
+}
+//An empty string, or a string of only whitespace
+export function whitespaceStringToNull () {
+    return chain(
+        match(/^\s*$/, name => `Expected ${name} to be a blank string`),
+        (_name : string, _str : string) => {
+            return null;
+        }
+    )
+}

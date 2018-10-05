@@ -85,3 +85,11 @@ export declare function emptyStringToNull(): AssertDelegate<null> & {
     __accepts: "";
     __canAccept: "";
 };
+export declare function whitespaceStringToUndef(): AssertDelegate<undefined> & {
+    __accepts: string;
+    __canAccept: string;
+};
+export declare function whitespaceStringToNull(): AssertDelegate<null> & {
+    __accepts: string;
+    __canAccept: string;
+};
