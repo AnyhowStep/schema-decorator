@@ -195,4 +195,10 @@ function emptyStringToUndef() {
     });
 }
 exports.emptyStringToUndef = emptyStringToUndef;
+function emptyStringToNull() {
+    return operator_1.chain(basic_1.literal(""), (_name, _str) => {
+        return null;
+    });
+}
+exports.emptyStringToNull = emptyStringToNull;
 //# sourceMappingURL=string.js.map

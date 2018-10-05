@@ -81,3 +81,7 @@ export declare function emptyStringToUndef(): AssertDelegate<undefined> & {
     __accepts: "";
     __canAccept: "";
 };
+export declare function emptyStringToNull(): AssertDelegate<null> & {
+    __accepts: "";
+    __canAccept: "";
+};

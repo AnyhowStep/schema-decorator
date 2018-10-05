@@ -256,3 +256,11 @@ export function emptyStringToUndef () {
         }
     );
 }
+export function emptyStringToNull () {
+    return chain(
+        literal(""),
+        (_name : string, _str : "") => {
+            return null;
+        }
+    );
+}
