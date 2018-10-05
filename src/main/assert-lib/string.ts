@@ -267,7 +267,7 @@ export function emptyStringToNull () {
 //An empty string, or a string of only whitespace
 export function whitespaceStringToUndef () {
     return chain(
-        match(/^\s*$/, name => `Expected ${name} to be a blank string`),
+        match(/^\s*$/, name => `Expected ${name} to be a whitespace string`),
         (_name : string, _str : string) => {
             return undefined;
         }
@@ -276,7 +276,7 @@ export function whitespaceStringToUndef () {
 //An empty string, or a string of only whitespace
 export function whitespaceStringToNull () {
     return chain(
-        match(/^\s*$/, name => `Expected ${name} to be a blank string`),
+        match(/^\s*$/, name => `Expected ${name} to be a whitespace string`),
         (_name : string, _str : string) => {
             return null;
         }
