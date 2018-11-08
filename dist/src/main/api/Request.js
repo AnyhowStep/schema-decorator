@@ -60,6 +60,17 @@ class Request {
     setOnInjectHeader(onInjectHeader) {
         return new Request(this.data, Object.assign({}, this.extraData, { onInjectHeader: onInjectHeader }));
     }
+    chainOnInjectHeader(onInjectHeader) {
+        if (this.extraData.onInjectHeader == undefined) {
+            return this.setOnInjectHeader(onInjectHeader);
+        }
+        const previousOnInjectHeader = this.extraData.onInjectHeader;
+        return new Request(this.data, Object.assign({}, this.extraData, { onInjectHeader: (route) => {
+                const previousHeader = previousOnInjectHeader(route);
+                const header = onInjectHeader(route);
+                return Object.assign({}, previousHeader, header);
+            } }));
+    }
     setOnTransformResponse(onTransformResponse) {
         return new Request(this.data, Object.assign({}, this.extraData, { onTransformResponse: onTransformResponse }));
     }

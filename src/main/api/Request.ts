@@ -10,6 +10,7 @@ import {
 } from "../types";
 
 export type TransformBodyDelegate = (rawBody : any|undefined) => any;
+export type TypedTransformBodyDelegate<BodyT> = (rawBody : BodyT) => any;
 export type InjectHeaderDelegate  = (route : Route<RouteData>) => any;
 export type TransformResponseDelegate = (rawResponseData : any, rawResponse : axios.AxiosResponse<any>) => any;
 
@@ -348,7 +349,17 @@ export class Request<DataT extends RequestData> {
             this.extraData
         );
     }
-    public setOnTransformBody (onTransformBody : TransformBodyDelegate|undefined) : (
+    public setOnTransformBody (
+        onTransformBody : TypedTransformBodyDelegate<
+            "bodyF" extends keyof DataT["route"]["data"] ?
+                (
+                    undefined extends DataT["route"]["data"]["bodyF"] ?
+                    unknown :
+                    TypeOf<Exclude<DataT["route"]["data"]["bodyF"], undefined>>
+                ) :
+                unknown
+        >|undefined
+    ) : (
         Request<DataT>
     ) {
         return new Request(
@@ -367,6 +378,28 @@ export class Request<DataT extends RequestData> {
             {
                 ...(this.extraData as any),
                 onInjectHeader : onInjectHeader,
+            }
+        );
+    }
+    public chainOnInjectHeader (onInjectHeader : InjectHeaderDelegate) : (
+        Request<DataT>
+    ) {
+        if (this.extraData.onInjectHeader == undefined) {
+            return this.setOnInjectHeader(onInjectHeader);
+        }
+        const previousOnInjectHeader = this.extraData.onInjectHeader;
+        return new Request(
+            this.data,
+            {
+                ...(this.extraData as any),
+                onInjectHeader : (route) => {
+                    const previousHeader = previousOnInjectHeader(route);
+                    const header = onInjectHeader(route);
+                    return {
+                        ...previousHeader,
+                        ...header,
+                    };
+                },
             }
         );
     }

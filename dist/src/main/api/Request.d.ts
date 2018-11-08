@@ -3,6 +3,7 @@ import { Route, RouteData } from "./Route";
 import { Api } from "./Api";
 import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc } from "../types";
 export declare type TransformBodyDelegate = (rawBody: any | undefined) => any;
+export declare type TypedTransformBodyDelegate<BodyT> = (rawBody: BodyT) => any;
 export declare type InjectHeaderDelegate = (route: Route<RouteData>) => any;
 export declare type TransformResponseDelegate = (rawResponseData: any, rawResponse: axios.AxiosResponse<any>) => any;
 export interface OnUnmodifiedArgs extends Error {
@@ -145,8 +146,9 @@ export declare class Request<DataT extends RequestData> {
     } ? ("header" extends keyof DataT ? never : Request<DataT>) : never), header: AcceptsOf<Exclude<DataT["route"]["data"]["headerF"], undefined>>): (Request<DataT & {
         header: TypeOf<Exclude<DataT["route"]["data"]["headerF"], undefined>>;
     }>);
-    setOnTransformBody(onTransformBody: TransformBodyDelegate | undefined): (Request<DataT>);
+    setOnTransformBody(onTransformBody: TypedTransformBodyDelegate<"bodyF" extends keyof DataT["route"]["data"] ? (undefined extends DataT["route"]["data"]["bodyF"] ? unknown : TypeOf<Exclude<DataT["route"]["data"]["bodyF"], undefined>>) : unknown> | undefined): (Request<DataT>);
     setOnInjectHeader(onInjectHeader: InjectHeaderDelegate | undefined): (Request<DataT>);
+    chainOnInjectHeader(onInjectHeader: InjectHeaderDelegate): (Request<DataT>);
     setOnTransformResponse(onTransformResponse: TransformResponseDelegate | undefined): (Request<DataT>);
     setOnUnmodified<D extends OnUnmodifiedDelegate<any>>(onUnmodified: D): (Request<DataT & {
         readonly onUnmodified: D;
