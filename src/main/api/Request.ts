@@ -562,7 +562,7 @@ export class Request<DataT extends RequestData> {
                         true
                 ) |
                 (
-                    "queryF" extends DataT["route"]["data"] ?
+                    "queryF" extends keyof DataT["route"]["data"] ?
                         (
                             "query" extends keyof DataT ?
                                 true :
@@ -571,7 +571,7 @@ export class Request<DataT extends RequestData> {
                         true
                 ) |
                 (
-                    "bodyF" extends DataT["route"]["data"] ?
+                    "bodyF" extends keyof DataT["route"]["data"] ?
                         (
                             "body" extends keyof DataT ?
                                 true :
@@ -580,7 +580,7 @@ export class Request<DataT extends RequestData> {
                         true
                 ) |
                 (
-                    "headerF" extends DataT["route"]["data"] ?
+                    "headerF" extends keyof DataT["route"]["data"] ?
                         (
                             "header" extends keyof DataT ?
                                 true :

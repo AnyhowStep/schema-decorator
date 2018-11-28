@@ -19,6 +19,7 @@ class Title {
 }
 //https://github.com/typicode/jsonplaceholder/issues/60
 //https://github.com/typicode/jsonplaceholder/issues/74
+//https://github.com/typicode/jsonplaceholder/issues/88
 class Response {
     @schema.assert(schema.maybe(schema.or(
         schema.naturalNumber(),
@@ -31,6 +32,8 @@ class Response {
     title? : null|string;
     @schema.assert(schema.maybe(validation.String.assertNonEmpty))
     body? : null|string;
+    @schema.assert(schema.any())
+    headers? : any;
 }
 class Comment {
     @schema.assert(validation.Number.assertNaturalNumber)
