@@ -9,6 +9,8 @@ export function isLiteralOrDate (mixed : unknown) : boolean {
     return (
         type == "string" ||
         type == "number" ||
-        type == "boolean"
+        type == "boolean" ||
+        //Hacking in bigint support
+        (type as any) == "bigint"
     );
 }

@@ -10,7 +10,9 @@ function isLiteralOrDate(mixed) {
     const type = typeof mixed;
     return (type == "string" ||
         type == "number" ||
-        type == "boolean");
+        type == "boolean" ||
+        //Hacking in bigint support
+        type == "bigint");
 }
 exports.isLiteralOrDate = isLiteralOrDate;
 //# sourceMappingURL=is-literal-or-date.js.map
