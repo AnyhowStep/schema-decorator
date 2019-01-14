@@ -8,6 +8,8 @@ __export(require("./api/Request"));
 __export(require("./api/Route"));
 __export(require("./api/to-api"));
 __export(require("./assert-lib"));
+const mysql = require("./mysql");
+exports.mysql = mysql;
 __export(require("./assert"));
 __export(require("./check"));
 __export(require("./convert"));

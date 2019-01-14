@@ -93,7 +93,9 @@ function anyToRaw(name, mixed, ignoreInstancesOf) {
         if (Object.getPrototypeOf(mixed).constructor == Object) {
             //This object is already as "raw" as we can get
             //Its values might not be, though
-            const result = Object.assign({}, mixed);
+            const result = {
+                ...mixed,
+            };
             for (let k in mixed) {
                 if (mixed.hasOwnProperty(k)) {
                     result[k] = anyToRaw(`${name}[${k}]`, mixed[k], ignoreInstancesOf);
@@ -145,7 +147,7 @@ function toClassExact(name, raw, ctor) {
     else {
         //TODO find a better way to do this
         if (raw instanceof Object) {
-            return toClass(name, Object.assign({}, raw), ctor);
+            return toClass(name, { ...raw }, ctor);
         }
         else {
             return toClass(name, raw, ctor);

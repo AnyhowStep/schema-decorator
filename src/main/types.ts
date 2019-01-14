@@ -168,7 +168,7 @@ export type UnsafeTypeOf<F> = (
 export type AcceptsOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     F extends Constructor<infer T> ?
     T :
-    F extends AssertDelegateAccepts<infer T> ?
+    F extends AssertDelegateAccepts<any> ?
     F["__accepts"] :
     F extends AssertDelegate<infer T> ?
     T :
@@ -183,7 +183,7 @@ export type AcceptsOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
 export type UnsafeAcceptsOf<F> = (
     F extends Constructor<infer T> ?
     T :
-    F extends AssertDelegateAccepts<infer T> ?
+    F extends AssertDelegateAccepts<any> ?
     F["__accepts"] :
     F extends AssertDelegate<infer T> ?
     T :
@@ -197,9 +197,9 @@ export type UnsafeAcceptsOf<F> = (
 export type CanAcceptOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
     F extends Constructor<infer T> ?
     T :
-    F extends AssertDelegateCanAccept<infer T> ?
+    F extends AssertDelegateCanAccept<any> ?
     F["__canAccept"] :
-    F extends AssertDelegateAccepts<infer T> ?
+    F extends AssertDelegateAccepts<any> ?
     F["__accepts"] :
     F extends AssertDelegate<infer T> ?
     T :
@@ -213,9 +213,9 @@ export type CanAcceptOf<F extends AnyAssertFunc|ChainedAssertDelegate<any>> = (
 export type UnsafeCanAcceptOf<F> = (
     F extends Constructor<infer T> ?
     T :
-    F extends AssertDelegateCanAccept<infer T> ?
+    F extends AssertDelegateCanAccept<any> ?
     F["__canAccept"] :
-    F extends AssertDelegateAccepts<infer T> ?
+    F extends AssertDelegateAccepts<any> ?
     F["__accepts"] :
     F extends AssertDelegate<infer T> ?
     T :

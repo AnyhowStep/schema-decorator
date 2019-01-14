@@ -89,25 +89,46 @@ class Route {
         });
     }
     append(part) {
-        return new Route(this._method, Object.assign({}, this.data, { path: this.data.path.append(part) }));
+        return new Route(this._method, {
+            ...this.data,
+            path: this.data.path.append(part),
+        });
     }
     appendParam(param, regex) {
-        return new Route(this._method, Object.assign({}, this.data, { path: this.data.path.appendParam(param, regex) }));
+        return new Route(this._method, {
+            ...this.data,
+            path: this.data.path.appendParam(param, regex),
+        });
     }
     param(paramF) {
-        return new Route(this._method, Object.assign({}, this.data, { paramF: paramF }));
+        return new Route(this._method, {
+            ...this.data,
+            paramF: paramF,
+        });
     }
     query(queryF) {
-        return new Route(this._method, Object.assign({}, this.data, { queryF: queryF }));
+        return new Route(this._method, {
+            ...this.data,
+            queryF: queryF,
+        });
     }
     body(bodyF) {
-        return new Route(this._method, Object.assign({}, this.data, { bodyF: bodyF }));
+        return new Route(this._method, {
+            ...this.data,
+            bodyF: bodyF,
+        });
     }
     header(headerF) {
-        return new Route(this._method, Object.assign({}, this.data, { headerF: headerF }));
+        return new Route(this._method, {
+            ...this.data,
+            headerF: headerF,
+        });
     }
     response(responseF) {
-        return new Route(this._method, Object.assign({}, this.data, { responseF: responseF }));
+        return new Route(this._method, {
+            ...this.data,
+            responseF: responseF,
+        });
     }
     /*
         Shortcut for,
@@ -124,10 +145,16 @@ class Route {
     */
     intersectQuery(queryF) {
         if (this.data.queryF == undefined) {
-            return new Route(this._method, Object.assign({}, this.data, { queryF: queryF }));
+            return new Route(this._method, {
+                ...this.data,
+                queryF: queryF,
+            });
         }
         else {
-            return new Route(this._method, Object.assign({}, this.data, { queryF: a.intersect(queryF, this.data.queryF) }));
+            return new Route(this._method, {
+                ...this.data,
+                queryF: a.intersect(queryF, this.data.queryF),
+            });
         }
     }
     method(method) {
@@ -147,7 +174,9 @@ class Route {
         }
     }
     withoutParam() {
-        const newData = Object.assign({}, this.data);
+        const newData = {
+            ...this.data
+        };
         delete newData["paramF"];
         return new Route(this._method, newData);
     }
@@ -157,7 +186,10 @@ class Route {
     //This hack is only necessary because of,
     //https://github.com/Microsoft/TypeScript/issues/23673
     anyParam(paramF) {
-        return new Route(this._method, Object.assign({}, this.data, { paramF: paramF }));
+        return new Route(this._method, {
+            ...this.data,
+            paramF: paramF,
+        });
     }
 }
 exports.Route = Route;

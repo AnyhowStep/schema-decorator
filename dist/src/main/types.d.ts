@@ -16,10 +16,10 @@ export declare type ChainedAssertFunc<AcceptsT> = (Constructor<AcceptsT> | Asser
 export declare type AnyChainedAssertFunc = ChainedAssertFunc<any>;
 export declare type TypeOf<F extends AnyAssertFunc | ChainedAssertDelegate<any>> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<infer T> ? T : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<infer T> ? T : F extends Field<string, infer F2> ? (F2 extends Constructor<infer T> ? T : F2 extends AssertDelegateAccepts<infer T> ? T : F2 extends AssertDelegate<infer T> ? T : F2 extends Field<string, infer F3> ? (F3 extends Constructor<infer T> ? T : F3 extends AssertDelegateAccepts<infer T> ? T : F3 extends AssertDelegate<infer T> ? T : F3 extends Field<string, infer F4> ? (F4 extends Constructor<infer T> ? T : F4 extends AssertDelegateAccepts<infer T> ? T : F4 extends AssertDelegate<infer T> ? T : never) : never) : never) : never);
 export declare type UnsafeTypeOf<F> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<infer T> ? T : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<infer T> ? T : F extends Field<string, infer F2> ? (F2 extends Constructor<infer T> ? T : F2 extends AssertDelegateAccepts<infer T> ? T : F2 extends AssertDelegate<infer T> ? T : F2 extends Field<string, infer F3> ? (F3 extends Constructor<infer T> ? T : F3 extends AssertDelegateAccepts<infer T> ? T : F3 extends AssertDelegate<infer T> ? T : F3 extends Field<string, infer F4> ? (F4 extends Constructor<infer T> ? T : F4 extends AssertDelegateAccepts<infer T> ? T : F4 extends AssertDelegate<infer T> ? T : never) : never) : never) : never);
-export declare type AcceptsOf<F extends AnyAssertFunc | ChainedAssertDelegate<any>> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<infer T> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never);
-export declare type UnsafeAcceptsOf<F> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<infer T> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never);
-export declare type CanAcceptOf<F extends AnyAssertFunc | ChainedAssertDelegate<any>> = (F extends Constructor<infer T> ? T : F extends AssertDelegateCanAccept<infer T> ? F["__canAccept"] : F extends AssertDelegateAccepts<infer T> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never);
-export declare type UnsafeCanAcceptOf<F> = (F extends Constructor<infer T> ? T : F extends AssertDelegateCanAccept<infer T> ? F["__canAccept"] : F extends AssertDelegateAccepts<infer T> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never);
+export declare type AcceptsOf<F extends AnyAssertFunc | ChainedAssertDelegate<any>> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<any> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never);
+export declare type UnsafeAcceptsOf<F> = (F extends Constructor<infer T> ? T : F extends AssertDelegateAccepts<any> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never);
+export declare type CanAcceptOf<F extends AnyAssertFunc | ChainedAssertDelegate<any>> = (F extends Constructor<infer T> ? T : F extends AssertDelegateCanAccept<any> ? F["__canAccept"] : F extends AssertDelegateAccepts<any> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never);
+export declare type UnsafeCanAcceptOf<F> = (F extends Constructor<infer T> ? T : F extends AssertDelegateCanAccept<any> ? F["__canAccept"] : F extends AssertDelegateAccepts<any> ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends ChainedAssertDelegate<any, infer AcceptsT> ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never);
 export declare type ToAssertDelegate<F extends AnyAssertFunc> = (AssertDelegate<TypeOf<F>> & {
     __accepts: AcceptsOf<F>;
     __canAccept: CanAcceptOf<F>;
@@ -38,12 +38,12 @@ export declare class Field<NameT extends string, F extends AnyAssertFunc> {
     } ? T : F3 extends AssertDelegate<infer T> ? T : F3 extends Field<string, infer F4> ? F4 extends Constructor<infer T> ? T : F4 extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? T : F4 extends AssertDelegate<infer T> ? T : never : never : never : never) | null | undefined> & {
-        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | null | undefined;
-        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __canAccept: unknown;
-        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | null | undefined;
     }>;
@@ -56,12 +56,12 @@ export declare class Field<NameT extends string, F extends AnyAssertFunc> {
     } ? T : F3 extends AssertDelegate<infer T> ? T : F3 extends Field<string, infer F4> ? F4 extends Constructor<infer T> ? T : F4 extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? T : F4 extends AssertDelegate<infer T> ? T : never : never : never : never) | undefined> & {
-        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | undefined;
-        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __canAccept: unknown;
-        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | undefined;
     }>;
@@ -74,12 +74,12 @@ export declare class Field<NameT extends string, F extends AnyAssertFunc> {
     } ? T : F3 extends AssertDelegate<infer T> ? T : F3 extends Field<string, infer F4> ? F4 extends Constructor<infer T> ? T : F4 extends ((name: string, mixed: unknown) => infer T) & {
         __accepts: unknown;
     } ? T : F4 extends AssertDelegate<infer T> ? T : never : never : never : never) | null> & {
-        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __accepts: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__accepts"] : never) | null;
-        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => infer T) & {
+        __canAccept: (F extends Constructor<infer T> ? T : F extends ((name: string, mixed: unknown) => any) & {
             __canAccept: unknown;
-        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => infer T) & {
+        } ? F["__canAccept"] : F extends ((name: string, mixed: unknown) => any) & {
             __accepts: unknown;
         } ? F["__accepts"] : F extends AssertDelegate<infer T> ? T : F extends (name: string, accepts: infer AcceptsT) => any ? AcceptsT : F extends Field<string, any> ? F["assertDelegate"]["__canAccept"] : never) | null;
     }>;

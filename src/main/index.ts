@@ -5,6 +5,8 @@ export * from "./api/Route";
 export * from "./api/to-api";
 
 export * from "./assert-lib";
+import * as mysql from "./mysql";
+export {mysql};
 
 export * from "./assert";
 export * from "./check";
