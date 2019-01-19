@@ -14,7 +14,7 @@ function toLiteralStr (arr : any[]) : string {
     return mapped.join("|")
 }
 
-export type LiteralType = string|number|boolean|undefined|null;
+export type LiteralType = string|number|boolean|undefined|null|bigint;
 export type LiteralValues<ArrT extends LiteralType[]> = (
     ArrT extends Array<infer T> ?
         T:

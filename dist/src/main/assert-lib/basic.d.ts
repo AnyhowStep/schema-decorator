@@ -1,5 +1,5 @@
 import { TypeOf, AssertDelegate, AnyAssertFunc } from "../types";
-export declare type LiteralType = string | number | boolean | undefined | null;
+export declare type LiteralType = string | number | boolean | undefined | null | bigint;
 export declare type LiteralValues<ArrT extends LiteralType[]> = (ArrT extends Array<infer T> ? T : never);
 export declare function literal<ArrT extends LiteralType[]>(...arr: ArrT): (AssertDelegate<LiteralValues<ArrT>>);
 export declare function excludeLiteral<F extends AnyAssertFunc, ArrT extends LiteralType[]>(assert: F, ...arr: ArrT): (AssertDelegate<Exclude<TypeOf<F>, LiteralValues<ArrT>>>);
