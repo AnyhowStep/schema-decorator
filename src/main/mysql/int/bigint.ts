@@ -42,13 +42,63 @@ export function bigint () {
 }
 bigint.nullable = () => sd.nullable(bigint());
 
+function lessThan (a : bigint, b : bigint) {
+    const aStr = a.toString();
+    const bStr = b.toString();
+    if (aStr == bStr) {
+        return false;
+    }
+    const aNeg = (aStr[0] == "-");
+    const bNeg = (bStr[0] == "-");
+    if (aNeg) {
+        if (bNeg) {
+            //Both negative
+            if (aStr.length > bStr.length) {
+                //Eg. a = -100, b = -99
+                return true;
+            } else if (aStr.length < bStr.length) {
+                //Eg. a = -99, b = -100
+                return false;
+            } else {
+                return aStr.localeCompare(bStr) > 0;
+            }
+        } else {
+            //Eg. a = -5, b = 100
+            return true;
+        }
+    } else {
+        if (bNeg) {
+            //Eg. a = 100, b = -5
+            return false;
+        } else {
+            //Both positive
+            if (aStr.length < bStr.length) {
+                //Eg. a = 99, b = 100
+                return true;
+            } else if (aStr.length > bStr.length) {
+                //Eg. a = 100, b = 99
+                return false;
+            } else {
+                return aStr.localeCompare(bStr) < 0;
+            }
+        }
+    }
+}
+function greaterThan (a : bigint, b : bigint) {
+    const aStr = a.toString();
+    const bStr = b.toString();
+    if (aStr == bStr) {
+        return false;
+    }
+    return lessThan(b, a);
+}
 const bigintSignedDelegate = sd.chain(
     bigintDelegate,
     (name : string, value : bigint) => {
-        if (value < -9223372036854775808n) {
+        if (lessThan(value, BigInt("-9223372036854775808"))) {
             throw new Error(`${name} must be >= -9,223,372,036,854,775,808`);
         }
-        if (value > 9223372036854775807n) {
+        if (greaterThan(value, BigInt("9223372036854775807"))) {
             throw new Error(`${name} must be <= 9,223,372,036,854,775,807`);
         }
         return value;
@@ -62,10 +112,10 @@ bigintSigned.nullable = () => sd.nullable(bigintSigned());
 const bigintUnsignedDelegate = sd.chain(
     bigintDelegate,
     (name : string, value : bigint) => {
-        if (value < 0n) {
+        if (lessThan(value, BigInt("0"))) {
             throw new Error(`${name} must be >= 0`);
         }
-        if (value > 18446744073709551616n) {
+        if (greaterThan(value, BigInt("18446744073709551616"))) {
             throw new Error(`${name} must be <= 18,446,744,073,709,551,616`);
         }
         return value;
