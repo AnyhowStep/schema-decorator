@@ -144,7 +144,17 @@ class Request {
         }, this.extraData);
     }
     getPath() {
-        const data = this.data;
+        return RequestUtil.getPath(this);
+    }
+    async send() {
+        return RequestUtil.send(this);
+    }
+}
+exports.Request = Request;
+var RequestUtil;
+(function (RequestUtil) {
+    function getPath(req) {
+        const data = req.data;
         const routeData = data.route.data;
         const param = (routeData.paramF == undefined) ?
             {} :
@@ -152,12 +162,13 @@ class Request {
         const path = routeData.path.getCallingPath(param);
         return path;
     }
-    async send() {
-        const data = this.data;
+    RequestUtil.getPath = getPath;
+    async function send(req) {
+        const data = req.data;
         const routeData = data.route.data;
-        const extraData = this.extraData;
+        const extraData = req.extraData;
         const method = data.route.getMethod();
-        const path = this.getPath();
+        const path = getPath(req);
         let debugName = `${method} ${path}`;
         const query = (routeData.queryF == undefined) ?
             undefined :
@@ -195,7 +206,7 @@ class Request {
             data: transformedBody,
             headers: header,
         };
-        return this.extraData.api.instance.request(config)
+        return req.extraData.api.instance.request(config)
             .then(async (result) => {
             result.type = ResponseType.Normal;
             if (routeData.responseF == undefined) {
@@ -223,57 +234,57 @@ class Request {
                 const response = err.response;
                 switch (response.status) {
                     case 304: {
-                        if (this.data.onUnmodified != undefined) {
+                        if (req.data.onUnmodified != undefined) {
                             response.type = ResponseType.Unmodified;
-                            response.data = await this.data.onUnmodified(err);
+                            response.data = await req.data.onUnmodified(err);
                             return response;
                         }
                         break;
                     }
                     case 400: {
-                        if (this.data.onSyntacticError != undefined) {
+                        if (req.data.onSyntacticError != undefined) {
                             response.type = ResponseType.SyntacticError;
-                            response.data = await this.data.onSyntacticError(err);
+                            response.data = await req.data.onSyntacticError(err);
                             return response;
                         }
                         break;
                     }
                     case 401: {
-                        if (this.data.onUnauthorized != undefined) {
+                        if (req.data.onUnauthorized != undefined) {
                             response.type = ResponseType.Unauthorized;
-                            response.data = await this.data.onUnauthorized(err);
+                            response.data = await req.data.onUnauthorized(err);
                             return response;
                         }
                         break;
                     }
                     case 403: {
-                        if (this.data.onForbidden != undefined) {
+                        if (req.data.onForbidden != undefined) {
                             response.type = ResponseType.Forbidden;
-                            response.data = await this.data.onForbidden(err);
+                            response.data = await req.data.onForbidden(err);
                             return response;
                         }
                         break;
                     }
                     case 404: {
-                        if (this.data.onNotFound != undefined) {
+                        if (req.data.onNotFound != undefined) {
                             response.type = ResponseType.NotFound;
-                            response.data = await this.data.onNotFound(err);
+                            response.data = await req.data.onNotFound(err);
                             return response;
                         }
                         break;
                     }
                     case 422: {
-                        if (this.data.onSemanticError != undefined) {
+                        if (req.data.onSemanticError != undefined) {
                             response.type = ResponseType.SemanticError;
-                            response.data = await this.data.onSemanticError(err);
+                            response.data = await req.data.onSemanticError(err);
                             return response;
                         }
                         break;
                     }
                     case 429: {
-                        if (this.data.onTooManyRequests != undefined) {
+                        if (req.data.onTooManyRequests != undefined) {
                             response.type = ResponseType.TooManyRequests;
-                            response.data = await this.data.onTooManyRequests(err);
+                            response.data = await req.data.onTooManyRequests(err);
                             return response;
                         }
                         break;
@@ -283,6 +294,6 @@ class Request {
             throw err;
         });
     }
-}
-exports.Request = Request;
+    RequestUtil.send = send;
+})(RequestUtil = exports.RequestUtil || (exports.RequestUtil = {}));
 //# sourceMappingURL=Request.js.map

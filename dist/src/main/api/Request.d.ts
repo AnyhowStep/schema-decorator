@@ -58,7 +58,7 @@ export interface OnTooManyRequestsArgs extends Error {
 }
 export declare type OnTooManyRequestsDelegate<ResultT> = (args: OnTooManyRequestsArgs) => ResultT;
 export declare type UnwrappedPromiseReturnType<F extends (...args: any[]) => any> = (ReturnType<F> extends Promise<infer WrappedT> ? WrappedT : ReturnType<F>);
-export declare type RequestWithResponse = (Request<RequestData> & {
+export declare type RequestWithResponse = (IRequest<RequestData> & {
     data: {
         route: {
             data: {
@@ -67,9 +67,9 @@ export declare type RequestWithResponse = (Request<RequestData> & {
         };
     };
 });
-export declare type RequestResponse<ReqT extends Request<RequestData>> = (ReqT["data"]["route"]["data"]["responseF"] extends AnyAssertFunc ? TypeOf<ReqT["data"]["route"]["data"]["responseF"]> : any);
-export declare type AssertRequestCanGetPath<ReqT extends Request<any>> = (((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never));
-export declare type AssertRequestCanSend<ReqT extends Request<any>> = ((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true) | ("queryF" extends keyof ReqT["data"]["route"]["data"] ? ("query" extends keyof ReqT["data"] ? true : false) : true) | ("bodyF" extends keyof ReqT["data"]["route"]["data"] ? ("body" extends keyof ReqT["data"] ? true : false) : true) | ("headerF" extends keyof ReqT["data"]["route"]["data"] ? ("header" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never);
+export declare type RequestResponse<ReqT extends IRequest<RequestData>> = (ReqT["data"]["route"]["data"]["responseF"] extends AnyAssertFunc ? TypeOf<ReqT["data"]["route"]["data"]["responseF"]> : any);
+export declare type AssertRequestCanGetPath<ReqT extends IRequest<any>> = (((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never));
+export declare type AssertRequestCanSend<ReqT extends IRequest<any>> = ((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true) | ("queryF" extends keyof ReqT["data"]["route"]["data"] ? ("query" extends keyof ReqT["data"] ? true : false) : true) | ("bodyF" extends keyof ReqT["data"]["route"]["data"] ? ("body" extends keyof ReqT["data"] ? true : false) : true) | ("headerF" extends keyof ReqT["data"]["route"]["data"] ? ("header" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never);
 export declare enum ResponseType {
     Normal = 0,
     Unmodified = 1,
@@ -115,7 +115,11 @@ export interface RequestExtraData {
     readonly onInjectHeader?: InjectHeaderDelegate;
     readonly onTransformResponse?: TransformResponseDelegate;
 }
-export declare class Request<DataT extends RequestData> {
+export interface IRequest<DataT extends RequestData> {
+    readonly data: DataT;
+    readonly extraData: RequestExtraData;
+}
+export declare class Request<DataT extends RequestData> implements IRequest<DataT> {
     readonly data: DataT;
     readonly extraData: RequestExtraData;
     static Create<RouteT extends Route<any>>(api: Api, route: RouteT): (Request<{
@@ -188,5 +192,10 @@ export declare class Request<DataT extends RequestData> {
         readonly onSemanticError: D;
     }>);
     getPath(this: AssertRequestCanGetPath<Request<DataT>>): string;
-    send(this: AssertRequestCanSend<Request<DataT>>): (Promise<Response<ResponseType.Normal, "responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<DataT>>);
+    send(this: AssertRequestCanSend<Request<DataT>>): (Promise<SendResult<Request<DataT>>>);
+}
+export declare type SendResult<ReqT extends IRequest<RequestData>> = (Response<ResponseType.Normal, "responseF" extends keyof ReqT["data"]["route"]["data"] ? TypeOf<Exclude<ReqT["data"]["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<ReqT["data"]>);
+export declare namespace RequestUtil {
+    function getPath<ReqT extends IRequest<RequestData>>(req: AssertRequestCanGetPath<ReqT>): string;
+    function send<ReqT extends IRequest<RequestData>>(req: AssertRequestCanSend<ReqT>): (Promise<SendResult<ReqT>>);
 }

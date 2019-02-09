@@ -97,7 +97,7 @@ export type UnwrappedPromiseReturnType<F extends (...args : any[]) => any> = (
 );
 
 export type RequestWithResponse = (
-    Request<RequestData> &
+    IRequest<RequestData> &
     {
         data : {
             route : {
@@ -108,12 +108,12 @@ export type RequestWithResponse = (
         }
     }
 );
-export type RequestResponse<ReqT extends Request<RequestData>> = (
+export type RequestResponse<ReqT extends IRequest<RequestData>> = (
     ReqT["data"]["route"]["data"]["responseF"] extends AnyAssertFunc ?
     TypeOf<ReqT["data"]["route"]["data"]["responseF"]> :
     any
 );
-export type AssertRequestCanGetPath<ReqT extends Request<any>> = (
+export type AssertRequestCanGetPath<ReqT extends IRequest<any>> = (
     (
         (
             (
@@ -130,7 +130,7 @@ export type AssertRequestCanGetPath<ReqT extends Request<any>> = (
             never
     )
 );
-export type AssertRequestCanSend<ReqT extends Request<any>> = (
+export type AssertRequestCanSend<ReqT extends IRequest<any>> = (
     (
         (
             "paramF" extends keyof ReqT["data"]["route"]["data"] ?
@@ -238,7 +238,12 @@ export interface RequestExtraData {
     readonly onTransformResponse? : TransformResponseDelegate;
 }
 
-export class Request<DataT extends RequestData> {
+export interface IRequest<DataT extends RequestData> {
+    readonly data : DataT;
+    readonly extraData : RequestExtraData;
+}
+
+export class Request<DataT extends RequestData> implements IRequest<DataT> {
     public static Create<RouteT extends Route<any>> (
         api : Api,
         route : RouteT
@@ -630,7 +635,36 @@ export class Request<DataT extends RequestData> {
     public getPath (
         this : AssertRequestCanGetPath<Request<DataT>>
     ) {
-        const data = this.data;
+        return RequestUtil.getPath(this);
+    }
+
+    public async send (
+        this : AssertRequestCanSend<Request<DataT>>
+    ) : (
+        Promise<SendResult<Request<DataT>>>
+    ) {
+        return RequestUtil.send(this);
+    }
+}
+
+export type SendResult<ReqT extends IRequest<RequestData>> = (
+    Response<
+        ResponseType.Normal,
+        "responseF" extends keyof ReqT["data"]["route"]["data"] ?
+            TypeOf<Exclude<
+            ReqT["data"]["route"]["data"]["responseF"],
+                undefined
+            >> :
+            unknown
+    > |
+    OnStatusHandlerResponse<ReqT["data"]>
+);
+
+export namespace RequestUtil {
+    export function getPath<ReqT extends IRequest<RequestData>> (
+        req : AssertRequestCanGetPath<ReqT>
+    ) : string {
+        const data = req.data;
         const routeData = data.route.data;
         const param = (routeData.paramF == undefined) ?
             {} :
@@ -641,29 +675,19 @@ export class Request<DataT extends RequestData> {
         const path = routeData.path.getCallingPath(param);
         return path;
     }
-
-    public async send (
-        this : AssertRequestCanSend<Request<DataT>>
+    export async function send<ReqT extends IRequest<RequestData>> (
+        req : AssertRequestCanSend<ReqT>
     ) : (
         Promise<
-            Response<
-                ResponseType.Normal,
-                "responseF" extends keyof DataT["route"]["data"] ?
-                    TypeOf<Exclude<
-                        DataT["route"]["data"]["responseF"],
-                        undefined
-                    >> :
-                    unknown
-            > |
-            OnStatusHandlerResponse<DataT>
+            SendResult<ReqT>
         >
     ) {
-        const data = this.data;
+        const data = req.data;
         const routeData = data.route.data;
-        const extraData = this.extraData;
+        const extraData = req.extraData;
 
         const method = data.route.getMethod();
-        const path = this.getPath();
+        const path = getPath(req);
 
         let debugName = `${method} ${path}`;
 
@@ -715,7 +739,7 @@ export class Request<DataT extends RequestData> {
             data : transformedBody,
             headers : header,
         };
-        return this.extraData.api.instance.request(config)
+        return req.extraData.api.instance.request(config)
             .then(async (result) => {
                 (result as any).type = ResponseType.Normal;
                 if (routeData.responseF == undefined) {
@@ -745,57 +769,57 @@ export class Request<DataT extends RequestData> {
 
                     switch (response.status) {
                         case 304: {
-                            if (this.data.onUnmodified != undefined) {
+                            if (req.data.onUnmodified != undefined) {
                                 (response as any).type = ResponseType.Unmodified;
-                                response.data = await this.data.onUnmodified(err);
+                                response.data = await req.data.onUnmodified(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 400: {
-                            if (this.data.onSyntacticError != undefined) {
+                            if (req.data.onSyntacticError != undefined) {
                                 (response as any).type = ResponseType.SyntacticError;
-                                response.data = await this.data.onSyntacticError(err);
+                                response.data = await req.data.onSyntacticError(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 401: {
-                            if (this.data.onUnauthorized != undefined) {
+                            if (req.data.onUnauthorized != undefined) {
                                 (response as any).type = ResponseType.Unauthorized;
-                                response.data = await this.data.onUnauthorized(err);
+                                response.data = await req.data.onUnauthorized(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 403: {
-                            if (this.data.onForbidden != undefined) {
+                            if (req.data.onForbidden != undefined) {
                                 (response as any).type = ResponseType.Forbidden;
-                                response.data = await this.data.onForbidden(err);
+                                response.data = await req.data.onForbidden(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 404: {
-                            if (this.data.onNotFound != undefined) {
+                            if (req.data.onNotFound != undefined) {
                                 (response as any).type = ResponseType.NotFound;
-                                response.data = await this.data.onNotFound(err);
+                                response.data = await req.data.onNotFound(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 422: {
-                            if (this.data.onSemanticError != undefined) {
+                            if (req.data.onSemanticError != undefined) {
                                 (response as any).type = ResponseType.SemanticError;
-                                response.data = await this.data.onSemanticError(err);
+                                response.data = await req.data.onSemanticError(err);
                                 return response as any;
                             }
                             break;
                         }
                         case 429: {
-                            if (this.data.onTooManyRequests != undefined) {
+                            if (req.data.onTooManyRequests != undefined) {
                                 (response as any).type = ResponseType.TooManyRequests;
-                                response.data = await this.data.onTooManyRequests(err);
+                                response.data = await req.data.onTooManyRequests(err);
                                 return response as any;
                             }
                             break;
