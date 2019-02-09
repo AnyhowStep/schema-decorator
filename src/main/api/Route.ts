@@ -105,7 +105,11 @@ export interface RouteData {
     readonly headerF?  : undefined|AnyAssertFunc,
     readonly responseF? : undefined|AnyAssertFunc,
 };
-export class Route<DataT extends RouteData> {
+export interface IRoute<DataT extends RouteData> {
+    readonly data : DataT;
+    getMethod () : Exclude<MethodLiteral, "Contextual">;
+}
+export class Route<DataT extends RouteData> implements IRoute<DataT> {
     public static Create () : Route<{
         path : Path<never>,
     }> {

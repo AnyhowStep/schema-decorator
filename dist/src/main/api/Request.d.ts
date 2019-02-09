@@ -1,10 +1,10 @@
 import * as axios from "axios";
-import { Route, RouteData } from "./Route";
+import { Route, RouteData, IRoute } from "./Route";
 import { Api } from "./Api";
 import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc, AnyAssertFunc } from "../types";
 export declare type TransformBodyDelegate = (rawBody: any | undefined) => any;
 export declare type TypedTransformBodyDelegate<BodyT> = (rawBody: BodyT) => any;
-export declare type InjectHeaderDelegate = (route: Route<RouteData>) => any;
+export declare type InjectHeaderDelegate = (route: IRoute<RouteData>) => any;
 export declare type TransformResponseDelegate = (rawResponseData: any, rawResponse: axios.AxiosResponse<any>) => any;
 export interface OnUnmodifiedArgs extends Error {
     config: axios.AxiosRequestConfig;
@@ -96,7 +96,7 @@ export declare type OnStatusHandlerResponse<DataT extends RequestData> = ({
     [k in keyof OnStatusHandlerNameToResponseType]: (k extends keyof DataT ? Response<OnStatusHandlerNameToResponseType[k], UnwrappedPromiseReturnType<Exclude<DataT[k], undefined>>> : never);
 }[keyof OnStatusHandlerNameToResponseType]);
 export interface RequestData {
-    readonly route: Route<RouteData>;
+    readonly route: IRoute<RouteData>;
     readonly param?: any;
     readonly query?: any;
     readonly body?: any;

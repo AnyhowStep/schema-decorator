@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import {Route, RouteData} from "./Route";
+import {Route, RouteData, IRoute} from "./Route";
 import {Api} from "./Api";
 import {
     ChainedAssertFunc,
@@ -12,7 +12,7 @@ import {
 
 export type TransformBodyDelegate = (rawBody : any|undefined) => any;
 export type TypedTransformBodyDelegate<BodyT> = (rawBody : BodyT) => any;
-export type InjectHeaderDelegate  = (route : Route<RouteData>) => any;
+export type InjectHeaderDelegate  = (route : IRoute<RouteData>) => any;
 export type TransformResponseDelegate = (rawResponseData : any, rawResponse : axios.AxiosResponse<any>) => any;
 
 //304
@@ -216,7 +216,7 @@ export type OnStatusHandlerResponse<
 );
 
 export interface RequestData {
-    readonly route : Route<RouteData>;
+    readonly route : IRoute<RouteData>;
 
     readonly param?  : any;
     readonly query?  : any;
