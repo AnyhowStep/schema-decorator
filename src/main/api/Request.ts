@@ -549,6 +549,35 @@ export class Request<DataT extends RequestData> {
         );
     }
 
+    public getPath (
+        this : (
+            (
+                (
+                    "paramF" extends keyof DataT["route"]["data"] ?
+                        (
+                            "param" extends keyof DataT ?
+                                true :
+                                false
+                        ) :
+                        true
+                )
+            ) extends true ?
+                Request<DataT> :
+                never
+        )
+    ) {
+        const data = this.data;
+        const routeData = data.route.data;
+        const param = (routeData.paramF == undefined) ?
+            {} :
+            toAssertDelegateExact(routeData.paramF)(
+                `${routeData.path.getRouterPath()} : param`,
+                data.param
+            );
+        const path = routeData.path.getCallingPath(param);
+        return path;
+    }
+
     public async send (
         this : (
             (
@@ -610,14 +639,8 @@ export class Request<DataT extends RequestData> {
         const routeData = data.route.data;
         const extraData = this.extraData;
 
-        const param = (routeData.paramF == undefined) ?
-            {} :
-            toAssertDelegateExact(routeData.paramF)(
-                `${routeData.path.getRouterPath()} : param`,
-                data.param
-            );
         const method = data.route.getMethod();
-        const path = routeData.path.getCallingPath(param);
+        const path = this.getPath();
 
         let debugName = `${method} ${path}`;
 

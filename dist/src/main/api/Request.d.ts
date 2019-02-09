@@ -175,5 +175,6 @@ export declare class Request<DataT extends RequestData> {
         readonly onSyntacticError: D;
         readonly onSemanticError: D;
     }>);
+    getPath(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): string;
     send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends keyof DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends keyof DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends keyof DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<Response<ResponseType.Normal, "responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<DataT>>);
 }

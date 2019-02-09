@@ -143,15 +143,21 @@ class Request {
             onSemanticError: onSyntacticOrSemanticErrorDelegate,
         }, this.extraData);
     }
+    getPath() {
+        const data = this.data;
+        const routeData = data.route.data;
+        const param = (routeData.paramF == undefined) ?
+            {} :
+            types_1.toAssertDelegateExact(routeData.paramF)(`${routeData.path.getRouterPath()} : param`, data.param);
+        const path = routeData.path.getCallingPath(param);
+        return path;
+    }
     async send() {
         const data = this.data;
         const routeData = data.route.data;
         const extraData = this.extraData;
-        const param = (routeData.paramF == undefined) ?
-            {} :
-            types_1.toAssertDelegateExact(routeData.paramF)(`${routeData.path.getRouterPath()} : param`, data.param);
         const method = data.route.getMethod();
-        const path = routeData.path.getCallingPath(param);
+        const path = this.getPath();
         let debugName = `${method} ${path}`;
         const query = (routeData.queryF == undefined) ?
             undefined :
