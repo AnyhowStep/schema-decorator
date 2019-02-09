@@ -1,7 +1,7 @@
 import * as axios from "axios";
 import { Route, RouteData } from "./Route";
 import { Api } from "./Api";
-import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc } from "../types";
+import { ChainedAssertFunc, AcceptsOf, TypeOf, AssertFunc, AnyAssertFunc } from "../types";
 export declare type TransformBodyDelegate = (rawBody: any | undefined) => any;
 export declare type TypedTransformBodyDelegate<BodyT> = (rawBody: BodyT) => any;
 export declare type InjectHeaderDelegate = (route: Route<RouteData>) => any;
@@ -58,6 +58,18 @@ export interface OnTooManyRequestsArgs extends Error {
 }
 export declare type OnTooManyRequestsDelegate<ResultT> = (args: OnTooManyRequestsArgs) => ResultT;
 export declare type UnwrappedPromiseReturnType<F extends (...args: any[]) => any> = (ReturnType<F> extends Promise<infer WrappedT> ? WrappedT : ReturnType<F>);
+export declare type RequestWithResponse = (Request<RequestData> & {
+    data: {
+        route: {
+            data: {
+                responseF: AnyAssertFunc;
+            };
+        };
+    };
+});
+export declare type RequestResponse<ReqT extends Request<RequestData>> = (ReqT["data"]["route"]["data"]["responseF"] extends AnyAssertFunc ? TypeOf<ReqT["data"]["route"]["data"]["responseF"]> : any);
+export declare type AssertRequestCanGetPath<ReqT extends Request<any>> = (((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never));
+export declare type AssertRequestCanSend<ReqT extends Request<any>> = ((("paramF" extends keyof ReqT["data"]["route"]["data"] ? ("param" extends keyof ReqT["data"] ? true : false) : true) | ("queryF" extends keyof ReqT["data"]["route"]["data"] ? ("query" extends keyof ReqT["data"] ? true : false) : true) | ("bodyF" extends keyof ReqT["data"]["route"]["data"] ? ("body" extends keyof ReqT["data"] ? true : false) : true) | ("headerF" extends keyof ReqT["data"]["route"]["data"] ? ("header" extends keyof ReqT["data"] ? true : false) : true)) extends true ? ReqT : never);
 export declare enum ResponseType {
     Normal = 0,
     Unmodified = 1,
@@ -175,6 +187,6 @@ export declare class Request<DataT extends RequestData> {
         readonly onSyntacticError: D;
         readonly onSemanticError: D;
     }>);
-    getPath(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): string;
-    send(this: ((("paramF" extends keyof DataT["route"]["data"] ? ("param" extends keyof DataT ? true : false) : true) | ("queryF" extends keyof DataT["route"]["data"] ? ("query" extends keyof DataT ? true : false) : true) | ("bodyF" extends keyof DataT["route"]["data"] ? ("body" extends keyof DataT ? true : false) : true) | ("headerF" extends keyof DataT["route"]["data"] ? ("header" extends keyof DataT ? true : false) : true)) extends true ? Request<DataT> : never)): (Promise<Response<ResponseType.Normal, "responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<DataT>>);
+    getPath(this: AssertRequestCanGetPath<Request<DataT>>): string;
+    send(this: AssertRequestCanSend<Request<DataT>>): (Promise<Response<ResponseType.Normal, "responseF" extends keyof DataT["route"]["data"] ? TypeOf<Exclude<DataT["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<DataT>>);
 }

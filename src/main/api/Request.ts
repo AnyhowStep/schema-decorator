@@ -6,7 +6,8 @@ import {
     AcceptsOf,
     TypeOf,
     toAssertDelegateExact,
-    AssertFunc
+    AssertFunc,
+    AnyAssertFunc
 } from "../types";
 
 export type TransformBodyDelegate = (rawBody : any|undefined) => any;
@@ -93,6 +94,83 @@ export type UnwrappedPromiseReturnType<F extends (...args : any[]) => any> = (
     ReturnType<F> extends Promise<infer WrappedT> ?
     WrappedT :
     ReturnType<F>
+);
+
+export type RequestWithResponse = (
+    Request<RequestData> &
+    {
+        data : {
+            route : {
+                data : {
+                    responseF : AnyAssertFunc
+                }
+            }
+        }
+    }
+);
+export type RequestResponse<ReqT extends Request<RequestData>> = (
+    ReqT["data"]["route"]["data"]["responseF"] extends AnyAssertFunc ?
+    TypeOf<ReqT["data"]["route"]["data"]["responseF"]> :
+    any
+);
+export type AssertRequestCanGetPath<ReqT extends Request<any>> = (
+    (
+        (
+            (
+                "paramF" extends keyof ReqT["data"]["route"]["data"] ?
+                    (
+                        "param" extends keyof ReqT["data"] ?
+                            true :
+                            false
+                    ) :
+                    true
+            )
+        ) extends true ?
+        ReqT :
+            never
+    )
+);
+export type AssertRequestCanSend<ReqT extends Request<any>> = (
+    (
+        (
+            "paramF" extends keyof ReqT["data"]["route"]["data"] ?
+                (
+                    "param" extends keyof ReqT["data"] ?
+                        true :
+                        false
+                ) :
+                true
+        ) |
+        (
+            "queryF" extends keyof ReqT["data"]["route"]["data"] ?
+                (
+                    "query" extends keyof ReqT["data"] ?
+                        true :
+                        false
+                ) :
+                true
+        ) |
+        (
+            "bodyF" extends keyof ReqT["data"]["route"]["data"] ?
+                (
+                    "body" extends keyof ReqT["data"] ?
+                        true :
+                        false
+                ) :
+                true
+        ) |
+        (
+            "headerF" extends keyof ReqT["data"]["route"]["data"] ?
+                (
+                    "header" extends keyof ReqT["data"] ?
+                        true :
+                        false
+                ) :
+                true
+        )
+    ) extends true ?
+        ReqT :
+        never
 );
 
 export enum ResponseType {
@@ -550,21 +628,7 @@ export class Request<DataT extends RequestData> {
     }
 
     public getPath (
-        this : (
-            (
-                (
-                    "paramF" extends keyof DataT["route"]["data"] ?
-                        (
-                            "param" extends keyof DataT ?
-                                true :
-                                false
-                        ) :
-                        true
-                )
-            ) extends true ?
-                Request<DataT> :
-                never
-        )
+        this : AssertRequestCanGetPath<Request<DataT>>
     ) {
         const data = this.data;
         const routeData = data.route.data;
@@ -579,48 +643,7 @@ export class Request<DataT extends RequestData> {
     }
 
     public async send (
-        this : (
-            (
-                (
-                    "paramF" extends keyof DataT["route"]["data"] ?
-                        (
-                            "param" extends keyof DataT ?
-                                true :
-                                false
-                        ) :
-                        true
-                ) |
-                (
-                    "queryF" extends keyof DataT["route"]["data"] ?
-                        (
-                            "query" extends keyof DataT ?
-                                true :
-                                false
-                        ) :
-                        true
-                ) |
-                (
-                    "bodyF" extends keyof DataT["route"]["data"] ?
-                        (
-                            "body" extends keyof DataT ?
-                                true :
-                                false
-                        ) :
-                        true
-                ) |
-                (
-                    "headerF" extends keyof DataT["route"]["data"] ?
-                        (
-                            "header" extends keyof DataT ?
-                                true :
-                                false
-                        ) :
-                        true
-                )
-            ) extends true ?
-                Request<DataT> :
-                never
-        )
+        this : AssertRequestCanSend<Request<DataT>>
     ) : (
         Promise<
             Response<
