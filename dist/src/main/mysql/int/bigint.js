@@ -29,7 +29,30 @@ const bigintDelegate = sd.or((name, raw) => {
     catch (err) {
         throw new Error(`${name} is not a valid bigint number; ${err.message}`);
     }
-}));
+}), 
+//Browser support for bigint is terrible.
+(name, raw) => {
+    if ((raw instanceof Object) &&
+        typeof raw.toString == "function") {
+        const rawStr = raw.toString();
+        if (typeof rawStr != "string") {
+            throw new Error(`${name}.toString() does not give a string`);
+        }
+        try {
+            const result = BigInt(rawStr);
+            if (result.toString() === rawStr) {
+                return result;
+            }
+            throw new Error(`${name}.toString() is not a valid bigint string`);
+        }
+        catch (err) {
+            throw new Error(`${name}.toString() is not a valid bigint string; ${err.message}`);
+        }
+    }
+    else {
+        throw new Error(`${name} is not an object with .toString()`);
+    }
+});
 function bigint() {
     return bigintDelegate;
 }
