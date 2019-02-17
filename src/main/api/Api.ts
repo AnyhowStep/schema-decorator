@@ -17,18 +17,29 @@ export interface ApiConfiguration {
 }
 
 export class Api {
-    public readonly instance : axios.AxiosInstance;
     private readonly config : ApiConfiguration;
+    public readonly instance : axios.AxiosInstance;
+
+    getDomain () {
+        return this.config.domain;
+    }
+    getRoot () {
+        return this.config.root;
+    }
+    getBaseUrl () {
+        const root = (this.config.root == undefined) ?
+            "" :
+            this.config.root;
+
+        return `${this.config.domain}${root}`;
+    }
 
     public constructor (config : ApiConfiguration) {
-        const root = (config.root != null) ?
-            config.root : "";
-
-        this.instance = axios.default.create({
-            baseURL: `${config.domain}${root}`,
-            responseType: "json"
-        });
         this.config = config;
+        this.instance = axios.default.create({
+            baseURL: this.getBaseUrl(),
+            responseType: "json",
+        });
     }
 
     request<RouteT extends Route<any>> (route : RouteT) : Request<{

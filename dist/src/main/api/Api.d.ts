@@ -9,8 +9,11 @@ export interface ApiConfiguration {
     onTransformResponse?: TransformResponseDelegate;
 }
 export declare class Api {
-    readonly instance: axios.AxiosInstance;
     private readonly config;
+    readonly instance: axios.AxiosInstance;
+    getDomain(): string;
+    getRoot(): string | undefined;
+    getBaseUrl(): string;
     constructor(config: ApiConfiguration);
     request<RouteT extends Route<any>>(route: RouteT): Request<{
         route: RouteT;

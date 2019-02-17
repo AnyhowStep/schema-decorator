@@ -193,6 +193,9 @@ export declare class Request<DataT extends RequestData> implements IRequest<Data
     }>);
     getPath(this: AssertRequestCanGetPath<Request<DataT>>): string;
     send(this: AssertRequestCanSend<Request<DataT>>): (Promise<SendResult<Request<DataT>>>);
+    getDomain(): string;
+    getRoot(): string | undefined;
+    getBaseUrl(): string;
 }
 export declare type SendResult<ReqT extends IRequest<RequestData>> = (Response<ResponseType.Normal, "responseF" extends keyof ReqT["data"]["route"]["data"] ? TypeOf<Exclude<ReqT["data"]["route"]["data"]["responseF"], undefined>> : unknown> | OnStatusHandlerResponse<ReqT["data"]>);
 export declare namespace RequestUtil {

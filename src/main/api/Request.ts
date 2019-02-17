@@ -645,6 +645,16 @@ export class Request<DataT extends RequestData> implements IRequest<DataT> {
     ) {
         return RequestUtil.send(this);
     }
+
+    getDomain () {
+        return this.extraData.api.getDomain();
+    }
+    getRoot () {
+        return this.extraData.api.getRoot();
+    }
+    getBaseUrl () {
+        return this.extraData.api.getBaseUrl();
+    }
 }
 
 export type SendResult<ReqT extends IRequest<RequestData>> = (

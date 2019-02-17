@@ -149,6 +149,15 @@ class Request {
     async send() {
         return RequestUtil.send(this);
     }
+    getDomain() {
+        return this.extraData.api.getDomain();
+    }
+    getRoot() {
+        return this.extraData.api.getRoot();
+    }
+    getBaseUrl() {
+        return this.extraData.api.getBaseUrl();
+    }
 }
 exports.Request = Request;
 var RequestUtil;
