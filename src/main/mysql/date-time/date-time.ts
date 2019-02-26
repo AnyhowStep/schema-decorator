@@ -28,7 +28,7 @@ function buildDateTimeDelegate (
             ),
             (name : string, str : string) => {
                 try {
-                    str = str.replace("T", " ").replace("Z", " ");
+                    str = str.replace("T", " ").replace("Z", "");
                     return DateTimeUtil.fromSqlUtc(str, fractionalSecondPrecision);
                 } catch (err) {
                     throw new Error(`${name}: Invalid MySQL DATETIME(${fractionalSecondPrecision}); ${err.message}`);

@@ -134,14 +134,46 @@ export function fromSqlUtc (sql : string, fractionalSecondPrecision : 0|1|2|3/*|
     const millisecond = Math.floor(microsecondPart/1000);
     const microsecond = microsecondPart % 1000;
 
-    if (
+    /*
+        With DATETIME(0),
+        We have per-second precision.
+        microsecondPart can only be zero.
+
+        With DATETIME(1),
+        We have 100ms precision, 100,000microsecond precision.
+        6-1 = 5
+        10^5 = 100,000
+        By using %(modulo) 100,000, we ensure microsecondPart
+        is a multiple of the precision we support.
+
+        With DATETIME(2),
+        We have 10ms precision, 10,000microsecond precision.
+        6-2 = 4
+        10^4 = 10,000
+        By using %(modulo) 10,000, we ensure microsecondPart
+        is a multiple of the precision we support.
+
+        ...
+        With DATETIME(6),
+        We have 1microsecond precision.
+        6-6 = 0
+        10^0 = 1
+        Any integer modulo one is zero.
+    */
+    if (microsecondPart%Math.pow(10, 6-fractionalSecondPrecision) != 0) {
+        throw new Error(
+            `Expected DATETIME(${fractionalSecondPrecision}), received DATETIME(${match[9].length})`
+        );
+    }
+    /*if (
         match[9] != undefined &&
         match[9].length > fractionalSecondPrecision
     ) {
         throw new Error(`Expected DATETIME(${fractionalSecondPrecision}), received DATETIME(${match[9].length})`);
-    }
+    }*/
 
     //TODO-FEATURE Microsecond support
+    //JS Date just doesn't support microseconds
     //BEGIN TEMPORARY NON-SUPPORT FOR MICROSECOND
     if (microsecond != 0) {
         throw new Error(`Microsecond support for DATETIME is not supported yet`);
