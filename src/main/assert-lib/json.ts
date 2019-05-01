@@ -25,7 +25,7 @@ export function jsonObjectStr () {
 export function jsonObjectToString () : (
     AssertDelegate<string> &
     {
-        __accepts : object
+        __accepts : { [k : string] : any }
     }
 ) {
     return ((name : string, mixed : unknown) => {
@@ -40,7 +40,7 @@ export function jsonObjectToString () : (
     }) as any;
 }
 export function jsonStringToObject () {
-    return (name : string, str : string) : object => {
+    return (name : string, str : string) : { [k : string] : any } => {
         if (typeof str != "string") {
             throw new Error(`Expected ${name} to be of type string; received ${toTypeStr(str)}`);
         }
