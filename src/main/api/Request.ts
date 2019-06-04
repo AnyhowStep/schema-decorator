@@ -743,7 +743,7 @@ export namespace RequestUtil {
             await extraData.onTransformBody(body);
 
         const config : axios.AxiosRequestConfig = {
-            method : method,
+            method : method as any,
             url : path,
             params : query,
             data : transformedBody,

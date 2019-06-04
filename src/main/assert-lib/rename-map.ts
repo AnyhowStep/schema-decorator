@@ -288,3 +288,162 @@ export function renameMap<MapT extends FieldCollection<any>> (
         intersect(...(arr as any))
     ) as any;
 }
+
+export type PartialRenameMapMapper<MapT extends FieldCollection<any>> = (
+    & AssertDelegate<
+        & {
+            [dst in ExtractLiteralDstName<MapT>] : (
+                | MergedOutputOf<
+                    Extract<
+                        MapT[Extract<keyof MapT, string>],
+                        { name : dst }
+                    >
+                >
+                | undefined
+            )
+        }
+        & (
+            string extends MapT[Extract<keyof MapT, string>]["name"] ?
+            {
+                [name : string] : (
+                    | TypeOf<
+                        Exclude<MapT[Extract<keyof MapT, string>], { name : ExtractLiteralDstName<MapT> }>
+                    >
+                    | undefined
+                )
+            } :
+            unknown
+        )
+    >
+    & Accepts<
+        & (
+            NonOptionalExpectedInputDstName<MapT> extends never ?
+            unknown :
+            {
+                [dst in NonOptionalExpectedInputDstName<MapT>]? : (
+                    AcceptsOf<
+                        Extract<
+                            MapT[Extract<keyof MapT, string>],
+                            { name : dst }
+                        >
+                    >
+                )
+            }
+        )
+        & (
+            OptionalExpectedInputDstName<MapT> extends never ?
+            unknown :
+            {
+                [dst in OptionalExpectedInputDstName<MapT>]? : (
+                    AcceptsOf<
+                        Extract<
+                            MapT[Extract<keyof MapT, string>],
+                            { name : dst }
+                        >
+                    >
+                )
+            }
+        )
+        & (
+            string extends MapT[Extract<keyof MapT, string>]["name"] ?
+            {
+                [name : string] : (
+                    | AcceptsOf<
+                        Exclude<MapT[Extract<keyof MapT, string>], { name : ExtractLiteralDstName<MapT> }>
+                    >
+                    | undefined
+                )
+            } :
+            unknown
+        )
+    >
+    & CanAccept<
+        | (
+            & (
+                NonOptionalMappableInputKey<MapT> extends never ?
+                unknown :
+                {
+                    [src in NonOptionalMappableInputKey<MapT>]? : (
+                        CanAcceptOf<
+                            MapT[src]
+                        >
+                    )
+                }
+            )
+            & (
+                OptionalMappableInputKey<MapT> extends never ?
+                unknown :
+                {
+                    [src in OptionalMappableInputKey<MapT>]? : (
+                        CanAcceptOf<
+                            MapT[src]
+                        >
+                    )
+                }
+            )
+        )
+        | (
+            & (
+                NonOptionalMappableInputDstName<MapT> extends never ?
+                unknown :
+                {
+                    [dst in NonOptionalMappableInputDstName<MapT>]? : (
+                        CanAcceptOf<
+                            Extract<
+                                MapT[Extract<keyof MapT, string>],
+                                { name : dst }
+                            >
+                        >
+                    )
+                }
+            )
+            & (
+                OptionalMappableInputDstName<MapT> extends never ?
+                unknown :
+                {
+                    [dst in OptionalMappableInputDstName<MapT>]? : (
+                        CanAcceptOf<
+                            Extract<
+                                MapT[Extract<keyof MapT, string>],
+                                { name : dst }
+                            >
+                        >
+                    )
+                }
+            )
+            & (
+                string extends MapT[Extract<keyof MapT, string>]["name"] ?
+                {
+                    [name : string] : (
+                        | CanAcceptOf<
+                            Exclude<MapT[Extract<keyof MapT, string>], { name : ExtractLiteralDstName<MapT> }>
+                        >
+                        | undefined
+                    )
+                } :
+                unknown
+            )
+        )
+    >
+);
+export function partialRenameMap<MapT extends FieldCollection<any>> (
+    map : MapT
+) : (
+    PartialRenameMapMapper<MapT>
+) {
+    const arr : AssertDelegate<unknown>[] = [];
+    for (let k in map) {
+        if (!map.hasOwnProperty(k)) {
+            continue;
+        }
+        const f = map[k];
+        arr.push(rename(k, f.optional()));
+    }
+    if (arr.length == 0) {
+        return (() => { return {}; }) as any;
+    }
+    return chain(
+        instanceOf(Object),
+        intersect(...(arr as any))
+    ) as any;
+}

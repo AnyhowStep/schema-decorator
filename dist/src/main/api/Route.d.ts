@@ -72,7 +72,7 @@ export declare class Route<DataT extends RouteData> implements IRoute<DataT> {
         queryF: Q;
     }>);
     method(method: MethodLiteral): (Route<DataT>);
-    getMethod(): "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "CONNECT";
+    getMethod(): "GET" | "DELETE" | "HEAD" | "OPTIONS" | "POST" | "PUT" | "PATCH" | "CONNECT";
     withoutParam(): (Route<{
         [key in Exclude<(keyof DataT) | (keyof RouteData), "paramF">]: (key extends keyof DataT ? DataT[key] : never);
     }>);
