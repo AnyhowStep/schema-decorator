@@ -11,6 +11,7 @@ import "./intersect";
 import "./LazyNested";
 import "./nested";
 import "./object-keys";
+import "./partial-schema";
 import "./rename";
 import "./restrict";
 import "./schema";

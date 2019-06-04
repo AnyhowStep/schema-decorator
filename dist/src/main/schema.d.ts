@@ -41,6 +41,22 @@ export declare function schema<Arr extends AnyField[]>(...fields: Arr): (AssertD
     __accepts: Merge<SchemaAccepts<Arr>>;
     __canAccept: Merge<SchemaCanAccept<Arr>>;
 });
+export declare function partialSchema<Arr extends AnyField[]>(...fields: Arr): (AssertDelegate<{
+    [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>> | undefined);
+} & {
+    [optionalName in OptionalTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, optionalName>> | undefined);
+}> & {
+    __accepts: ({
+        [requiredName in RequiredAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, requiredName>> | undefined);
+    } & {
+        [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, optionalName>> | undefined);
+    });
+    __canAccept: ({
+        [requiredName in RequiredCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, requiredName>> | undefined);
+    } & {
+        [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, optionalName>> | undefined);
+    });
+});
 export declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({
     [name in {
         [k in keyof RawFieldCollectionT]: (undefined extends TypeOf<RawFieldCollectionT[k]> ? never : k);

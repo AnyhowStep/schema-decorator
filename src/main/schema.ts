@@ -212,6 +212,60 @@ export function schema<Arr extends AnyField[]> (...fields : Arr) : (
     return d as any;
 }
 
+export function partialSchema<Arr extends AnyField[]> (...fields : Arr) : (
+    AssertDelegate<
+        {
+            [requiredName in RequiredTypeNames<Arr>] : (
+                TypeOf<FieldWithName<Arr, requiredName>>|undefined
+            )
+        } &
+        {
+            [optionalName in OptionalTypeNames<Arr>] : (
+                TypeOf<FieldWithName<Arr, optionalName>>|undefined
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [requiredName in RequiredAcceptsNames<Arr>]? : (
+                    AcceptsOf<FieldWithName<Arr, requiredName>>|undefined
+                )
+            } &
+            {
+                [optionalName in OptionalAcceptsNames<Arr>]? : (
+                    AcceptsOf<FieldWithName<Arr, optionalName>>|undefined
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [requiredName in RequiredCanAcceptNames<Arr>]? : (
+                    CanAcceptOf<FieldWithName<Arr, requiredName>>|undefined
+                )
+            } &
+            {
+                [optionalName in OptionalCanAcceptNames<Arr>]? : (
+                    CanAcceptOf<FieldWithName<Arr, optionalName>>|undefined
+                )
+            }
+        ),
+    }
+) {
+    const optionalFields = fields.map(f => f.optional());
+    const d = (name : string, mixed : any) : any => {
+        if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an object; received ${toTypeStr(mixed)}`);
+        }
+        const result : any = {};
+        for (let f of optionalFields) {
+            result[f.name] = f.assertDelegate(`${name}.${f.name}`, mixed[f.name]);
+        }
+        return result;
+    };
+    return d as any;
+}
+
 export type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = (
     {
         [name in {

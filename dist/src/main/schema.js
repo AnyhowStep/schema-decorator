@@ -16,6 +16,21 @@ function schema(...fields) {
     return d;
 }
 exports.schema = schema;
+function partialSchema(...fields) {
+    const optionalFields = fields.map(f => f.optional());
+    const d = (name, mixed) => {
+        if (!(mixed instanceof Object) || (mixed instanceof Date) || (mixed instanceof Array)) {
+            throw new Error(`Expected ${name} to be an object; received ${util_1.toTypeStr(mixed)}`);
+        }
+        const result = {};
+        for (let f of optionalFields) {
+            result[f.name] = f.assertDelegate(`${name}.${f.name}`, mixed[f.name]);
+        }
+        return result;
+    };
+    return d;
+}
+exports.partialSchema = partialSchema;
 //https://github.com/Microsoft/TypeScript/issues/26207
 function toSchemaImpl(raw) {
     const fieldCollection = field_1.fields(raw);
