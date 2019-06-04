@@ -108,3 +108,13 @@ export declare const toSchema4: <RawFieldCollectionT extends RawFieldCollection>
         [name in keyof ToSchemaCanAccept<RawFieldCollectionT>]: (CanAcceptOf<RawFieldCollectionT[name]>);
     });
 });
+export declare const toPartialSchema: <RawFieldCollectionT extends RawFieldCollection>(raw: RawFieldCollectionT) => (AssertDelegate<{
+    [name in keyof ToSchemaType<RawFieldCollectionT>]: (TypeOf<RawFieldCollectionT[name]> | undefined);
+}> & {
+    __accepts: ({
+        [name in keyof ToSchemaAccepts<RawFieldCollectionT>]?: (AcceptsOf<RawFieldCollectionT[name]> | undefined);
+    });
+    __canAccept: ({
+        [name in keyof ToSchemaCanAccept<RawFieldCollectionT>]?: (CanAcceptOf<RawFieldCollectionT[name]> | undefined);
+    });
+});

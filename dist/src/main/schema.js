@@ -50,5 +50,17 @@ const raw = {
 };
 const ts = toSchema(raw);
 const ts2 = toSchema2(raw);
-*/ 
+*/
+function toPartialSchemaImpl(raw) {
+    const fieldCollection = field_1.fields(raw);
+    const fieldArray = [];
+    for (let k in fieldCollection) {
+        if (fieldCollection.hasOwnProperty(k)) {
+            //HACK
+            fieldArray.push(fieldCollection[k].optional());
+        }
+    }
+    return schema(...fieldArray);
+}
+exports.toPartialSchema = toPartialSchemaImpl;
 //# sourceMappingURL=schema.js.map

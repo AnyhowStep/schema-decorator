@@ -441,3 +441,69 @@ const raw = {
 const ts = toSchema(raw);
 const ts2 = toSchema2(raw);
 */
+
+function toPartialSchemaImpl<
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) : (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>|undefined
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>]? : (
+                    AcceptsOf<RawFieldCollectionT[name]>|undefined
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>]? : (
+                    CanAcceptOf<RawFieldCollectionT[name]>|undefined
+                )
+            }
+        )
+    }
+) {
+    const fieldCollection = fields(raw);
+    const fieldArray : Field<string, any>[] = [];
+    for (let k in fieldCollection) {
+        if (fieldCollection.hasOwnProperty(k)) {
+            //HACK
+            fieldArray.push((fieldCollection as any)[k].optional());
+        }
+    }
+    return schema(...fieldArray) as any;
+}
+
+export const toPartialSchema : <
+    RawFieldCollectionT extends RawFieldCollection
+> (raw : RawFieldCollectionT) => (
+    AssertDelegate<
+        {
+            [name in keyof ToSchemaType<RawFieldCollectionT>] : (
+                TypeOf<RawFieldCollectionT[name]>|undefined
+            )
+        }
+    > &
+    {
+        __accepts : (
+            {
+                [name in keyof ToSchemaAccepts<RawFieldCollectionT>]? : (
+                    AcceptsOf<RawFieldCollectionT[name]>|undefined
+                )
+            }
+        ),
+        __canAccept : (
+            {
+                [name in keyof ToSchemaCanAccept<RawFieldCollectionT>]? : (
+                    CanAcceptOf<RawFieldCollectionT[name]>|undefined
+                )
+            }
+        )
+    }
+) = toPartialSchemaImpl;

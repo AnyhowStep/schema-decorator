@@ -21,6 +21,7 @@ import "./to-class";
 import "./to-enumeration";
 import "./to-json";
 import "./to-parameter";
+import "./to-partial-schema";
 import "./to-raw-already-raw";
 import "./to-raw-ignore";
 import "./to-schema";
