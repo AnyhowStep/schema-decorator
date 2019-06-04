@@ -22,6 +22,18 @@ export type UnionToIntersection<U> = (
     ) ? I : never
 );
 
+export type MergedOutputOfImpl<F extends AnyAssertFunc> = (
+    F extends AnyAssertFunc ?
+    [TypeOf<F>] :
+    never
+);
+export type MergedOutputOf<F extends AnyAssertFunc> = (
+    Extract<
+        UnionToIntersection<MergedOutputOfImpl<F>>,
+        [any]
+    >[0]
+);
+
 export type IsOptional<F extends AnyAssertFunc> = (
     undefined extends TypeOf<F> ?
     true :
@@ -123,12 +135,10 @@ export type RenameMapMapper<MapT extends FieldCollection<any>> = (
     & AssertDelegate<
         & {
             [dst in ExtractLiteralDstName<MapT>] : (
-                UnionToIntersection<
-                    TypeOf<
-                        Extract<
-                            MapT[Extract<keyof MapT, string>],
-                            { name : dst }
-                        >
+                MergedOutputOf<
+                    Extract<
+                        MapT[Extract<keyof MapT, string>],
+                        { name : dst }
                     >
                 >
             )

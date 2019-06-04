@@ -4,6 +4,8 @@
 import { FieldCollection } from "../field";
 import { AssertDelegate, Accepts, CanAccept, CanAcceptOf, AcceptsOf, TypeOf, AnyAssertFunc } from "../types";
 export declare type UnionToIntersection<U> = ((U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never);
+export declare type MergedOutputOfImpl<F extends AnyAssertFunc> = (F extends AnyAssertFunc ? [TypeOf<F>] : never);
+export declare type MergedOutputOf<F extends AnyAssertFunc> = (Extract<UnionToIntersection<MergedOutputOfImpl<F>>, [any]>[0]);
 export declare type IsOptional<F extends AnyAssertFunc> = (undefined extends TypeOf<F> ? true : false);
 export declare type IsExpectedInputOptional<F extends AnyAssertFunc> = (undefined extends AcceptsOf<F> ? true : false);
 export declare type ExtractLiteralDstName<MapT extends FieldCollection<any>> = ({
@@ -36,9 +38,9 @@ export declare type OptionalMappableInputDstName<MapT extends FieldCollection<an
     }>> extends true ? k : never);
 }[ExtractLiteralDstName<MapT>]);
 export declare type RenameMapMapper<MapT extends FieldCollection<any>> = (AssertDelegate<{
-    [dst in ExtractLiteralDstName<MapT>]: (UnionToIntersection<TypeOf<Extract<MapT[Extract<keyof MapT, string>], {
+    [dst in ExtractLiteralDstName<MapT>]: (MergedOutputOf<Extract<MapT[Extract<keyof MapT, string>], {
         name: dst;
-    }>>>);
+    }>>);
 } & (string extends MapT[Extract<keyof MapT, string>]["name"] ? {
     [name: string]: (TypeOf<Exclude<MapT[Extract<keyof MapT, string>], {
         name: ExtractLiteralDstName<MapT>;
