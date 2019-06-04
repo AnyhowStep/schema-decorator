@@ -21,5 +21,6 @@ export * from "./restrict";
 export * from "./schema";
 export * from "./strict";
 export * from "./to-parameter";
+export * from "./try-map";
 export * from "./types";
 export * from "./util";

@@ -12,4 +12,5 @@ export * from "./missing-value";
 export * from "./number";
 export * from "./object";
 export * from "./operator";
+export * from "./rename-map";
 export * from "./string";

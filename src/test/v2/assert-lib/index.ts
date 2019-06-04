@@ -11,4 +11,5 @@ import "./missing-value";
 import "./number";
 import "./object";
 import "./operator";
+import "./rename-map";
 import "./string";

@@ -29,6 +29,16 @@ export type AssertDelegateCanAccept<T, CanAcceptT=unknown> = (
         __canAccept : CanAcceptT
     }
 );
+export type Accepts<AcceptsT> = (
+    {
+        __accepts : AcceptsT
+    }
+);
+export type CanAccept<CanAcceptT> = (
+    {
+        __canAccept : CanAcceptT
+    }
+);
 
 export type Constructor<T> = {new():T};
 export type AssertFunc<T> = (

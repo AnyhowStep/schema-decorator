@@ -22,6 +22,7 @@ __export(require("./restrict"));
 __export(require("./schema"));
 __export(require("./strict"));
 __export(require("./to-parameter"));
+__export(require("./try-map"));
 __export(require("./types"));
 __export(require("./util"));
 //# sourceMappingURL=index.js.map

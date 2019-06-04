@@ -17,5 +17,6 @@ __export(require("./missing-value"));
 __export(require("./number"));
 __export(require("./object"));
 __export(require("./operator"));
+__export(require("./rename-map"));
 __export(require("./string"));
 //# sourceMappingURL=index.js.map

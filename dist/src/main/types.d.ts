@@ -7,6 +7,12 @@ export declare type ChainedAssertDelegate<T, AcceptsT = any> = ((name: string, a
 export declare type AssertDelegateCanAccept<T, CanAcceptT = unknown> = (((name: string, mixed: unknown) => T) & {
     __canAccept: CanAcceptT;
 });
+export declare type Accepts<AcceptsT> = ({
+    __accepts: AcceptsT;
+});
+export declare type CanAccept<CanAcceptT> = ({
+    __canAccept: CanAcceptT;
+});
 export declare type Constructor<T> = {
     new (): T;
 };
