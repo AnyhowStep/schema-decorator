@@ -10,16 +10,17 @@ export declare const assertFalse: import("../..").AssertDelegate<boolean> & {
     __accepts: false | 0 | "0" | "false";
     __canAccept: false | 0 | "0" | "false";
 };
-export declare function boolean(): import("../..").AssertDelegate<boolean> & {
+declare function boolean(): import("../..").AssertDelegate<boolean> & {
     __accepts: boolean | 0 | 1 | "0" | "1" | "true" | "false";
     __canAccept: boolean | 0 | 1 | "0" | "1" | "true" | "false";
 };
-export declare namespace boolean {
+declare namespace boolean {
     var nullable: () => import("../..").AssertDelegate<boolean | null> & {
         __accepts: boolean | 0 | 1 | "0" | "1" | "true" | "false" | null;
         __canAccept: boolean | 0 | 1 | "0" | "1" | "true" | "false" | null;
     };
 }
+export default boolean;
 declare function getTrue(): import("../..").AssertDelegate<boolean> & {
     __accepts: true | 1 | "1" | "true";
     __canAccept: true | 1 | "1" | "true";

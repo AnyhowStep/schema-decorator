@@ -1,6 +1,6 @@
 {
   "name": "schema-decorator",
-  "version": "2.61.0",
+  "version": "2.61.1",
   "description": "Schema validation with decorators",
   "main": "dist/src/main/index.js",
   "types": "dist/src/main/index.d.ts",
@@ -28,6 +28,6 @@
     "@types/tape": "^4.2.31",
     "tape": "^4.8.0",
     "ts-node": "^4.1.0",
-    "typescript": "^3.3.0-dev.20190103"
+    "typescript": "^3.5.1"
   }
 }

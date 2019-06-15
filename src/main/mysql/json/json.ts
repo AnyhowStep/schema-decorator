@@ -60,7 +60,7 @@ export function jsonDelegate (
 }
 
 /*
-    he space required to store a JSON document is roughly
+    The space required to store a JSON document is roughly
     the same as for LONGBLOB or LONGTEXT.
 
     In addition, MySQL imposes a limit on the size of any JSON

@@ -158,36 +158,36 @@ export type FieldWithName<Arr extends AnyField[], NameT extends string> = (
 export type SchemaType<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredTypeNames<Arr>] : (
-            TypeOf<FieldWithName<Arr, requiredName>>
+            TypeOf<FieldWithName<Arr, Extract<requiredName, string>>>
         )
     } &
     {
         [optionalName in OptionalTypeNames<Arr>]? : (
-            TypeOf<FieldWithName<Arr, optionalName>>
+            TypeOf<FieldWithName<Arr, Extract<optionalName, string>>>
         )
     }
 );
 export type SchemaAccepts<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredAcceptsNames<Arr>] : (
-            AcceptsOf<FieldWithName<Arr, requiredName>>
+            AcceptsOf<FieldWithName<Arr, Extract<requiredName, string>>>
         )
     } &
     {
         [optionalName in OptionalAcceptsNames<Arr>]? : (
-            AcceptsOf<FieldWithName<Arr, optionalName>>
+            AcceptsOf<FieldWithName<Arr, Extract<optionalName, string>>>
         )
     }
 );
 export type SchemaCanAccept<Arr extends AnyField[]> = (
     {
         [requiredName in RequiredCanAcceptNames<Arr>] : (
-            CanAcceptOf<FieldWithName<Arr, requiredName>>
+            CanAcceptOf<FieldWithName<Arr, Extract<requiredName, string>>>
         )
     } &
     {
         [optionalName in OptionalCanAcceptNames<Arr>]? : (
-            CanAcceptOf<FieldWithName<Arr, optionalName>>
+            CanAcceptOf<FieldWithName<Arr, Extract<optionalName, string>>>
         )
     }
 );
@@ -216,12 +216,12 @@ export function partialSchema<Arr extends AnyField[]> (...fields : Arr) : (
     AssertDelegate<
         {
             [requiredName in RequiredTypeNames<Arr>] : (
-                TypeOf<FieldWithName<Arr, requiredName>>|undefined
+                TypeOf<FieldWithName<Arr, Extract<requiredName, string>>>|undefined
             )
         } &
         {
             [optionalName in OptionalTypeNames<Arr>] : (
-                TypeOf<FieldWithName<Arr, optionalName>>|undefined
+                TypeOf<FieldWithName<Arr, Extract<optionalName, string>>>|undefined
             )
         }
     > &
@@ -229,24 +229,24 @@ export function partialSchema<Arr extends AnyField[]> (...fields : Arr) : (
         __accepts : (
             {
                 [requiredName in RequiredAcceptsNames<Arr>]? : (
-                    AcceptsOf<FieldWithName<Arr, requiredName>>|undefined
+                    AcceptsOf<FieldWithName<Arr, Extract<requiredName, string>>>|undefined
                 )
             } &
             {
                 [optionalName in OptionalAcceptsNames<Arr>]? : (
-                    AcceptsOf<FieldWithName<Arr, optionalName>>|undefined
+                    AcceptsOf<FieldWithName<Arr, Extract<optionalName, string>>>|undefined
                 )
             }
         ),
         __canAccept : (
             {
                 [requiredName in RequiredCanAcceptNames<Arr>]? : (
-                    CanAcceptOf<FieldWithName<Arr, requiredName>>|undefined
+                    CanAcceptOf<FieldWithName<Arr, Extract<requiredName, string>>>|undefined
                 )
             } &
             {
                 [optionalName in OptionalCanAcceptNames<Arr>]? : (
-                    CanAcceptOf<FieldWithName<Arr, optionalName>>|undefined
+                    CanAcceptOf<FieldWithName<Arr, Extract<optionalName, string>>>|undefined
                 )
             }
         ),

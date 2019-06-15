@@ -23,38 +23,38 @@ export declare type FieldWithName<Arr extends AnyField[], NameT extends string> 
     [index in Exclude<keyof Arr, keyof any[]>]: (Arr[index] extends AnyField ? (Arr[index]["name"] extends NameT ? Arr[index] : never) : never);
 }[Exclude<keyof Arr, keyof any[]>]);
 export declare type SchemaType<Arr extends AnyField[]> = ({
-    [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>>);
+    [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, Extract<requiredName, string>>>);
 } & {
-    [optionalName in OptionalTypeNames<Arr>]?: (TypeOf<FieldWithName<Arr, optionalName>>);
+    [optionalName in OptionalTypeNames<Arr>]?: (TypeOf<FieldWithName<Arr, Extract<optionalName, string>>>);
 });
 export declare type SchemaAccepts<Arr extends AnyField[]> = ({
-    [requiredName in RequiredAcceptsNames<Arr>]: (AcceptsOf<FieldWithName<Arr, requiredName>>);
+    [requiredName in RequiredAcceptsNames<Arr>]: (AcceptsOf<FieldWithName<Arr, Extract<requiredName, string>>>);
 } & {
-    [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, optionalName>>);
+    [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, Extract<optionalName, string>>>);
 });
 export declare type SchemaCanAccept<Arr extends AnyField[]> = ({
-    [requiredName in RequiredCanAcceptNames<Arr>]: (CanAcceptOf<FieldWithName<Arr, requiredName>>);
+    [requiredName in RequiredCanAcceptNames<Arr>]: (CanAcceptOf<FieldWithName<Arr, Extract<requiredName, string>>>);
 } & {
-    [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, optionalName>>);
+    [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, Extract<optionalName, string>>>);
 });
 export declare function schema<Arr extends AnyField[]>(...fields: Arr): (AssertDelegate<Merge<SchemaType<Arr>>> & {
     __accepts: Merge<SchemaAccepts<Arr>>;
     __canAccept: Merge<SchemaCanAccept<Arr>>;
 });
 export declare function partialSchema<Arr extends AnyField[]>(...fields: Arr): (AssertDelegate<{
-    [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, requiredName>> | undefined);
+    [requiredName in RequiredTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, Extract<requiredName, string>>> | undefined);
 } & {
-    [optionalName in OptionalTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, optionalName>> | undefined);
+    [optionalName in OptionalTypeNames<Arr>]: (TypeOf<FieldWithName<Arr, Extract<optionalName, string>>> | undefined);
 }> & {
     __accepts: ({
-        [requiredName in RequiredAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, requiredName>> | undefined);
+        [requiredName in RequiredAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, Extract<requiredName, string>>> | undefined);
     } & {
-        [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, optionalName>> | undefined);
+        [optionalName in OptionalAcceptsNames<Arr>]?: (AcceptsOf<FieldWithName<Arr, Extract<optionalName, string>>> | undefined);
     });
     __canAccept: ({
-        [requiredName in RequiredCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, requiredName>> | undefined);
+        [requiredName in RequiredCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, Extract<requiredName, string>>> | undefined);
     } & {
-        [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, optionalName>> | undefined);
+        [optionalName in OptionalCanAcceptNames<Arr>]?: (CanAcceptOf<FieldWithName<Arr, Extract<optionalName, string>>> | undefined);
     });
 });
 export declare type ToSchemaType<RawFieldCollectionT extends RawFieldCollection> = ({

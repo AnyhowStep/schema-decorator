@@ -154,10 +154,10 @@ export class Route<DataT extends RouteData> implements IRoute<DataT> {
         }>
     ) {
         return new Route(
-            this._method,
+            (this as this)._method,
             {
-                ...(this.data as any),
-                path : this.data.path.appendParam(param, regex),
+                ...((this as this).data as any),
+                path : (this as this).data.path.appendParam(param, regex),
             }
         );
     }
