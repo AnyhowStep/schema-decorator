@@ -1,3 +1,9 @@
+# THIS PACKAGE IS NOW DEPRECATED
+
+Use [`type-mapping`](https://github.com/anyhowstep/type-mapping) instead.
+
+-----
+
 # `schema-decorator`
 
 Security for web apps is important. User input should never be trusted.
